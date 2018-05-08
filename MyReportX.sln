@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyReportX", "MyReportX\MyReportX.csproj", "{50B8D886-BFC5-4888-B643-90F2B63350C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyReportXTests2", "MyReportXTests2\MyReportXTests2.csproj", "{647E368D-F5EF-4B70-8EE9-C57F0FBEEA50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50B8D886-BFC5-4888-B643-90F2B63350C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B8D886-BFC5-4888-B643-90F2B63350C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B8D886-BFC5-4888-B643-90F2B63350C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B8D886-BFC5-4888-B643-90F2B63350C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{647E368D-F5EF-4B70-8EE9-C57F0FBEEA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{647E368D-F5EF-4B70-8EE9-C57F0FBEEA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{647E368D-F5EF-4B70-8EE9-C57F0FBEEA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{647E368D-F5EF-4B70-8EE9-C57F0FBEEA50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C55CB1B-CF4C-48F6-BA99-7BD61A654415}
+	EndGlobalSection
+EndGlobal
