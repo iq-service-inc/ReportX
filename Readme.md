@@ -1,5 +1,5 @@
 # ReportX
-ReportX是一個快速建立Word.doc 和 Excel.xls 報表之API，幫助開發人員能夠快速完成報表輸出之功能。
+ReportX 可以用簡單的方法，快速建立 Word 與 Excel 報表。更棒的是，它的輸出結果也可以在網頁中直接呈現
 
 ## Installation
 
@@ -15,30 +15,30 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ## API Reference
 
-* Report：
-* ExcelReport：
-* WordReport：
+* Report： 
+* ExcelReport： 
+* WordReport： 
 
 
 ## Customized
 
 * `v1.2.0`
-  * 可以自訂報表規則，使用範例如下：  
+  * 可以自訂報表規則，產生Excel報表範例如下：  
 
 ```csharp
 
-ExcelReport Exx = new ExcelReport(typeof(ModelXXX)); //使用ExcelReport 方法
+ExcelReport Exx = new ExcelReport(typeof(data));  //data 為資料陣列
 
-Exx.setTile(title);  //設置標題
-Exx.setDate(Convert.ToDateTime(starttime), Convert.ToDateTime(endtime)); //自訂時間區間
+Exx.setTile('設置標題');  
+Exx.setDate(Convert.ToDateTime('開始時間'), Convert.ToDateTime('結束時間')); 
 Exx.setCreatedDate();  //製表時間
 Exx.setColumn(); //建立表格屬性
-Exx.setData(data); //匯入資料 (Model)
+Exx.setData(data); //匯入資料
             
 //統計資料數
 Exx.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length);
             
-//輸出報表
+//產生報表
 string output = Exx.render();
             
 ```
@@ -52,44 +52,54 @@ string output = Exx.render();
 
 Report s = new Report(); //使用Report 方法
 
-//帶入參數(資料,開始時間,結束時間,製表人)
+//帶入參數('資料','標題','開始時間','結束時間','製表人')
 ExcelReport myca = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 //統計資料數
 myca.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
-            
-//輸出報表
+//產生報表
 string output = Exx.render();
+//輸出報表
+
             
 ```
+
 ## Output 
 
- * 輸出報表需轉存成Word或Excel ，請建立以下報表輸出方法：  
+* 用 File.AppendAllText 方法 把檔案保存到電腦
 
 ```csharp
 
-public HttpResponseMessage getFile(string content, string fileNmae = null, string mimeType = "application/octet-stream", HttpStatusCode code = HttpStatusCode.OK)
-{
-    HttpResponseMessage resp = new HttpResponseMessage();
-    resp.StatusCode = code;
-    string fn = (fileNmae ?? Guid.NewGuid().ToString()) + ".xls";//根據需求更改.xls 或 .doc
-    if (content != null)
-     {
-       resp.Content = new StringContent(content, Encoding.UTF8, mimeType);
-       resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-        {
-         FileName = fn
-        };
-      }
-    return resp;
-}
+File.AppendAllText(output, ".doc"); //另存為Word檔
+File.AppendAllText(output, ".xls"); //另存為Excel檔
+
 
 ```
- * 輸出報表：  
+## use ReportX with ZapLib
+* 使用 Zaplib 中的 ExtApiHelper 套件，呼叫 getAttachmentResponse()
+* 下載預設為 .xls
 
 ```csharp
 
-    return getFile(output);
-    
+ExtApiHelper api = new ExtApiHelper(this); 
+
+return api.getAttachmentResponse(資料,檔名);
+
 ```
 
-* 若嫌麻煩,，請直接使用Zaplib的 getAttachmentResponse()方法！
+即可下載excel檔案
+
+## License
+
+   Copyright 2018 LinSol
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
