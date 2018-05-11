@@ -92,4 +92,4 @@ public HttpResponseMessage getFile(string content, string fileNmae = null, strin
     
 ```
 
-* 若嫌麻煩,，請直接使用Zaplib的 getAttachmentResponse()方法，謝謝！
+* 若嫌麻煩,，請直接使用Zaplib的 getAttachmentResponse()方法！
