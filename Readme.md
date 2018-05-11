@@ -27,7 +27,7 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ```csharp
 
-ExcelReport Exx = new ExcelReport(typeof(Modeltrend)); //使用ExcelReport 方法
+ExcelReport Exx = new ExcelReport(typeof(ModelXXX)); //使用ExcelReport 方法
 
 Exx.setTile(title);  //設置標題
 Exx.setDate(Convert.ToDateTime(starttime), Convert.ToDateTime(endtime)); //自訂時間區間
