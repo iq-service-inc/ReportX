@@ -22,8 +22,7 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ## Customized
 
-* `v1.2.0`
-  * 可以自訂報表規則，產生Excel報表範例如下：  
+* `v1.2.0` 可以自訂報表規則，產生Excel報表範例如下：  
 
 ```csharp
 
@@ -45,8 +44,7 @@ string output = Exx.render();
 
 ## Default
 
-* `v1.2.0`
-  * 可以使用內建報表規則，使用範例如下：  
+* `v1.2.0` 可以使用內建報表規則，使用範例如下：  
 
 ```csharp
 
@@ -75,8 +73,7 @@ File.AppendAllText(output, ".xls"); //另存為Excel檔
 
 ```
 ## use ReportX with ZapLib
-* 使用 Zaplib 中的 ExtApiHelper 套件，呼叫 getAttachmentResponse()
-* 下載預設為 .xls
+* 使用 Zaplib 中的 ExtApiHelper 套件，呼叫 getAttachmentResponse()，預設為下載 .xls檔
 
 ```csharp
 
@@ -86,7 +83,7 @@ return api.getAttachmentResponse(資料,檔名);
 
 ```
 
-即可下載excel檔案
+即可下載檔案
 
 ## License
 
