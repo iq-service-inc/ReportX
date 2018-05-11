@@ -22,7 +22,7 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ## Customized
 
-* `v1.2.0` 可以自訂報表規則，產生Excel報表範例如下：  
+* `v1.2.0` 可以自訂報表規則，使用範例如下：
 
 ```csharp
 
