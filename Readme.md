@@ -1,5 +1,5 @@
 # ReportX
-ReportX是一個快速建立WORD和EXCEL報表之API，幫助開發人員能夠快速完成報表輸出之功能。
+ReportX是一個快速建立Word.doc 和 Excel.xls 報表之API，幫助開發人員能夠快速完成報表輸出之功能。
 
 ## Installation
 
@@ -61,3 +61,35 @@ myca.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style =
 string output = Exx.render();
             
 ```
+## Output 
+
+ * 輸出報表需轉存成Word或Excel ，請建立以下報表輸出方法：  
+
+```csharp
+
+public HttpResponseMessage getFile(string content, string fileNmae = null, string mimeType = "application/octet-stream", HttpStatusCode code = HttpStatusCode.OK)
+{
+    HttpResponseMessage resp = new HttpResponseMessage();
+    resp.StatusCode = code;
+    string fn = (fileNmae ?? Guid.NewGuid().ToString()) + ".xls";//根據需求更改.xls 或 .doc
+    if (content != null)
+     {
+       resp.Content = new StringContent(content, Encoding.UTF8, mimeType);
+       resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+        {
+         FileName = fn
+        };
+      }
+    return resp;
+}
+
+```
+ * 輸出報表：  
+
+```csharp
+
+    return getFile(output);
+    
+```
+
+* 若嫌麻煩,，請直接使用Zaplib的　getAttachmentResponse()　方法，謝謝！
