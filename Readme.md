@@ -20,7 +20,7 @@ PM> Install-Package ReportX -Version 1.2.0
 * WordReport： 
 
 ## Default Model
-* 以下範例資料皆使用以下Model：
+* 以下範例資料皆使用此Model：
 
 ```csharp
 using ReportX.Rep.Attributes;
@@ -43,10 +43,9 @@ namespace TEST.Models
 
 ## Default
 
-* `v1.2.0` 可以使用內建報表規則，使用範例如下：  
+* `v1.2.0` 使用內建規則報表，使用範例如下：  
 
 ```csharp
-
 //範例模型
 ModelGO[] data = new ModelGO[20];
 
@@ -61,24 +60,20 @@ for (int a = 0; a < 20; a++)
     };
 }
 
-//帶入參數產生Excel報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
+Report s = new Report(); 
+
+//帶入參數產生Excel 報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
 ExcelReport myex = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
-//帶入參數產生Word報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
-WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
-
-//統計資料數
 myex.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
-mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
-
-//產生報表
 string Outexcel = myex.render();
-string Outword = mywd.render();
-
-//另存檔案
 File.AppendAllText(Outexcel, ".xls"); //另存為Excel檔
-File.AppendAllText(Outword, ".doc");  //另存為Word檔
 
-            
+
+//帶入參數產生Word 報表
+WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
+mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
+string Outword = mywd.render();
+File.AppendAllText(Outword, ".doc");  //另存為WWord檔
 ```
 
 ## Customized Excel
@@ -86,7 +81,6 @@ File.AppendAllText(Outword, ".doc");  //另存為Word檔
 * `v1.2.0` 自訂規則製作成Excel檔，使用範例如下：
 
 ```csharp
-
 //範例模型
 ModelGO[] data = new ModelGO[20];
 
@@ -101,7 +95,7 @@ for (int a = 0; a < 20; a++)
     };
 }
 
-ExcelReport Exx = new ExcelReport(typeof("data"));  //data 為資料陣列
+ExcelReport Exx = new ExcelReport(typeof(data));  //data 為資料陣列
 
 Exx.setTile("設置標題");  
 Exx.setDate(Convert.ToDateTime("開始時間"), Convert.ToDateTime("結束時間")); 
@@ -109,16 +103,9 @@ Exx.setCreatedDate();  //製表時間
 Exx.setColumn();       //建立表格屬性
 Exx.setData(data);     //匯入資料
             
-//統計資料數
-Exx.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length);
-            
-//產生報表
-string output = Exx.render();
-
-//另存Excel 報表
-File.AppendAllText(output, ".xls"); 
-
-            
+Exx.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+string output = Exx.render();//產生報表
+File.AppendAllText(output, ".xls"); //另存Excel 報表
 ```
 
 ## Customized Word
@@ -126,7 +113,6 @@ File.AppendAllText(output, ".xls");
 * `v1.2.0` 自訂規則也可以製作成Word檔，使用範例如下：
 
 ```csharp
-
 //範例模型
 ModelGO[] data = new ModelGO[20];
 
@@ -141,7 +127,7 @@ for (int a = 0; a < 20; a++)
     };
 }
 
-WordReport wrd = new WordReport(typeof("data"));  //data 為資料陣列
+WordReport wrd = new WordReport(typeof(data));  //data 為資料陣列
 
 wrd.setTile("設置標題");  
 wrd.setDate(Convert.ToDateTime("開始時間"), Convert.ToDateTime("結束時間")); 
@@ -149,16 +135,9 @@ wrd.setCreatedDate();  //製表時間
 wrd.setColumn();       //建立表格屬性
 wrd.setData(data);     //匯入資料
             
-//統計資料數
-wrd.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length);
-            
-//產生報表
-string output = wrd.render();
-
-//另存Word 報表
-File.AppendAllText(output, ".doc"); 
-
-            
+wrd.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length); //統計資料數
+string output = wrd.render();//產生報表
+File.AppendAllText(output, ".doc"); //另存Word 報表
 ```
 
 
