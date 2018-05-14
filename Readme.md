@@ -139,8 +139,9 @@ wrd.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style 
 string output = wrd.render();//產生報表
 File.AppendAllText(output, ".doc"); //另存Word 報表
 ```
+## Preview
 
-
+![image](http://192.168.1.136/SideProject/ZapLib/blob/master/EX.PNG)
 ## License
 
    Copyright 2018 LinSol
