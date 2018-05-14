@@ -19,6 +19,27 @@ PM> Install-Package ReportX -Version 1.2.0
 * ExcelReport： 
 * WordReport： 
 
+## Default Model
+* 以下範例資料皆使用以下Model：
+
+```csharp
+using ReportX.Rep.Attributes;
+
+namespace TEST.Models
+{
+    public class ModelGO
+    {
+        [Present("編號")]
+        public string postpid { get; set; }
+        [Present("標題")]
+        public string posttitle { get; set; }
+        [Present("作者編號")]
+        public string authormid { get; set; }
+        [Present("員工編號")]
+        public string employeeno { get; set; }
+    }
+}
+```
 
 ## Default
 
@@ -26,7 +47,19 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ```csharp
 
-Report s = new Report(); 
+//範例模型
+ModelGO[] data = new ModelGO[20];
+
+for (int a = 0; a < 20; a++)
+{
+    data[a] = new ModelGO
+    {
+        postpid = "ID" + a,
+        posttitle = "標題" + a,
+        authormid = "編號" + a,
+        employeeno = "員工" + a
+    };
+}
 
 //帶入參數產生Excel報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
 ExcelReport myex = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
@@ -54,6 +87,20 @@ File.AppendAllText(Outword, ".doc");  //另存為Word檔
 
 ```csharp
 
+//範例模型
+ModelGO[] data = new ModelGO[20];
+
+for (int a = 0; a < 20; a++)
+{
+    data[a] = new ModelGO
+    {
+        postpid = "ID" + a,
+        posttitle = "標題" + a,
+        authormid = "編號" + a,
+        employeeno = "員工" + a
+    };
+}
+
 ExcelReport Exx = new ExcelReport(typeof("data"));  //data 為資料陣列
 
 Exx.setTile("設置標題");  
@@ -79,6 +126,20 @@ File.AppendAllText(output, ".xls");
 * `v1.2.0` 自訂規則也可以製作成Word檔，使用範例如下：
 
 ```csharp
+
+//範例模型
+ModelGO[] data = new ModelGO[20];
+
+for (int a = 0; a < 20; a++)
+{
+    data[a] = new ModelGO
+    {
+        postpid = "ID" + a,
+        posttitle = "標題" + a,
+        authormid = "編號" + a,
+        employeeno = "員工" + a
+    };
+}
 
 WordReport wrd = new WordReport(typeof("data"));  //data 為資料陣列
 
