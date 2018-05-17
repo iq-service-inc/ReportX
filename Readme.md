@@ -141,7 +141,7 @@ File.AppendAllText(output, ".doc"); //另存Word 報表
 ```
 ## Preview
 
-![image](http://192.168.1.136/SideProject/ReportX/blob/master/EX.PNG)
+![image](http://192.168.1.136/SideProject/ReportX/raw/master/EX.PNG)
 ## License
 
    Copyright 2018 LinSol
