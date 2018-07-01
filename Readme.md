@@ -75,7 +75,7 @@ File.AppendAllText("路徑+檔案.xls", Outexcel); //另存為Excel檔
 WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
 string Outword = mywd.render();
-File.AppendAllText("路徑+檔案.doc", Outexcel);  //另存為Word檔
+File.AppendAllText("路徑+檔案.doc", Outword );  //另存為Word檔
 ```
 
 ## Customized Excel
