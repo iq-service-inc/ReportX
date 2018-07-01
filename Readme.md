@@ -66,14 +66,14 @@ Report s = new Report();
 ExcelReport myex = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 myex.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
 string Outexcel = myex.render();
-File.AppendAllText(Outexcel, ".xls"); //另存為Excel檔
+File.AppendAllText("路徑內的檔案.xml", Outexcel); //另存為Excel檔
 
 
 //帶入參數產生Word 報表
 WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
 string Outword = mywd.render();
-File.AppendAllText(Outword, ".doc");  //另存為WWord檔
+File.AppendAllText("路徑內的檔案.xml", Outexcel);  //另存為WWord檔
 ```
 
 ## Customized Excel
