@@ -60,20 +60,22 @@ for (int a = 0; a < 20; a++)
     };
 }
 
+string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+
 Report s = new Report(); 
 
 //帶入參數產生Excel 報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
 ExcelReport myex = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 myex.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
 string Outexcel = myex.render();
-File.AppendAllText(Outexcel, ".xls"); //另存為Excel檔
+File.AppendAllText("路徑+檔案.xls", Outexcel); //另存為Excel檔
 
 
 //帶入參數產生Word 報表
 WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
 mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
 string Outword = mywd.render();
-File.AppendAllText(Outword, ".doc");  //另存為WWord檔
+File.AppendAllText("路徑+檔案.doc", Outword );  //另存為Word檔
 ```
 
 ## Customized Excel
@@ -141,7 +143,7 @@ File.AppendAllText(output, ".doc"); //另存Word 報表
 ```
 ## Preview
 
-![image](http://192.168.1.136/SideProject/ZapLib/blob/master/EX.PNG)
+![image](http://192.168.1.136/SideProject/ReportX/raw/master/EX.PNG)
 ## License
 
    Copyright 2018 LinSol
