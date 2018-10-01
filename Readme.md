@@ -24,7 +24,7 @@ PM> Install-Package ReportX -Version 1.2.0
 ## Default Model
 * 以下範例 Model：
 
-```csharp=
+```csharp
 namespace ReportXTests2.Model
 {
     public class ModelEmployeeTicket
