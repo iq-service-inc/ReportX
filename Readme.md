@@ -15,135 +15,179 @@ PM> Install-Package ReportX -Version 1.2.0
 
 ## API Reference
 
-* Report： 
-* ExcelReport： 
-* WordReport： 
+* Report
+* ExcelReport：
+* WordReport
+* FileReport  `2018.10.01 updata` 
+
 
 ## Default Model
-* 以下範例資料皆使用此Model：
+* 以下範例 Model：
 
 ```csharp
-using ReportX.Rep.Attributes;
-
-namespace TEST.Models
+namespace ReportXTests2.Model
 {
-    public class ModelGO
+    public class ModelEmployeeTicket
     {
-        [Present("編號")]
-        public string postpid { get; set; }
+        [Present("ID")]
+        public Int64 postpid { get; set; }
         [Present("標題")]
         public string posttitle { get; set; }
-        [Present("作者編號")]
-        public string authormid { get; set; }
-        [Present("員工編號")]
-        public string employeeno { get; set; }
+        [Present("姓名")]
+        public string name { get; set; }
+        [Present("編號")]
+        public string number{ get; set; }
+        [Present("資料")]
+        public string data { get; set; }
+        [Present("電話")]
+        public string tel { get; set; }
     }
 }
 ```
 
-## Default
+## Default 
 
-* `v1.2.0` 使用內建規則報表，使用範例如下：  
+* `v1.2.0` 使用內建規則產生報表，使用範例如下：  
 
 ```csharp
-//範例模型
-ModelGO[] data = new ModelGO[20];
-
-for (int a = 0; a < 20; a++)
+//範例: 原始資料
+ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
+for (int i = 50 - 1; i >= 0; i--)
 {
-    data[a] = new ModelGO
+    string s = Guid.NewGuid().ToString("N");
+    ModelEmployeeTicket tmp = new ModelEmployeeTicket
     {
-        postpid = "ID" + a,
-        posttitle = "標題" + a,
-        authormid = "編號" + a,
-        employeeno = "員工" + a
+        postpid = i+1,
+        posttitle = "測試_" + i,
+        name = "SOL_" + i,
+        number = "123 ",
+        data = s,
+        tel = "0923456789"
     };
+    data[i] = tmp;
 }
 
-string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-
-Report s = new Report(); 
-
-//帶入參數產生Excel 報表 (資料 , 標題 , 開始時間 , 結束時間 , 製表人 )
-ExcelReport myex = s.excelResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
-myex.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
-string Outexcel = myex.render();
-File.AppendAllText("路徑+檔案.xls", Outexcel); //另存為Excel檔
-
-
-//帶入參數產生Word 報表
-WordReport mywd = s.wordResponse(data,"Report", Convert.ToDateTime(starttime), Convert.ToDateTime(endtime), "SOL");
-mywd.appendRow(new { value = "筆數", colspan = myca.getColCount() - 1, style = lastRowStyle }, data.Length);
-string Outword = mywd.render();
-File.AppendAllText("路徑+檔案.doc", Outword );  //另存為Word檔
+//範例: 欲顯示哪些標題
+string[] cols = new string[5];
+    cols[0] = "姓名";
+    cols[1] = "資料";
+    cols[2] = "ID";
+    cols[3] = "電話";
+    
+//範例: 標題
+string title = "今日工事";
 ```
 
-## Customized Excel
-
-* `v1.2.0` 自訂規則製作成Excel檔，使用範例如下：
+宣告使用Report方法
+```csharp
+Report Rpt = new Report();
+```
+帶入參數產生Excel 
 
 ```csharp
-//範例模型
-ModelGO[] data = new ModelGO[20];
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+ExcelReport er = Rpt.excelResponse(data , cols, title , DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
 
-for (int a = 0; a < 20; a++)
-{
-    data[a] = new ModelGO
-    {
-        postpid = "ID" + a,
-        posttitle = "標題" + a,
-        authormid = "編號" + a,
-        employeeno = "員工" + a
-    };
-}
+//產生excel 報表
+string exce; = er.render();
+if (File.Exists("excel檔案.doc")) File.Delete("excel檔案.doc");
+//另存為excel檔
+File.AppendAllText("excel檔案.xls", excel); 
 
-ExcelReport Exx = new ExcelReport(typeof(data));  //data 為資料陣列
+```
+帶入參數產生Word 報表
+```csharp
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+WordReport wr =Rpt.WordResponse(data, cols , title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "SOL",true);
+//產生word 報表
+string word = wr.render();
+if (File.Exists("word檔案.doc")) File.Delete("word檔案.doc");
+//另存為word檔
+File.AppendAllText("word檔案.doc", word );  
 
-Exx.setTile("設置標題");  
-Exx.setDate(Convert.ToDateTime("開始時間"), Convert.ToDateTime("結束時間")); 
-Exx.setCreatedDate();  //製表時間
-Exx.setColumn();       //建立表格屬性
-Exx.setData(data);     //匯入資料
-            
-Exx.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-string output = Exx.render();//產生報表
-File.AppendAllText(output, ".xls"); //另存Excel 報表
+```
+`2018/10/01` 新增綜合版   宣告 `FileReport `
+```csharp
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+FileReport file = rep.FileReport(data, cols, title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "SOL", true);
+//若要產生 word檔
+string word = file.render(null, "word");
+//若要產生 excel檔
+string excel = file.render(null, "excel");
+
+//另存為Word檔
+File.AppendAllText("word檔案.doc", word );
+//另存為Excel檔
+File.AppendAllText("excel檔案.doc", excel );  
 ```
 
-## Customized Word
 
-* `v1.2.0` 自訂規則也可以製作成Word檔，使用範例如下：
+## Customized Word and Excel 
 
+* `v1.2.0` 自訂表格排序和欄位，可以製作成`Word`和`excel`檔，使用範例如下：
+
+### 自定義欄位
+
+|Funtion_Name      |Content|Type|Example|
+|-------------|-------------|-----------|---------|
+|setTile    |表格標題|string      |setTile("`表格標題`")|
+|setDate    |表格日期|DateTime    |setDate(`starting`, `ending`)|
+|setCreator|製表人|string         |setCreator("`作者`")|
+|setCreatedDate  |製表時間`DateTime.Now`|`null`  |setCreatedDate()|
+|setColumn |表格屬性|`null`    |setColumn()|
+|setData   |表格內容  |T []data     |setData(data)|
+|setcut    |欲顯示欄位|string[] cols| setcut(cols)|
+|setsum    |總筆數欄位|T []data|setsum(data)|
+
+
+----------------------------------------------------------
+範例模型
 ```csharp
-//範例模型
-ModelGO[] data = new ModelGO[20];
-
-for (int a = 0; a < 20; a++)
+ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
+for (int i = 50 - 1; i >= 0; i--)
 {
-    data[a] = new ModelGO
+    string s = Guid.NewGuid().ToString("N");
+    ModelEmployeeTicket tmp = new ModelEmployeeTicket
     {
-        postpid = "ID" + a,
-        posttitle = "標題" + a,
-        authormid = "編號" + a,
-        employeeno = "員工" + a
+        postpid = i + 100,
+        posttitle = "測試_" + i,
+        name = "SOL_" + i,
+        number = "123 ",
+        data = s,
+        tel = "0923456789"+i
     };
+    data[i] = tmp;
 }
+```
+自定義表格欄位 
+* warning
+自定義欄位必須按照： 
+[架構表格]->[塞入資料]->[加入總筆數] 順序，否則會噴錯!
+```csharp
+//宣告FileReport 方法
+FileReport file = new FileReport(typeof(ModelEmployeeTicket));
 
-WordReport wrd = new WordReport(typeof(data));  //data 為資料陣列
+    file.setTile("標題");//標題
+    file.setDate(DateTime.Now.AddDays(-1), DateTime.Now);//日期
+    file.setCreatedDate();//時間
+    file.setColumn();//架構表格
+    file.setData(data);//塞入資料
+    file.setsum(data);//加入總筆數
 
-wrd.setTile("設置標題");  
-wrd.setDate(Convert.ToDateTime("開始時間"), Convert.ToDateTime("結束時間")); 
-wrd.setCreatedDate();  //製表時間
-wrd.setColumn();       //建立表格屬性
-wrd.setData(data);     //匯入資料
-            
-wrd.appendRow(new { value = "總筆數", colspan = Exx.getColCount() - 1, style = lastRowStyle }, data.Length); //統計資料數
-string output = wrd.render();//產生報表
-File.AppendAllText(output, ".doc"); //另存Word 報表
+    //產生 word檔
+    string word = file.render(null, "word");
+    File.AppendAllText("自定義綜合版.doc", word);
+
+    //產生 excel檔
+    string excel = file.render(null, "excel");
+    File.AppendAllText("自定義綜合版.xls", excel);
 ```
 ## Preview
+* Excel
+![excel](https://i.imgur.com/heC8f8i.png)
+* Word 
+![word](https://i.imgur.com/CQCqfcu.png)
 
-![image](http://192.168.1.136/SideProject/ReportX/raw/master/EX.PNG)
 ## License
 
    Copyright 2018 LinSol
