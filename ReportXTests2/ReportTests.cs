@@ -40,18 +40,15 @@ namespace ReportX.Tests
 
             Report Rpt = new Report();
             Excel excelRes = Rpt.excelResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
-
             string res = excelRes.render();
-
-
-            // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+           
             if (File.Exists("data.xls"))
                 File.Delete("data.xls");
-            File.AppendAllText("data.xls", res);
+            File.AppendAllText("data.xls", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
             Assert.IsNotNull(res);
-        }
 
-        
+
+        }
 
         [TestMethod()]
         //綜合版測試
@@ -81,24 +78,41 @@ namespace ReportX.Tests
             cols[3] = "電話";
 
             string title = "今日工事";
-            Report rep = new Report();
-            FileReport file = rep.FileReport(data, cols, title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "林家弘", true);
+
+            /*使用預設作法*/
+
+            //Report rep = new Report();
+            //FileReport file = rep.FileReport(data, cols, title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "林家弘", true);
+            //string word = file.render(null, "word");
+            //string excel = file.render(null, "excel");
+
+
+            /*自定義作法*/
+
+            FileReport file = new FileReport(typeof(ModelEmployeeTicket));
+            file.setTile("標題");
+            file.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+            file.setCreatedDate();
+            file.setColumn();
+            file.setData(data);
+            file.setsum(data);
+
             string word = file.render(null, "word");
             string excel = file.render(null, "excel");
 
 
-            if (File.Exists("綜合版.doc") && File.Exists("綜合版.xls"))
+            if (File.Exists("自定義綜合版.doc") && File.Exists("自定義綜合版.xls"))
             {
-                File.Delete("綜合版.doc");
-                File.Delete("綜合版.xls");
+                File.Delete("自定義綜合版.doc");
+                File.Delete("自定義綜合版.xls");
 
-                File.AppendAllText("綜合版.doc", word);
-                File.AppendAllText("綜合版.xls", excel);
+                File.AppendAllText("自定義綜合版.doc", word);
+                File.AppendAllText("自定義綜合版.xls", excel);
             }
             else
             {
-                File.AppendAllText("綜合版.doc", word);
-                File.AppendAllText("綜合版.xls", excel);
+                File.AppendAllText("自定義綜合版.doc", word);
+                File.AppendAllText("自定義綜合版.xls", excel);
             } 
         }
     }
