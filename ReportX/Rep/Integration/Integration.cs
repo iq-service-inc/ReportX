@@ -5,30 +5,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ReportX.Rep.Word
+namespace ReportX.Rep.Integration
 {
-    public class Word
+    public class Integration
     {
         //存取器
         protected string[] oldcols;
         protected string[] newcols;
 
         public string[] cols;
+        private ModelExcel excel;
         private ModelWord word;
-        private List<ModelTR> trs;
-        private int colspan;
 
-        public Word(Type model)
+        private List<ModelTR> trs;
+        public MemberInfo[] modeli;
+
+        public Integration(Type model)
         {
             trs = new List<ModelTR>();
+            excel = new ModelExcel();
+            excel.style = new ViewStyle();
+
             word = new ModelWord();
             word.style = new ViewStyle();
 
             List<MemberInfo> list_cols = new List<MemberInfo>();
-
+            modeli = model.GetMembers();
             foreach (var member in model.GetMembers())
             {
                 Present attr = member.GetCustomAttribute<Present>();
@@ -46,37 +49,50 @@ namespace ReportX.Rep.Word
                 }
                 list_cols.Insert(inserted_index, member);
             }
-
-            string[] str_cols = new string[list_cols.Count];
+            string[] str_cols = new string[list_cols.Count]; //取得標題數量
 
             for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
-
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
 
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
+
+            excel.colNum = cols.Length;
             word.colNum = cols.Length;
 
         }
-
         // 傳入一個陣列 
         public void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
             cols = intersectResult.ToArray();
+            excel.colNum = cols.Length;
             word.colNum = cols.Length;
         }
 
-        public void setWord(string author = null, string company = null, string sheetName = null)
+
+        public string formatDate(DateTime dateTime1, DateTime dateTime2)
         {
-            if (author != null) word.author = author;
-            if (company != null) word.company = company;
-            if (sheetName != null) word.sheetName = sheetName;
+            throw new NotImplementedException();
+        }
+
+        public void setData(string author = null, string company = null, string sheetName = null)
+        {
+            if (author != null)
+                excel.author = author;
+                word.author = author;
+            if (company != null)
+                excel.company = company;
+                word.company = company;
+            if (sheetName != null)
+                excel.sheetName = sheetName;
+                word.sheetName = sheetName;
         }
 
         public void setCustomStyle(string css)
         {
+            excel.style.setCustomCSS(css);
             word.style.setCustomCSS(css);
         }
 
@@ -88,7 +104,10 @@ namespace ReportX.Rep.Word
             td.data = data;
             td.className = className;
             td.style = trStyle;
+
+            td.colspan = excel.colNum;
             td.colspan = word.colNum;
+
             tr.tds.Add(td);
             trs.Add(tr);
             return tr;
@@ -128,7 +147,6 @@ namespace ReportX.Rep.Word
                     if (className != null) td.className = style.GetValue(cell, null).ToString();
                 }
                 tr.tds.Add(td);
-                
             }
             trs.Add(tr);
             return tr;
@@ -164,7 +182,6 @@ namespace ReportX.Rep.Word
                 }
                 foreach (ModelTD td in tds)
                     tr.tds.Add(td);
-                   
                 trs.Add(tr);
             }
         }
@@ -174,12 +191,22 @@ namespace ReportX.Rep.Word
             return cols.Length;
         }
 
-        public string render(int? width = null)
-        {
-            word.body = new ViewBody(trs, width);
-            ViewWord report = new ViewWord(word);
-            return report.render();
-        }
 
+        public string render(int? width = null, string File_type = "excel")
+        {
+            if (File_type == "excel")
+            {
+                excel.body = new ViewBody(trs, width);
+                ViewExcel report = new ViewExcel(excel);
+                return report.render();
+            }
+            else
+            {
+                word.body = new ViewBody(trs, width);
+                ViewWord report = new ViewWord(word);
+                return report.render();
+
+            }
+        }
     }
 }

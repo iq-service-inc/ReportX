@@ -1,9 +1,5 @@
 ﻿using ReportX.Rep.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportXTests2.Model
 {
@@ -18,5 +14,9 @@ namespace ReportXTests2.Model
         public string name { get; set; }
         [Present("編號")]
         public string number{ get; set; }
+        [Present("資料")]
+        public string data { get; set; }
+        [Present("電話")]
+        public string tel { get; set; }
     }
 }

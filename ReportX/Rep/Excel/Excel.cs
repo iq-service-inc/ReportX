@@ -4,12 +4,17 @@ using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace ReportX.Rep.Excel
 {
     public class Excel
     {
+        //存取器
+        protected string[] oldcols;
+        protected string[] newcols;
+
         public string[] cols;
         private ModelExcel excel;
         private List<ModelTR> trs;
@@ -39,16 +44,27 @@ namespace ReportX.Rep.Excel
                 }
                 list_cols.Insert(inserted_index, member);
             }
-            string[] str_cols = new string[list_cols.Count];
+            string[] str_cols = new string[list_cols.Count]; //取得標題數量
 
             for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
 
 
+            oldcols = str_cols; //舊的陣列
             cols = str_cols;
             excel.colNum = cols.Length;
 
+
         }
+        // 傳入一個陣列 
+        public void changecut(string[] cut)
+        {
+            newcols = cut;
+            var intersectResult = oldcols.Intersect(newcols);
+            cols = intersectResult.ToArray();
+            excel.colNum = cols.Length;
+        }
+
 
         public string formatDate(DateTime dateTime1, DateTime dateTime2)
         {
@@ -161,9 +177,12 @@ namespace ReportX.Rep.Excel
 
         public string render(int? width = null)
         {
+            
             excel.body = new ViewBody(trs, width);
             ViewExcel report = new ViewExcel(excel);
             return report.render();
+           
+          
         }
 
     }

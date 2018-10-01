@@ -1,20 +1,20 @@
 ﻿using ReportX.Rep.Excel;
+using ReportX.Rep.Integration;
 using ReportX.Rep.Word;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX
 {
     public class Report
     {
-        
-        public ExcelReport excelResponse<T>(T[] data, string title, DateTime starting, DateTime ending ,string Creator)
+        public ExcelReport excelResponse<T>(T[] data, string[] cols ,string title, DateTime starting, DateTime ending ,string Creator, bool end = false)
         {
             ExcelReport erp = new ExcelReport(typeof(T));
+            
+            if (cols.Length > 0)
+            {
+                erp.setcut(cols);
+            }
             erp.setTile(title);
             erp.setDate(starting, ending);
             erp.setCreator(Creator);
@@ -22,28 +22,58 @@ namespace ReportX
             erp.setColumn();
             erp.setData(data);
 
+            if(end) //如果要顯示結算筆數 end =true;
+            {
+                erp.setsum(data);
+            }
             return erp;
-
         }
 
-        public WordReport WordResponse<T>(T[] data, string title, DateTime starting, DateTime ending, string Creator)
+        public WordReport WordResponse<T>(T[] data,string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             WordReport wrp = new WordReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                wrp.setcut(cols);
+            }
+
             wrp.setTile(title);
             wrp.setDate(starting, ending);
             wrp.setCreator(Creator);
             wrp.setCreatedDate();
             wrp.setColumn();
             wrp.setData(data);
-            
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                wrp.setsum(data);
+            }
             return wrp;   
 
         }
 
+        //綜合板
+        public FileReport FileReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            FileReport file = new FileReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
 
+            file.setTile(title);
+            file.setDate(starting, ending);
+            file.setCreator(Creator);
+            file.setCreatedDate();
+            file.setColumn();
+            file.setData(data);
 
-
-
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
 
     }
 }

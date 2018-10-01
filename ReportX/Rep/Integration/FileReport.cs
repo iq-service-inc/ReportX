@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReportX.Rep.Model;
+﻿using ReportX.Rep.Model;
+using System;
 
-namespace ReportX.Rep.Word
+namespace ReportX.Rep.Integration
 {
-    public class WordReport : Word
+   public class FileReport : Integration //(綜合)
     {
         string customCSS = @"
             .r-header-title{
@@ -39,14 +35,14 @@ namespace ReportX.Rep.Word
             }             
         ";
 
-        public WordReport(Type model) : base(model)
+        public FileReport(Type model) : base(model)
         {
             setCustomStyle(customCSS);
         }
 
         public void setTile(string title)
         {
-            setWord(sheetName: title);
+            setData(sheetName: title);
             appendFullRow(title, null, "r-header-title");
         }
 
@@ -63,7 +59,7 @@ namespace ReportX.Rep.Word
 
         public void setCreator(string creator)
         {
-            setWord(author: creator);
+            setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
         }
 
@@ -85,19 +81,17 @@ namespace ReportX.Rep.Word
             appendTable(data);
         }
 
+        public void setsum<T>(T[] data) //總筆數
+        {
+            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+            appendRow (new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+ 
+        }
+
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
             changecut(cut);
         }
-
-        public void setsum<T>(T[] data) //總筆數
-        {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-
-        }
-
     }
-
 }

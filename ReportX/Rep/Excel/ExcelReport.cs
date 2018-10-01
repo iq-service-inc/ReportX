@@ -41,14 +41,14 @@ namespace ReportX.Rep.Excel
             setCustomStyle(customCSS);
         }
 
-
+        // 設定製表標題
         public void setTile(string title)
         {
             setExcel(sheetName: title);
             appendFullRow(title, null, "r-header-title");
         }
 
-
+        // 設定製表日期 : 帶入參數 yyyy/MM/dd yyyy/MM/dd
         public void setDate(DateTime from, DateTime? to = null)
         {
             if (from == null) return;
@@ -60,18 +60,21 @@ namespace ReportX.Rep.Excel
             appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
         }
 
+        // 設定製表人
         public void setCreator(string creator)
         {
             setExcel(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
         }
 
+        // 設定製表時間 :取得現在時間
         public void setCreatedDate()
         {
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
             appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
         }
 
+        // 設定資料欄位
         public void setColumn()
         {
             ModelTR col = appendRow(cols);
@@ -79,11 +82,23 @@ namespace ReportX.Rep.Excel
                 td.className = "column";
         }
 
+        // 塞入資料
         public void setData<T>(T[] data)
         {
             appendTable(data);
         }
 
+        // 傳入欲顯示欄位標題 之陣列
+        public void setcut(string[] cut)
+        {
+            changecut(cut);
+        }
 
+        public void setsum<T>(T[] data) //總筆數欄位
+        {
+            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+
+        }
     }
 }
