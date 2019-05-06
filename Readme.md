@@ -182,6 +182,20 @@ FileReport file = new FileReport(typeof(ModelEmployeeTicket));
     string excel = file.render(null, "excel");
     File.AppendAllText("自定義綜合版.xls", excel);
 ```
+
+
+## Multi ExcelWorksheet
+  在Excel 做分頁表格
+
+### 參數
+ExcelReport 的 陣列
+
+```csharp
+List<ExcelReport> excelResList = new List<ExcelReport>();
+MultiExcel multiExcel = new MultiExcel(excelResList);
+string res = multiExcel.render();
+```
+
 ## Preview
 * Excel
 ![excel](https://i.imgur.com/heC8f8i.png)

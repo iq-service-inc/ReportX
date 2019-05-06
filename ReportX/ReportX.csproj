@@ -46,14 +46,17 @@
     <Compile Include="Rep\Attribute\Present.cs" />
     <Compile Include="Rep\Excel\Excel.cs" />
     <Compile Include="Rep\Excel\ExcelReport.cs" />
+    <Compile Include="Rep\Excel\MultiExcel.cs" />
     <Compile Include="Rep\Integration\FileReport.cs" />
     <Compile Include="Rep\Integration\Integration.cs" />
     <Compile Include="Rep\Model\ModelExcelcs.cs" />
+    <Compile Include="Rep\Model\ModelMultiExcel.cs" />
     <Compile Include="Rep\Model\ModelTD.cs" />
     <Compile Include="Rep\Model\ModelTR.cs" />
     <Compile Include="Rep\Model\ModelWord.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
     <Compile Include="Rep\View\ViewExcel.cs" />
+    <Compile Include="Rep\View\ViewMultiExcel.cs" />
     <Compile Include="Rep\View\ViewStyle.cs" />
     <Compile Include="Rep\View\ViewWord.cs" />
     <Compile Include="Rep\Word\Word.cs" />
