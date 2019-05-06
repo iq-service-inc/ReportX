@@ -24,7 +24,7 @@ namespace ReportX.Rep.Excel
             trs = new List<ModelTR>();
             excel = new ModelExcel();
             excel.style = new ViewStyle();
-          
+
             List<MemberInfo> list_cols = new List<MemberInfo>();
             modeli = model.GetMembers();
             foreach (var member in model.GetMembers())
@@ -175,6 +175,11 @@ namespace ReportX.Rep.Excel
             return cols.Length;
         }
 
+        public string getsheetName()
+        {
+            return excel.sheetName;
+        }
+        
         public string render(int? width = null)
         {
             
