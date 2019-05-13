@@ -35,9 +35,8 @@ namespace ReportX.Rep.View
 ---=BOUNDARY_EXCEL
 Content-ID: {0}
 Content-Type: text/html; charset='utf-8'
-              
-            {1}  
-        ";
+{1}
+";
 
  //MIME必須要靠左，排版會影響輸出 
         string template = @"MIME-Version: 1.0
@@ -66,8 +65,6 @@ Content-Type: text/html; charset=""utf-8""
             </html>
 
             {1}
-
-
 ---=BOUNDARY_EXCEL--
 ";
     }
