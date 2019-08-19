@@ -41,6 +41,8 @@ namespace ReportXTests2.Model
         public string data { get; set; }
         [Present("電話")]
         public string tel { get; set; }
+		[Present("測試")]
+        public string test { get; set; }
     }
 }
 ```
