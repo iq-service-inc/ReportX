@@ -1,5 +1,6 @@
 ﻿using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
+using ReportX.Rep.Odf;
 using ReportX.Rep.Word;
 using System;
 
@@ -51,7 +52,28 @@ namespace ReportX
             return wrp;   
 
         }
+        public OdtReport OdtResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            OdtReport orp = new OdtReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                orp.setcut(cols);
+            }
 
+            orp.setTile(title);
+            orp.setDate(starting, ending);
+            orp.setCreator(Creator);
+            orp.setCreatedDate();
+            orp.setColumn();
+            orp.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                orp.setsum(data);
+            }
+            return orp;
+
+        }
         //綜合板
         public FileReport FileReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {

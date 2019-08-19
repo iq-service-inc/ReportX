@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
+using ReportX.Rep.Odf;
 using ReportXTests2.Model;
 using System;
 using System.IO;
@@ -49,7 +50,44 @@ namespace ReportX.Tests
 
 
         }
+        [TestMethod()]
+        public void odtResponse()
+        {
+            ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
+            for (int i = 50 - 1; i >= 0; i--)
+            {
+                string s = Guid.NewGuid().ToString("N");
+                ModelEmployeeTicket tmp = new ModelEmployeeTicket
+                {
+                    postpid = i + 1,
+                    posttitle = "測試_" + i,
+                    name = "SOL_" + i,
+                    number = "123 ",
+                    data = s,
+                    tel = "0923456789"
+                };
+                data[i] = tmp;
+            }
 
+            string[] cols = new string[5];
+
+            cols[0] = "姓名";
+            cols[1] = "資料";
+            cols[2] = "ID";
+            cols[3] = "電話";
+
+            string title = "今日工事";
+
+            Report Rpt = new Report();
+            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
+            string res = odtRes.render();
+            if (File.Exists("data.doc"))
+                File.Delete("data.doc");
+            File.AppendAllText("data.doc", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            Assert.IsNotNull(res);
+
+
+        }
         [TestMethod()]
         //綜合版測試
         public void FileReport()
