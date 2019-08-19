@@ -1,0 +1,10 @@
+diff a/Readme.md b/Readme.md	(rejected hunks)
+@@ -41,6 +41,8 @@
+         public string data { get; set; }
+         [Present("電話")]
+         public string tel { get; set; }
++		[Present("測試")]
++        public string test { get; set; }
+     }
+ }
+ ```
