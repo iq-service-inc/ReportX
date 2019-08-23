@@ -58,10 +58,12 @@
     <Compile Include="Rep\Odf\Odt.cs" />
     <Compile Include="Rep\Odf\OdtReport.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
+    <Compile Include="Rep\View\ViewBodyOdt.cs" />
     <Compile Include="Rep\View\ViewExcel.cs" />
     <Compile Include="Rep\View\ViewMultiExcel.cs" />
     <Compile Include="Rep\View\ViewOdt.cs" />
     <Compile Include="Rep\View\ViewStyle.cs" />
+    <Compile Include="Rep\View\ViewStyleOdt.cs" />
     <Compile Include="Rep\View\ViewWord.cs" />
     <Compile Include="Rep\Word\Word.cs" />
     <Compile Include="Rep\Word\WordReport.cs" />

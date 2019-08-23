@@ -13,8 +13,8 @@ namespace ReportX.Rep.Model
         public string author { get; set; }
         public string company { get; set; }
         public string sheetName { get; set; }
-        public ViewStyle style { get; set; }
-        public ViewBody body { get; set; }
+        public ViewStyleOdt style { get; set; }
+        public ViewBodyOdt body { get; set; }
 
 
         public ModelOdt()

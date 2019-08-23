@@ -24,7 +24,7 @@ namespace ReportX.Rep.Odf
         {
             trs = new List<ModelTR>();
             odt = new ModelOdt();
-            odt.style = new ViewStyle();
+            odt.style = new ViewStyleOdt();
 
             List<MemberInfo> list_cols = new List<MemberInfo>();
 
@@ -173,7 +173,7 @@ namespace ReportX.Rep.Odf
 
         public string render(int? width = null)
         {
-            odt.body = new ViewBody(trs, width);
+            odt.body = new ViewBodyOdt(trs, width);
             ViewOdt report = new ViewOdt(odt);
             return report.render();
         }
