@@ -50,9 +50,10 @@ namespace ReportX.Tests
             string title = "今日工事";
 
             Report Rpt = new Report();
+            
             Excel excelRes = Rpt.excelResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
+            //excelRes.setCustomStyle();
             string res = excelRes.render();
-            //XElement newNode = XDocument.Parse(res).Root;
             if (File.Exists("data.xls"))
                 File.Delete("data.xls");
             File.AppendAllText("data.xls", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
@@ -63,8 +64,8 @@ namespace ReportX.Tests
         [TestMethod()]
         public void odtResponse()
         {
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[5];
-            for (int i = 5 - 1; i >= 0; i--)
+            ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
+            for (int i = 50 - 1; i >= 0; i--)
             {
                 string s = Guid.NewGuid().ToString("N");
                 ModelEmployeeTicket tmp = new ModelEmployeeTicket
@@ -79,7 +80,7 @@ namespace ReportX.Tests
                 data[i] = tmp;
             }
 
-            string[] cols = new string[5];
+            string[] cols = new string[6];
 
             cols[0] = "姓名";
             cols[1] = "資料";
@@ -87,8 +88,9 @@ namespace ReportX.Tests
             cols[3] = "電話";
             string title = "今日工事";
             Report Rpt = new Report();
-            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
-            string res = odtRes.render();          
+            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘",true);
+            var width = odtRes.getColCount();
+            string res = odtRes.render(width);          
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
@@ -137,7 +139,7 @@ namespace ReportX.Tests
                 data[i] = tmp;
             }
 
-            string[] cols = new string[5];
+            string[] cols = new string[6];
 
             cols[0] = "姓名";
             cols[1] = "資料";
@@ -148,24 +150,24 @@ namespace ReportX.Tests
 
             /*使用預設作法*/
 
-            //Report rep = new Report();
-            //FileReport file = rep.FileReport(data, cols, title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "林家弘", true);
-            //string word = file.render(null, "word");
-            //string excel = file.render(null, "excel");
+            Report rep = new Report();
+            FileReport file = rep.FileReport(data, cols, title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "林家弘", true);
+            string word = file.render(null, "word");
+            string excel = file.render(null, "excel");
 
 
             /*自定義作法*/
 
-            FileReport file = new FileReport(typeof(ModelEmployeeTicket));
-            file.setTile("標題");
-            file.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            file.setCreatedDate();
-            file.setColumn();
-            file.setData(data);
-            file.setsum(data);
+            //FileReport file = new FileReport(typeof(ModelEmployeeTicket));
+            //file.setTile("標題");
+            //file.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+            //file.setCreatedDate();
+            //file.setColumn();
+            //file.setData(data);
+            //file.setsum(data);
 
-            string word = file.render(null, "word");
-            string excel = file.render(null, "excel");
+            //string word = file.render(null, "word");
+            //string excel = file.render(null, "excel");
 
 
             if (File.Exists("自定義綜合版.doc") && File.Exists("自定義綜合版.xls"))

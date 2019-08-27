@@ -122,7 +122,7 @@ namespace ReportX.Rep.Odf
                     if (align != null) td.align = align.GetValue(cell, null).ToString();
                     if (bold != null) td.bold = true;
                     if (style != null) td.style = style.GetValue(cell, null).ToString();
-                    if (className != null) td.className = style.GetValue(cell, null).ToString();
+                    if (className != null) td.className = className.GetValue(cell, null).ToString();
                 }
                 tr.tds.Add(td);
 

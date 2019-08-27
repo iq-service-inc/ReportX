@@ -10,12 +10,18 @@ namespace ReportX.Rep.Odf
    public class OdtReport:Odt
     {
        
- string customCSS = @"<office:automatic-styles>
+ string customCSS = @"
+
+
+<office:automatic-styles>
     <style:style style:name='TableColumn' style:family='table-column'>
-      <style:table-column-properties style:column-width='1.2013in'/>
+      <style:table-column-properties />
+    </style:style>
+    <style:style style:name='TableColumn' style:family='table-column'>
+      <style:table-column-properties />
     </style:style>
     <style:style style:name='Table' style:family='table' style:master-page-name='MP0'>
-      <style:table-properties style:width='3.7604in' fo:margin-left='0in' table:align='center'/>
+      <style:table-properties  fo:margin-left='0in' table:align='center'/>
     </style:style>
     <style:style style:name='TableRow' style:family='table-row'>
       <style:table-row-properties/>
@@ -72,7 +78,7 @@ namespace ReportX.Rep.Odf
         public void setTile(string title)
         {
             setWord(sheetName: title);
-            appendFullRow(title, null, "r-header-title");
+            appendFullRow(title, "TableCellData", "Title");
         }
 
         public void setDate(DateTime from, DateTime? to = null)
@@ -83,19 +89,19 @@ namespace ReportX.Rep.Odf
             string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
                    date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
 
-            appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
+            appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
         }
 
         public void setCreator(string creator)
         {
             setWord(author: creator);
-            appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
+            appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
         }
 
         public void setCreatedDate()
         {
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
+            appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
         }
 
         public void setColumn()
@@ -118,8 +124,9 @@ namespace ReportX.Rep.Odf
 
         public void setsum<T>(T[] data) //總筆數
         {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+            string lastRowStyle = "TotalCell"; //預設CSS
+            string lastClassName = "Word";
+            appendRow(new { value = data.Length, colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
 
         }
 
