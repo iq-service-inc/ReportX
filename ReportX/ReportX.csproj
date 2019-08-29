@@ -49,6 +49,7 @@
     <Compile Include="Rep\Excel\MultiExcel.cs" />
     <Compile Include="Rep\Integration\FileReport.cs" />
     <Compile Include="Rep\Integration\Integration.cs" />
+    <Compile Include="Rep\Model\ModelAmount.cs" />
     <Compile Include="Rep\Model\ModelExcelcs.cs" />
     <Compile Include="Rep\Model\ModelMultiExcel.cs" />
     <Compile Include="Rep\Model\ModelOdt.cs" />
@@ -57,12 +58,17 @@
     <Compile Include="Rep\Model\ModelWord.cs" />
     <Compile Include="Rep\Odf\Odt.cs" />
     <Compile Include="Rep\Odf\OdtReport.cs" />
+    <Compile Include="Rep\S5report\Amount.cs" />
+    <Compile Include="Rep\S5report\AmountReport.cs" />
+    <Compile Include="Rep\View\ViewAmount.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
+    <Compile Include="Rep\View\ViewBodyAmount.cs" />
     <Compile Include="Rep\View\ViewBodyOdt.cs" />
     <Compile Include="Rep\View\ViewExcel.cs" />
     <Compile Include="Rep\View\ViewMultiExcel.cs" />
     <Compile Include="Rep\View\ViewOdt.cs" />
     <Compile Include="Rep\View\ViewStyle.cs" />
+    <Compile Include="Rep\View\ViewStyleAmount.cs" />
     <Compile Include="Rep\View\ViewStyleOdt.cs" />
     <Compile Include="Rep\View\ViewWord.cs" />
     <Compile Include="Rep\Word\Word.cs" />
@@ -71,5 +77,6 @@
   <ItemGroup>
     <None Include="ReportX.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

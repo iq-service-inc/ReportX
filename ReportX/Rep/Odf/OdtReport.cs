@@ -11,8 +11,6 @@ namespace ReportX.Rep.Odf
     {
        
  string customCSS = @"
-
-
 <office:automatic-styles>
     <style:style style:name='TableColumn' style:family='table-column'>
       <style:table-column-properties />

@@ -1,8 +1,10 @@
 ﻿using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
 using ReportX.Rep.Odf;
+using ReportX.Rep.S5report;
 using ReportX.Rep.Word;
 using System;
+using System.Data;
 
 namespace ReportX
 {
@@ -96,6 +98,25 @@ namespace ReportX
             }
             return file;
         }
+        public AmountReport AmountReport<T>(T[] data, string[] cols, string title,string dateTime,int sum_correct, int sum_wrong,  string Creator, bool end = false)
+        {
+            AmountReport file = new AmountReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
 
+            file.setTile(title);
+            file.setCreator(Creator);
+            file.setCreatedDate(dateTime);
+            file.setColumn();
+            file.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(sum_correct, sum_wrong);
+            }
+            return file;
+        }
     }
 }

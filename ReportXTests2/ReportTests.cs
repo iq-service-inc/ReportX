@@ -1,20 +1,12 @@
-﻿using AODL.Document;
-using AODL.Document.Content;
-using AODL.Document.Content.Tables;
-using AODL.Document.Content.Text;
-using AODL.Document.TextDocuments;
-using ICSharpCode.SharpZipLib.Zip;
+﻿using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
 using ReportX.Rep.Odf;
+using ReportX.Rep.S5report;
 using ReportXTests2.Model;
 using System;
 using System.IO;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-    
 
 namespace ReportX.Tests
 {
@@ -50,7 +42,7 @@ namespace ReportX.Tests
             string title = "今日工事";
 
             Report Rpt = new Report();
-            
+
             Excel excelRes = Rpt.excelResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
             //excelRes.setCustomStyle();
             string res = excelRes.render();
@@ -88,9 +80,9 @@ namespace ReportX.Tests
             cols[3] = "電話";
             string title = "今日工事";
             Report Rpt = new Report();
-            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘",true);
+            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
             var width = odtRes.getColCount();
-            string res = odtRes.render(width);          
+            string res = odtRes.render(width);
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
@@ -182,6 +174,83 @@ namespace ReportX.Tests
             {
                 File.AppendAllText("自定義綜合版.doc", word);
                 File.AppendAllText("自定義綜合版.xls", excel);
+            }
+        }
+
+        [TestMethod()]
+        public void AmountReportTest()
+        {
+            Random r = new Random();
+            var sum_correct = 0;
+            var sum_wrong = 0;
+            ModelKnowledgeAmount[] data = new ModelKnowledgeAmount[100];
+            for (int i = 100 - 1; i >= 0; i--)
+            {
+                int num = r.Next(0, 30);
+                int numw = r.Next(0, 5);
+                string knowledge = "";
+                string s = Guid.NewGuid().ToString("N");
+                if (num%2==0)
+                {
+                    knowledge = "◎目錄" + i;
+                }
+                else
+                {
+                    knowledge = "目錄" + i;
+                }
+                ModelKnowledgeAmount tmp = new ModelKnowledgeAmount
+                {
+                    sequence = i + 1,
+                    knowledge = knowledge,
+                    correctAmount = num,
+                    wrongAmount = numw,
+
+                };
+                data[i] = tmp;
+            }
+            
+            var datetime = DateTime.Now.ToString("yyyyMMddhhmmss");
+            string[] cols = new string[4];
+            cols[0] = "順序";
+            cols[1] = "知識目錄";
+            cols[2] = "有效知識";
+            cols[3] = "無效知識";
+            string title = "知識數量統計表";
+            foreach (var item in data)
+            {
+                sum_correct += item.correctAmount;
+                sum_wrong += item.wrongAmount;
+            }
+            Report Rpt = new Report();
+            Amount AmountRes = Rpt.AmountReport(data, cols, title, DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"), sum_correct, sum_wrong, "林家弘", true);
+            var width = AmountRes.getColCount();
+            string res = AmountRes.render(width);
+            if (File.Exists("content.xml"))
+                File.Delete("content.xml");
+            File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            Assert.IsNotNull(res);
+            if (File.Exists("content.xml"))
+            {
+                string inputFile = @"content.xml";
+                string outputFile = @"./Amount(" + datetime + ").odt";
+                byte[] buffer = new byte[4096];
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                using (var input = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+                using (var zip = new ZipOutputStream(output))
+                {
+                    ZipEntry entry = new ZipEntry(inputFile);
+                    entry.DateTime = DateTime.Now;
+                    zip.PutNextEntry(entry);
+                    int readLength;
+                    do
+                    {
+                        readLength = input.Read(buffer, 0, buffer.Length);
+                        if (readLength > 0)
+                        {
+                            zip.Write(buffer, 0, readLength);
+                        }
+                    } while (readLength > 0);
+                }
             }
         }
     }
