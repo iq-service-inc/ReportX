@@ -28,8 +28,7 @@ namespace ReportX.Rep.View
                 string tr_className = tr.className == null ? "" : string.Format("class=\"{0}\" ", tr.className),
                        tr_customStyle = tr.style ?? "",
                        tr_style = string.Format("style=\"{0}\" ", tr_customStyle) + tr_className,
-                       tds = "",
-                       table_header =""
+                       tds = ""
                       ;
 
                 if (tr.tds != null)
@@ -48,7 +47,6 @@ namespace ReportX.Rep.View
                         {
                             attributes += string.Format("table:style-name='TableCell'");
                             className = "Data";
-                            table_header = "</table:table-header-rows>";
                         }
                         if (td.className == null)
                         {
@@ -106,7 +104,7 @@ namespace ReportX.Rep.View
                         tds += string.Format(template_td, attributes, text_style, data, table_cell);
                     }
                 }
-                trs += string.Format(template_tr, tr_style, tds, table_header);
+                trs += string.Format(template_tr, tr_style, tds);
             }
 
             return string.Format(template, trs, table_width);
@@ -115,8 +113,7 @@ namespace ReportX.Rep.View
 
         string template = @"{0}";
         string template_td = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>{3} ";
-        string template_tr = "<table:table-row table:style-name='TitleTableRow '>{1}</table:table-row>{2}";
+        string template_tr = "<table:table-row table:style-name='TitleTableRow '>{1}</table:table-row>";
         string lastRow = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>";
-        //0:style-name='TableCellData' table:number-columns-spanned=\"{0}\"  1:text:style-name="Title" 2:text:style-name="TitleWord" 3:data
     }
 }

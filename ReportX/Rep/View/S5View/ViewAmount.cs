@@ -44,7 +44,6 @@ namespace ReportX.Rep.View
           <table:table-column table:style-name='TableColumn6'/>
           <table:table-column table:style-name='TableColumn7'/>
         </table:table-columns>
-<table:table-header-rows>
      {5}
       </table:table>
       <text:p text:style-name='ContentData'/>

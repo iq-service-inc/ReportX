@@ -98,6 +98,7 @@ namespace ReportX
             }
             return file;
         }
+        //s5amount
         public AmountReport AmountReport<T>(T[] data, string[] cols, string title,string dateTime,int sum_correct, int sum_wrong,  string Creator, bool end = false)
         {
             AmountReport file = new AmountReport(typeof(T));
@@ -118,5 +119,27 @@ namespace ReportX
             }
             return file;
         }
+        public KBStaticReport KBStaticReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday , string lastdday, string Creator, bool end = false)
+        {
+            KBStaticReport file = new KBStaticReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
+
+            file.setTile(title);
+            file.setCreator(Creator);
+            file.setCreatedDate(dateTime);
+            file.setCreatedDayRange(firstday,lastdday);            
+            file.setColumn();
+            file.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
+
     }
 }
