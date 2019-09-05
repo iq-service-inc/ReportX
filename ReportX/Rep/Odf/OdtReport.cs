@@ -1,6 +1,7 @@
 ﻿using ReportX.Rep.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -113,7 +114,10 @@ namespace ReportX.Rep.Odf
         {
             appendTable(data);
         }
-
+        public void setData (DataTable data)
+        {
+            appendTable(data);
+        }
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
@@ -125,6 +129,13 @@ namespace ReportX.Rep.Odf
             string lastRowStyle = "TotalCell"; //預設CSS
             string lastClassName = "Word";
             appendRow(new { value = data.Length, colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
+
+        }
+        public void setsum(DataTable data) //總筆數
+        {
+            string lastRowStyle = "TotalCell"; //預設CSS
+            string lastClassName = "Word";
+            appendRow(new { value = data.Select().Count(), colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
 
         }
 

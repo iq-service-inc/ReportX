@@ -83,20 +83,22 @@ namespace ReportX.Rep.View
                                     break;
                             }
                         }
-                        if (td.style == "TotalCell")
+                        if (td.className == "Data")
                         {
-                            table_cell = "";
-                            attributes = "";
-                            var lastCellStyle = "table:style-name='ContentTableCell'";
-                            var lastTextStyle = "text:style-name='KnowledgeData'";
-                            attributes += string.Format("table:style-name='ContentTableCell' table:number-columns-spanned=\"{0}\" ", td.colspan);
-                            for (int i = 1; i < td.colspan; i++)
+                            if (td.style != null)
                             {
-
-                                table_cell += "<table:covered-table-cell/>";
+                                attributes += string.Format("table:style-name='ContentTableCell' table:number-columns-spanned='2' ");
+                                for (int i = 1; i < td.colspan; i++)
+                                {
+                                    table_cell += "<table:covere-table-cell/>";
+                                }
+                                className = "Data";
                             }
-                            table_cell += string.Format(lastRow, lastCellStyle, lastTextStyle, td.sum_c);
-                            table_cell += string.Format(lastRow, lastCellStyle, lastTextStyle, td.sum_w);
+                            else
+                            {
+                                attributes += string.Format("table:style-name='ContentTableCell'");
+                                className = "KnowledgeData";
+                            }
                         }
                         if (td_style == null)
                             attributes += string.Format("table:style-name=\"{0}\" ", td_style);
@@ -114,6 +116,5 @@ namespace ReportX.Rep.View
         string template = @"{0}";
         string template_td = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>{3} ";
         string template_tr = "<table:table-row table:style-name='TitleTableRow '>{1}</table:table-row>";
-        string lastRow = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>";
     }
 }

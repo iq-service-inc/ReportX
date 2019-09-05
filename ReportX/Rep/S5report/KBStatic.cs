@@ -131,8 +131,6 @@ namespace ReportX.Rep.S5report
                     if (bold != null) td.bold = true;
                     if (style != null) td.style = style.GetValue(cell, null).ToString();
                     if (className != null) td.className = className.GetValue(cell, null).ToString();
-                    if (sum_c != null) td.sum_c = sum_c.GetValue(cell, null).ToString();
-                    if (sum_w != null) td.sum_w = sum_w.GetValue(cell, null).ToString();
 
                 }
                 tr.tds.Add(td);

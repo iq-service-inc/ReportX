@@ -18,8 +18,6 @@ namespace ReportX.Rep.Model
         public string style { get; set; }
         public string className { get; set; }
         public string col { get; set; } //欄位
-        public string sum_c { get; set; } //有效知識總和
-        public string sum_w { get; set; } //無效知識總和   
 
         public ModelTD()
         {

@@ -54,7 +54,7 @@ namespace ReportX
             return wrp;   
 
         }
-        public OdtReport OdtResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public OdtReport OdtResponse<T>( T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false, DataTable table =null)
         {
             OdtReport orp = new OdtReport(typeof(T));
             if (cols.Length > 0)
@@ -67,11 +67,12 @@ namespace ReportX
             orp.setCreator(Creator);
             orp.setCreatedDate();
             orp.setColumn();
-            orp.setData(data);
+            orp.setData(table);
+            //orp.setData(data);
 
             if (end) //如果要顯示結算筆數 end =true;
             {
-                orp.setsum(data);
+                orp.setsum(table);
             }
             return orp;
 
@@ -99,7 +100,7 @@ namespace ReportX
             return file;
         }
         //s5amount
-        public AmountReport AmountReport<T>(T[] data, string[] cols, string title,string dateTime,int sum_correct, int sum_wrong,  string Creator, bool end = false)
+        public AmountReport AmountReport<T>(T[] data, string[] cols, string title,string dateTime,  string Creator, bool end = false)
         {
             AmountReport file = new AmountReport(typeof(T));
             if (cols.Length > 0)
@@ -115,11 +116,11 @@ namespace ReportX
 
             if (end) //如果要顯示結算筆數 end =true;
             {
-                file.setsum(sum_correct, sum_wrong);
+                file.setsum(data);
             }
             return file;
         }
-        public KBStaticReport KBStaticReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday , string lastdday, string Creator, bool end = false)
+        public KBStaticReport KBStaticReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
         {
             KBStaticReport file = new KBStaticReport(typeof(T));
             if (cols.Length > 0)
@@ -130,9 +131,31 @@ namespace ReportX
             file.setTile(title);
             file.setCreator(Creator);
             file.setCreatedDate(dateTime);
-            file.setCreatedDayRange(firstday,lastdday);            
+            file.setCreatedDayRange(firstday, lastdday);
             file.setColumn();
             file.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
+        public SignStatusReport SignStatusReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
+        {
+            SignStatusReport file = new SignStatusReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
+
+            file.setTile(title);
+            file.setCreator(Creator);
+            file.setCreatedDate(dateTime);
+            file.setCreatedDayRange(firstday, lastdday);
+            file.setColumn();
+            file.setSecondColumn();
+            file.setData(data); ;
 
             if (end) //如果要顯示結算筆數 end =true;
             {

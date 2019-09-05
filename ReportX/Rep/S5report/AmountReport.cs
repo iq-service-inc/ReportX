@@ -110,11 +110,32 @@ namespace ReportX.Rep.S5report
             changecut(cut);
         }
 
-        public void setsum(int sum_correct, int sum_wrong) //總筆數
+        public void setsum<T>(T[] data) //總筆數
         {
+            int sum_correct = 0;
+            int sum_wrong = 0;
             string lastRowStyle = "TotalCell"; //預設CSS
             string lastClassName = "Data";
-            appendRow(new { colspan = getColCount() - 2, style = lastRowStyle, className = lastClassName, value = "合計", sum_c = sum_correct, sum_w = sum_wrong });//統計資料數
+            foreach (T item in data)
+            {
+                foreach (var prop in item.GetType().GetProperties())
+                {
+                    switch (prop.Name)
+                    {
+                        case "correctAmount":
+                            sum_correct += (int)prop.GetValue(item, null);
+                            break;
+                        case "wrongAmount":
+                            sum_wrong += (int)prop.GetValue(item, null);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            appendRow(new { colspan = getColCount() - 2, style = lastRowStyle, className = lastClassName, value = "合計" },
+                new {   value = sum_correct,  className = lastClassName },
+                new {   value = sum_wrong,  className = lastClassName });//統計資料數
 
         }
     }

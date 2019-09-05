@@ -117,8 +117,6 @@ namespace ReportX.Rep.S5report
                     var bold = cell.GetType().GetProperty("bold");
                     var style = cell.GetType().GetProperty("style");
                     var className = cell.GetType().GetProperty("className");
-                    var sum_c = cell.GetType().GetProperty("sum_c");
-                    var sum_w = cell.GetType().GetProperty("sum_w");
 
 
                     if (value != null) td.data = value.GetValue(cell, null);
@@ -129,8 +127,6 @@ namespace ReportX.Rep.S5report
                     if (bold != null) td.bold = true;
                     if (style != null) td.style = style.GetValue(cell, null).ToString();
                     if (className != null) td.className = className.GetValue(cell, null).ToString();
-                    if (sum_c != null) td.sum_c = sum_c.GetValue(cell, null).ToString();
-                    if (sum_w != null) td.sum_w = sum_w.GetValue(cell, null).ToString();
 
                 }
                 tr.tds.Add(td);

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ReportXTests2.Model
 {
-    public class ModelKBSstaticData
+    public class ModelKBStaticData
     {
         [Present("編號")]
         public int number { get; set; }

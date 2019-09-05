@@ -54,6 +54,7 @@
     <Compile Include="Rep\Model\ModelKBStatic.cs" />
     <Compile Include="Rep\Model\ModelMultiExcel.cs" />
     <Compile Include="Rep\Model\ModelOdt.cs" />
+    <Compile Include="Rep\Model\ModelSignStatus.cs" />
     <Compile Include="Rep\Model\ModelTD.cs" />
     <Compile Include="Rep\Model\ModelTR.cs" />
     <Compile Include="Rep\Model\ModelWord.cs" />
@@ -63,10 +64,15 @@
     <Compile Include="Rep\S5report\AmountReport.cs" />
     <Compile Include="Rep\S5report\KBStatic.cs" />
     <Compile Include="Rep\S5report\KBStaticReport.cs" />
+    <Compile Include="Rep\S5report\SignStatus.cs" />
+    <Compile Include="Rep\S5report\SignStatusReport.cs" />
     <Compile Include="Rep\View\S5View\ViewBodyKBStatic.cs" />
+    <Compile Include="Rep\View\S5View\ViewBodySignStatus.cs" />
     <Compile Include="Rep\View\S5View\ViewKBStatic.cs" />
     <Compile Include="Rep\View\S5View\ViewAmount.cs" />
+    <Compile Include="Rep\View\S5View\ViewSignStatus.cs" />
     <Compile Include="Rep\View\S5View\ViewStyleKBStatic.cs" />
+    <Compile Include="Rep\View\S5View\ViewStyleSignStatus.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
     <Compile Include="Rep\View\S5View\ViewBodyAmount.cs" />
     <Compile Include="Rep\View\ViewBodyOdt.cs" />
