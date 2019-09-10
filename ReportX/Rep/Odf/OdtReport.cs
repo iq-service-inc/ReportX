@@ -73,7 +73,10 @@ namespace ReportX.Rep.Odf
         {
             setCustomStyle(customCSS);
         }
-
+        public OdtReport(DataTable model) : base(model)
+        {
+            setCustomStyle(customCSS);
+        }
         public void setTile(string title)
         {
             setWord(sheetName: title);

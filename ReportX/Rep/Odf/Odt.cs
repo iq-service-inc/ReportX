@@ -4,6 +4,7 @@ using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -51,6 +52,24 @@ namespace ReportX.Rep.Odf
 
             for (int i = 0; i < list_cols.Count; i++)
                 str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
+
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            odt.colNum = cols.Length;
+
+        }
+        public Odt(DataTable data)
+        {
+            trs = new List<ModelTR>();
+            odt = new ModelOdt();
+            odt.style = new ViewStyleOdt();
+
+
+            string[] str_cols = new string[data.Columns.Count];
+
+            for (int i = 0; i < data.Columns.Count; i++)
+                str_cols[i] = data.Columns[i].ToString();
 
 
             oldcols = str_cols; //舊的陣列
@@ -211,6 +230,24 @@ namespace ReportX.Rep.Odf
             odt.body = new ViewBodyOdt(trs, width);
             ViewOdt report = new ViewOdt(odt);
             return report.render();
+        }
+        public void CreateMeta()
+        {
+            var str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            string dirPath = @".\META-INF";
+            if (Directory.Exists(dirPath))
+            {
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", str);
+            }
+            else
+            {
+                Directory.CreateDirectory(dirPath);
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", str);
+            }
         }
     }
 }

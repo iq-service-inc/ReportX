@@ -106,6 +106,5 @@ namespace ReportX.Rep.View
         string template_tr = "<table:table-row table:style-name='TableRow'>{1}</table:table-row>";
         string lastRow = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>";
         string titleRow = "<text:span text:style-name='TitleWord'>{0}</text:span>";
-        //0:style-name='TableCellData' table:number-columns-spanned=\"{0}\"  1:text:style-name="Title" 2:text:style-name="TitleWord" 3:data
     }
 }

@@ -3,6 +3,7 @@ using ReportX.Rep.Model;
 using ReportX.Rep.View.S5View;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -191,7 +192,24 @@ namespace ReportX.Rep.S5report
             ViewKBStatic report = new ViewKBStatic(kbs);
             return report.render();
         }
-
+        public void CreateMeta()
+        {
+            var str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            string dirPath = @".\META-INF";
+            if (Directory.Exists(dirPath))
+            {
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", str);
+            }
+            else
+            {
+                Directory.CreateDirectory(dirPath);
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", str);
+            }
+        }
     }
 
 }

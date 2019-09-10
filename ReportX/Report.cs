@@ -10,10 +10,10 @@ namespace ReportX
 {
     public class Report
     {
+
         public ExcelReport excelResponse<T>(T[] data, string[] cols ,string title, DateTime starting, DateTime ending ,string Creator, bool end = false)
         {
             ExcelReport erp = new ExcelReport(typeof(T));
-            
             if (cols.Length > 0)
             {
                 erp.setcut(cols);
@@ -54,7 +54,7 @@ namespace ReportX
             return wrp;   
 
         }
-        public OdtReport OdtResponse<T>( T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false, DataTable table =null)
+        public OdtReport OdtResponse<T>( T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             OdtReport orp = new OdtReport(typeof(T));
             if (cols.Length > 0)
@@ -67,12 +67,33 @@ namespace ReportX
             orp.setCreator(Creator);
             orp.setCreatedDate();
             orp.setColumn();
-            orp.setData(table);
-            //orp.setData(data);
+            orp.setData(data);
 
             if (end) //如果要顯示結算筆數 end =true;
             {
-                orp.setsum(table);
+                orp.setsum(data);
+            }
+            return orp;
+
+        }
+        public OdtReport OdtResponse(DataTable dtTable, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            OdtReport orp = new OdtReport(dtTable);
+            if (cols.Length > 0)
+            {
+                orp.setcut(cols);
+            }
+
+            orp.setTile(title);
+            orp.setDate(starting, ending);
+            orp.setCreator(Creator);
+            orp.setCreatedDate();
+            orp.setColumn();
+            orp.setData(dtTable);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                orp.setsum(dtTable);
             }
             return orp;
 
