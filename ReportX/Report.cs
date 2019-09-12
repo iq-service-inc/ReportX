@@ -98,6 +98,28 @@ namespace ReportX
             return orp;
 
         }
+        public OdsReport OdsResponse(DataTable dtTable, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            OdsReport orp = new OdsReport(dtTable);
+            if (cols.Length > 0)
+            {
+                orp.setcut(cols);
+            }
+
+            orp.setTile(title);
+            orp.setDate(starting, ending);
+            orp.setCreator(Creator);
+            orp.setCreatedDate();
+            orp.setColumn();
+            orp.setData(dtTable);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                orp.setsum(dtTable);
+            }
+            return orp;
+
+        }
         //綜合板
         public FileReport FileReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
@@ -165,6 +187,28 @@ namespace ReportX
         public SignStatusReport SignStatusReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
         {
             SignStatusReport file = new SignStatusReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
+
+            file.setTile(title);
+            file.setCreator(Creator);
+            file.setCreatedDate(dateTime);
+            file.setCreatedDayRange(firstday, lastdday);
+            file.setColumn();
+            file.setSecondColumn();
+            file.setData(data); ;
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
+        public SignStatusReportOds SignStatusReportOds<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
+        {
+            SignStatusReportOds file = new SignStatusReportOds(typeof(T));
             if (cols.Length > 0)
             {
                 file.setcut(cols);

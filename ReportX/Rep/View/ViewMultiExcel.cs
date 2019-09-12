@@ -19,7 +19,7 @@ namespace ReportX.Rep.View
         public string render()
         {
             string worksheet = String.Join("",m.Select(x=> string.Format(Worksheettemplate, x.report.getsheetName(),x.cid)).ToList()),
-                   bodyrender = String.Join("", m.Select(x => string.Format(bodytemplate, x.cid,x.report.render())).ToList()); 
+                   bodyrender = String.Join("", m.Select(x => string.Format(bodytemplate, x.cid,x.report.render(null))).ToList()); 
 
             return string.Format(template, worksheet, bodyrender);
 

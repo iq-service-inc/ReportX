@@ -1,35 +1,32 @@
 ﻿using ReportX.Rep.Attributes;
 using ReportX.Rep.Common;
 using ReportX.Rep.Model;
-using ReportX.Rep.View;
+using ReportX.Rep.View.S5View;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportX.Rep.Odf
+namespace ReportX.Rep.S5report
 {
-    public  class Odt:AbsOpenOffice
+    public class SignStatusOds:AbsOpenOffice
     {
-
-        private ModelOdt odt;
-
+        private ModelSignStatusOds ss;
         protected override string[] oldcols { get; set; }
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        public Odt(Type model)
+        public MemberInfo[] modeli;
+        public SignStatusOds(Type model)
         {
             trs = new List<ModelTR>();
-            odt = new ModelOdt();
-            odt.style = new ViewStyleOdt();
+            ss = new ModelSignStatusOds();
+            ss.style = new ViewStyleSignStatusOds();
 
             List<MemberInfo> list_cols = new List<MemberInfo>();
-
+            modeli = model.GetMembers();
             foreach (var member in model.GetMembers())
             {
                 Present attr = member.GetCustomAttribute<Present>();
@@ -47,52 +44,37 @@ namespace ReportX.Rep.Odf
                 }
                 list_cols.Insert(inserted_index, member);
             }
-
-            string[] str_cols = new string[list_cols.Count];
-
+            string[] str_cols = new string[list_cols.Count]; //取得標題數量
             for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
-
-
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
-            odt.colNum = cols.Length;
+            ss.colNum = cols.Length;
 
         }
-        public Odt(DataTable data)
-        {
-            trs = new List<ModelTR>();
-            odt = new ModelOdt();
-            odt.style = new ViewStyleOdt();
-
-
-            string[] str_cols = new string[data.Columns.Count];
-
-            for (int i = 0; i < data.Columns.Count; i++)
-                str_cols[i] = data.Columns[i].ToString();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            odt.colNum = cols.Length;
-
-        }
+        // 傳入一個陣列 
         public override void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
-            odt.colNum = cols.Length;
+            cols = intersectResult.ToArray();
+            ss.colNum = cols.Length;
         }
-        public  void setOdt(string author = null, string company = null, string sheetName = null)
+
+        public void setTitle(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
-            if (author != null) odt.author = author;
-            if (company != null) odt.company = company;
-            if (sheetName != null) odt.sheetName = sheetName;
+            if (author != null) ss.author = author;
+            if (company != null) ss.company = company;
+            if (sheetName != null) ss.sheetName = sheetName;
+            if (dateTime != null) ss.datetime = dateTime;
+            if (dateRange != null) ss.dateRange = dateRange;
         }
+
         public override void setCustomStyle(string css)
         {
-            odt.style.setCustomCSS(css);
+            ss.style.setCustomCSS(css);
         }
+
         public override ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
             ModelTR tr = new ModelTR();
@@ -101,17 +83,19 @@ namespace ReportX.Rep.Odf
             td.data = data;
             td.className = className;
             td.style = trStyle;
-            td.colspan = odt.colNum;
+            td.colspan = ss.colNum;
             tr.tds.Add(td);
             trs.Add(tr);
             return tr;
         }
+
         public override string render(int? width = null)
         {
-            odt.body = new ViewBodyOdt(trs  , width);
-            ViewOdt report = new ViewOdt(odt);
+
+            ss.body = new ViewBodySignStatusOds(trs, width);
+            ViewSignStatusOds report = new ViewSignStatusOds(ss);
             return report.render();
         }
-        
+
     }
 }

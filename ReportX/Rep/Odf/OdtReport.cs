@@ -79,10 +79,9 @@ namespace ReportX.Rep.Odf
         }
         public void setTile(string title)
         {
-            setWord(sheetName: title);
+            setOdt(sheetName: title);
             appendFullRow(title, "TableCellData", "Title");
         }
-
         public void setDate(DateTime from, DateTime? to = null)
         {
             if (from == null) return;
@@ -93,48 +92,42 @@ namespace ReportX.Rep.Odf
 
             appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
         }
-
         public void setCreator(string creator)
         {
-            setWord(author: creator);
+            setOdt(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
         }
-
         public void setCreatedDate()
         {
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
             appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
         }
-
         public void setColumn()
         {
             ModelTR col = appendRow(cols);
             foreach (ModelTD td in col.tds)
                 td.className = "column";
         }
-
         public void setData<T>(T[] data)
         {
             appendTable(data);
         }
-        public void setData (DataTable data)
+        public void setData(DataTable data)
         {
             appendTable(data);
         }
-        // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
             changecut(cut);
         }
-
-        public void setsum<T>(T[] data) //總筆數
+        public  void setsum<T>(T[] data) //總筆數
         {
             string lastRowStyle = "TotalCell"; //預設CSS
             string lastClassName = "Word";
             appendRow(new { value = data.Length, colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
 
         }
-        public void setsum(DataTable data) //總筆數
+        public  void setsum(DataTable data) //總筆數
         {
             string lastRowStyle = "TotalCell"; //預設CSS
             string lastClassName = "Word";

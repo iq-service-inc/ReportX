@@ -1,4 +1,5 @@
 ﻿using ReportX.Rep.Attributes;
+using ReportX.Rep.Common;
 using ReportX.Rep.Model;
 using ReportX.Rep.View;
 using System;
@@ -8,17 +9,17 @@ using System.Reflection;
 
 namespace ReportX.Rep.Integration
 {
-    public class Integration
+    public class Integration : AbsOffice
     {
         //存取器
-        protected string[] oldcols;
-        protected string[] newcols;
-
-        public string[] cols;
+        protected override string[] oldcols { get; set; }
+        protected override string[] newcols { get; set; }
+        protected override List<ModelTR> trs { get; }
+        public override string[] cols { get; set; }
         private ModelExcel excel;
         private ModelWord word;
 
-        private List<ModelTR> trs;
+
         public MemberInfo[] modeli;
 
         public Integration(Type model)
@@ -62,7 +63,7 @@ namespace ReportX.Rep.Integration
 
         }
         // 傳入一個陣列 
-        public void changecut(string[] cut)
+        public override void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
@@ -71,32 +72,26 @@ namespace ReportX.Rep.Integration
             word.colNum = cols.Length;
         }
 
-
-        public string formatDate(DateTime dateTime1, DateTime dateTime2)
-        {
-            throw new NotImplementedException();
-        }
-
         public void setData(string author = null, string company = null, string sheetName = null)
         {
             if (author != null)
                 excel.author = author;
-                word.author = author;
+            word.author = author;
             if (company != null)
                 excel.company = company;
-                word.company = company;
+            word.company = company;
             if (sheetName != null)
                 excel.sheetName = sheetName;
-                word.sheetName = sheetName;
+            word.sheetName = sheetName;
         }
 
-        public void setCustomStyle(string css)
+        public override void setCustomStyle(string css)
         {
             excel.style.setCustomCSS(css);
             word.style.setCustomCSS(css);
         }
 
-        public ModelTR appendFullRow(string data, string trStyle = null, string className = null)
+        public override  ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
             ModelTR tr = new ModelTR();
             ModelTD td = new ModelTD();
@@ -113,86 +108,7 @@ namespace ReportX.Rep.Integration
             return tr;
         }
 
-        public ModelTR appendRow(params object[] data)
-        {
-            ModelTR tr = new ModelTR();
-            tr.tds = new List<ModelTD>();
-            foreach (object cell in data)
-            {
-
-                ModelTD td = new ModelTD();
-                var value = cell.GetType().GetProperty("value");
-
-                if (value == null)
-                {
-                    td.data = cell.ToString();
-                }
-                else
-                {
-                    var colspan = cell.GetType().GetProperty("colspan");
-                    var rowspan = cell.GetType().GetProperty("rowspan");
-                    var fontSize = cell.GetType().GetProperty("fontSize");
-                    var align = cell.GetType().GetProperty("align");
-                    var bold = cell.GetType().GetProperty("bold");
-                    var style = cell.GetType().GetProperty("style");
-                    var className = cell.GetType().GetProperty("className");
-
-                    if (value != null) td.data = value.GetValue(cell, null);
-                    if (colspan != null) td.colspan = (int)colspan.GetValue(cell, null);
-                    if (rowspan != null) td.rowspan = (int)rowspan.GetValue(cell, null);
-                    if (fontSize != null) td.fontSize = fontSize.GetValue(cell, null).ToString();
-                    if (align != null) td.align = align.GetValue(cell, null).ToString();
-                    if (bold != null) td.bold = true;
-                    if (style != null) td.style = style.GetValue(cell, null).ToString();
-                    if (className != null) td.className = style.GetValue(cell, null).ToString();
-                }
-                tr.tds.Add(td);
-            }
-            trs.Add(tr);
-            return tr;
-        }
-
-        public void appendTable<T>(T[] data, string trStyle = null, string className = null)
-        {
-
-            foreach (T tuple in data)
-            {
-                ModelTD[] tds = new ModelTD[cols.Length];
-                ModelTR tr = new ModelTR();
-                tr.tds = new List<ModelTD>();
-                tr.style = trStyle;
-                tr.className = className;
-                foreach (var prop in tuple.GetType().GetProperties())
-                {
-                    try
-                    {
-                        Present attr = prop.GetCustomAttribute<Present>();
-                        if (attr == null) continue;
-                        int colinx = Array.IndexOf(cols, attr.getName());
-                        object value = prop.GetValue(tuple, null);
-                        tds[colinx] = new ModelTD()
-                        {
-                            data = value
-                        };
-                    }
-                    catch (Exception)
-                    {
-                        continue;
-                    }
-                }
-                foreach (ModelTD td in tds)
-                    tr.tds.Add(td);
-                trs.Add(tr);
-            }
-        }
-
-        public int getColCount()
-        {
-            return cols.Length;
-        }
-
-
-        public string render(int? width = null, string File_type = "excel")
+        public override string render(int? width = null, string File_type = "excel")
         {
             if (File_type == "excel")
             {

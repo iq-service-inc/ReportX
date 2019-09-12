@@ -91,7 +91,7 @@ namespace ReportX.Rep.Integration
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
-            changecut(cut);
+            changecut(cut);   
         }
     }
 }

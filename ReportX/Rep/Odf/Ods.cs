@@ -5,7 +5,6 @@ using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace ReportX.Rep.Odf
 {
-    public  class Odt:AbsOpenOffice
+    public class Ods:AbsOpenOffice
     {
-
-        private ModelOdt odt;
+        private ModelOds ods;
 
         protected override string[] oldcols { get; set; }
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        public Odt(Type model)
+
+        public Ods(Type model)
         {
             trs = new List<ModelTR>();
-            odt = new ModelOdt();
-            odt.style = new ViewStyleOdt();
+            ods = new ModelOds();
+            ods.style = new ViewStyleOds();
 
             List<MemberInfo> list_cols = new List<MemberInfo>();
 
@@ -56,14 +55,14 @@ namespace ReportX.Rep.Odf
 
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
-            odt.colNum = cols.Length;
+            ods.colNum = cols.Length;
 
         }
-        public Odt(DataTable data)
+        public Ods(DataTable data)
         {
             trs = new List<ModelTR>();
-            odt = new ModelOdt();
-            odt.style = new ViewStyleOdt();
+            ods = new ModelOds();
+            ods.style = new ViewStyleOds();
 
 
             string[] str_cols = new string[data.Columns.Count];
@@ -74,24 +73,25 @@ namespace ReportX.Rep.Odf
 
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
-            odt.colNum = cols.Length;
+            ods.colNum = cols.Length;
 
         }
         public override void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
-            odt.colNum = cols.Length;
+            cols = intersectResult.ToArray();
+            ods.colNum = cols.Length;
         }
-        public  void setOdt(string author = null, string company = null, string sheetName = null)
+        public void setOds(string author = null, string company = null, string sheetName = null)
         {
-            if (author != null) odt.author = author;
-            if (company != null) odt.company = company;
-            if (sheetName != null) odt.sheetName = sheetName;
+            if (author != null) ods.author = author;
+            if (company != null) ods.company = company;
+            if (sheetName != null) ods.sheetName = sheetName;
         }
         public override void setCustomStyle(string css)
         {
-            odt.style.setCustomCSS(css);
+            ods.style.setCustomCSS(css);
         }
         public override ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
@@ -101,17 +101,17 @@ namespace ReportX.Rep.Odf
             td.data = data;
             td.className = className;
             td.style = trStyle;
-            td.colspan = odt.colNum;
+            td.colspan = ods.colNum;
             tr.tds.Add(td);
             trs.Add(tr);
             return tr;
         }
         public override string render(int? width = null)
         {
-            odt.body = new ViewBodyOdt(trs  , width);
-            ViewOdt report = new ViewOdt(odt);
+            ods.body = new ViewBodyOds(trs, width);
+            ViewOds report = new ViewOds(ods);
             return report.render();
         }
-        
+
     }
 }

@@ -18,8 +18,8 @@ namespace ReportX.Tests
         [TestMethod()]
         public void excelResponse()
         {
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
-            for (int i = 50 - 1; i >= 0; i--)
+            ModelEmployeeTicket[] data = new ModelEmployeeTicket[1];
+            for (int i = 1 - 1; i >= 0; i--)
             {
                 string s = Guid.NewGuid().ToString("N");
                 ModelEmployeeTicket tmp = new ModelEmployeeTicket
@@ -34,20 +34,21 @@ namespace ReportX.Tests
                 data[i] = tmp;
             }
 
-            string[] cols = new string[5];
+            string[] cols = new string[6];
 
             cols[0] = "姓名";
             cols[1] = "資料";
             cols[2] = "ID";
             cols[3] = "電話";
-
+            cols[4] = "編號";
+            cols[5] = "標題";
             string title = "今日工事";
 
             Report Rpt = new Report();
 
-            Excel excelRes = Rpt.excelResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘");
+            Excel excelRes = Rpt.excelResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
             //excelRes.setCustomStyle();
-            string res = excelRes.render();
+            string res = excelRes.render(null);
             if (File.Exists("data.xls"))
                 File.Delete("data.xls");
             File.AppendAllText("data.xls", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
@@ -249,7 +250,7 @@ namespace ReportX.Tests
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
-            AmountRes.CreateMeta();
+            AmountRes.CreateMeta("odt");
             Assert.IsNotNull(res);
             if (File.Exists("content.xml"))
             {
@@ -344,7 +345,7 @@ namespace ReportX.Tests
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
-            KBSRes.CreateMeta();
+            KBSRes.CreateMeta("odt");
             Assert.IsNotNull(res);
             if (File.Exists("content.xml"))
             {
@@ -406,8 +407,8 @@ namespace ReportX.Tests
             }
             string beforeMouthOneDay = beforeYear + "/" + beforeMouth + "/" + "1"; //上個月第一天
             string beforeMouthLastDay = beforeYear + "/" + beforeMouth + "/" + DateTime.DaysInMonth(year, beforeMouth); //上個月最後一天
-            ModelSignStatusData[] data = new ModelSignStatusData[20];
-            for (int i = 20 - 1; i >= 0; i--)
+            ModelSignStatusData[] data = new ModelSignStatusData[12];
+            for (int i = 12 - 1; i >= 0; i--)
             {
                 var addknowledgeReview = r.Next(0, 3);
                 var addknowledgeBack = r.Next(0, 3);
@@ -457,7 +458,7 @@ namespace ReportX.Tests
             cols[13] = "刪除知識生效";
             cols[14] = "刪除知識退件";
 
-            string title = "知識統計表";
+            string title = "知識審核狀況統計表";
             Report Rpt = new Report();
             SignStatus SSRes = Rpt.SignStatusReport(data, cols, title, DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"), beforeMouthOneDay, beforeMouthLastDay, "林家弘", true);
             var width = SSRes.getColCount();
@@ -465,7 +466,7 @@ namespace ReportX.Tests
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
-            SSRes.CreateMeta();
+            SSRes.CreateMeta("odt");
             Assert.IsNotNull(res);
             if (File.Exists("content.xml"))
             {
@@ -508,7 +509,6 @@ namespace ReportX.Tests
                     }
             }
         }
-
         [TestMethod()]
         public void OdtResponseTest()
         {
@@ -551,11 +551,11 @@ namespace ReportX.Tests
             if (File.Exists("content.xml"))
                 File.Delete("content.xml");
             File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
-            odtRes.CreateMeta();
+            odtRes.CreateMeta("odt");
             Assert.IsNotNull(res);
             if (File.Exists("content.xml"))
             {
-                string[] test =new string[2];
+                string[] test = new string[2];
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
                 test[0] = inputFile;
@@ -564,7 +564,7 @@ namespace ReportX.Tests
                 using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
                     try
                     {
-        
+
                         using (var zip = new ZipOutputStream(output))
                         {
                             zip.SetLevel(9);
@@ -590,7 +590,216 @@ namespace ReportX.Tests
                     }
                     catch (Exception ex)
                     {
-                    }  
+                    }
+            }
+        }
+
+        [TestMethod()]
+        public void OdsResponseTest()
+        {
+            DataTable dtTable = new DataTable("test");
+            DataRow row;
+            DataColumn[] colss ={
+                                  new DataColumn("ID",typeof(int)),
+                                  new DataColumn("標題",typeof(string)),
+                                  new DataColumn("姓名",typeof(string)),
+                                  new DataColumn("編號",typeof(decimal)),
+                                  new DataColumn("資料",typeof(string)),
+                                  new DataColumn("電話",typeof(string))
+                              };
+            dtTable.Columns.AddRange(colss);
+            // 建立欄位
+            // 新增資料到DataTable
+            for (int i = 1; i <= 10; i++)
+            {
+                string a = Guid.NewGuid().ToString("N");
+                row = dtTable.NewRow();
+                row["ID"] = i;
+                row["標題"] = "測試 " + i.ToString();
+                row["姓名"] = "SOL_" + i;
+                row["編號"] = "123";
+                row["資料"] = a.ToString();
+                row["電話"] = "0923456789";
+                dtTable.Rows.Add(row);
+            }
+            string[] cols = new string[6];
+
+            cols[0] = "姓名";
+            cols[1] = "資料";
+            cols[2] = "ID";
+            cols[3] = "電話";
+
+            string title = "今日工事";
+            Report Rpt = new Report();
+            Ods odsRes = Rpt.OdsResponse(dtTable, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            var width = odsRes.getColCount();
+            string res = odsRes.render(width);
+            if (File.Exists("content.xml"))
+                File.Delete("content.xml");
+            File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            odsRes.CreateMeta("ods");
+            Assert.IsNotNull(res);
+            if (File.Exists("content.xml"))
+            {
+                string[] test = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                test[0] = inputFile;
+                test[1] = inputData;
+                string outputFile = @".\result.ods";
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in test)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            }
+        }
+
+        [TestMethod()]
+        public void SignStatusReportOdsTest()
+        {
+            Random r = new Random();
+            int year = DateTime.Now.Year;//當前年
+            int mouth = DateTime.Now.Month;//當前月
+            int beforeYear = 0;
+            int beforeMouth = 0;
+            if (mouth <= 1)//如果當前月是一月，那麽年份就要減1
+            {
+                beforeYear = year - 1;
+                beforeMouth = 12;//上個月
+            }
+            else
+            {
+                beforeYear = year;
+                beforeMouth = mouth - 1;//上個月
+            }
+            string beforeMouthOneDay = beforeYear + "/" + beforeMouth + "/" + "1"; //上個月第一天
+            string beforeMouthLastDay = beforeYear + "/" + beforeMouth + "/" + DateTime.DaysInMonth(year, beforeMouth); //上個月最後一天
+            ModelSignStatusData[] data = new ModelSignStatusData[12];
+            for (int i = 12 - 1; i >= 0; i--)
+            {
+                var addknowledgeReview = r.Next(0, 3);
+                var addknowledgeBack = r.Next(0, 3);
+                var addknowledgeWork = r.Next(0, 3);
+                var deleteknowledgeReview = r.Next(0, 3);
+                var deleteknowledgeBack = r.Next(0, 3);
+                var deleteknowledgeWork = r.Next(0, 3);
+                var updateknowledgeReview = r.Next(0, 3);
+                var updateknowledgeBack = r.Next(0, 3);
+                var updateknowledgeWork = r.Next(0, 3);
+                var total = addknowledgeReview + addknowledgeBack + addknowledgeWork + deleteknowledgeReview + deleteknowledgeBack + deleteknowledgeWork
+             + updateknowledgeReview + updateknowledgeBack + updateknowledgeWork;
+                string s = Guid.NewGuid().ToString("N");
+                ModelSignStatusData tmp = new ModelSignStatusData
+                {
+                    sequence = i + 1,
+                    reviewDate = DateTime.Now.AddDays(i).ToString("yyyy/MM/dd"),
+                    addknowledgeReview = addknowledgeReview,
+                    addknowledgeBack = addknowledgeBack,
+                    addknowledgeWork = addknowledgeWork,
+                    deleteknowledgeReview = deleteknowledgeReview,
+                    deleteknowledgeBack = deleteknowledgeBack,
+                    deleteknowledgeWork = deleteknowledgeWork,
+                    updateknowledgeReview = updateknowledgeReview,
+                    updateknowledgeBack = updateknowledgeBack,
+                    updateknowledgeWork = updateknowledgeWork,
+                    total = total
+                };
+                data[i] = tmp;
+            }
+
+            var datetime = DateTime.Now.ToString("yyyyMMddhhmmss");
+            string[] cols = new string[15];
+            cols[0] = "順序";
+            cols[1] = "審核起始日";
+            cols[2] = "新增知識";
+            cols[3] = "修改知識";
+            cols[4] = "刪除知識";
+            cols[5] = "合計";
+            cols[6] = "新增知識審核";
+            cols[7] = "新增知識生效";
+            cols[8] = "新增知識退件";
+            cols[9] = "修改知識審核";
+            cols[10] = "修改知識生效";
+            cols[11] = "修改知識退件";
+            cols[12] = "刪除知識審核";
+            cols[13] = "刪除知識生效";
+            cols[14] = "刪除知識退件";
+
+            string title = "知識審核狀況統計表";
+            Report Rpt = new Report();
+            SignStatusOds SSRes = Rpt.SignStatusReportOds(data, cols, title, DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"), beforeMouthOneDay, beforeMouthLastDay, "林家弘", true);
+            var width = SSRes.getColCount();
+            string res = SSRes.render(width);
+            if (File.Exists("content.xml"))
+                File.Delete("content.xml");
+            File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            SSRes.CreateMeta("ods");
+            Assert.IsNotNull(res);
+            if (File.Exists("content.xml"))
+            {
+                string[] test = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                test[0] = inputFile;
+                test[1] = inputData;
+                string outputFile = @"./SignStatuss(" + datetime + ").ods";
+
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in test)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
             }
         }
     }

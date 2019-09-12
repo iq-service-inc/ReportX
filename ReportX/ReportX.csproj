@@ -41,10 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ToReport.cs" />
+    <Compile Include="Rep\Common\AbsOffice.cs" />
+    <Compile Include="Rep\Common\AbsOpenOffice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Rep\Attribute\Present.cs" />
+    <Compile Include="Rep\Common\ReportCreate.cs" />
+    <Compile Include="Rep\Common\IReportX.cs" />
     <Compile Include="Rep\Excel\Excel.cs" />
     <Compile Include="Rep\Excel\ExcelReport.cs" />
     <Compile Include="Rep\Excel\MultiExcel.cs" />
@@ -54,11 +57,15 @@
     <Compile Include="Rep\Model\ModelExcelcs.cs" />
     <Compile Include="Rep\Model\ModelKBStatic.cs" />
     <Compile Include="Rep\Model\ModelMultiExcel.cs" />
+    <Compile Include="Rep\Model\ModelOds.cs" />
     <Compile Include="Rep\Model\ModelOdt.cs" />
     <Compile Include="Rep\Model\ModelSignStatus.cs" />
+    <Compile Include="Rep\Model\ModelSignStatusOds.cs" />
     <Compile Include="Rep\Model\ModelTD.cs" />
     <Compile Include="Rep\Model\ModelTR.cs" />
     <Compile Include="Rep\Model\ModelWord.cs" />
+    <Compile Include="Rep\Odf\Ods.cs" />
+    <Compile Include="Rep\Odf\OdsReport.cs" />
     <Compile Include="Rep\Odf\Odt.cs" />
     <Compile Include="Rep\Odf\OdtReport.cs" />
     <Compile Include="Rep\S5report\Amount.cs" />
@@ -67,28 +74,38 @@
     <Compile Include="Rep\S5report\KBStaticReport.cs" />
     <Compile Include="Rep\S5report\SignStatus.cs" />
     <Compile Include="Rep\S5report\SignStatusReport.cs" />
+    <Compile Include="Rep\S5report\SignStatusReportOds.cs" />
+    <Compile Include="Rep\S5report\SignStatusOds.cs" />
+    <Compile Include="Rep\View\S5View\ViewStyleSignStatusOds.cs" />
     <Compile Include="Rep\View\S5View\ViewBodyKBStatic.cs" />
     <Compile Include="Rep\View\S5View\ViewBodySignStatus.cs" />
+    <Compile Include="Rep\View\S5View\ViewBodySignStatusOds.cs" />
     <Compile Include="Rep\View\S5View\ViewKBStatic.cs" />
     <Compile Include="Rep\View\S5View\ViewAmount.cs" />
     <Compile Include="Rep\View\S5View\ViewSignStatus.cs" />
+    <Compile Include="Rep\View\S5View\ViewSignStatusOds.cs" />
     <Compile Include="Rep\View\S5View\ViewStyleKBStatic.cs" />
     <Compile Include="Rep\View\S5View\ViewStyleSignStatus.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
     <Compile Include="Rep\View\S5View\ViewBodyAmount.cs" />
+    <Compile Include="Rep\View\ViewBodyOds.cs" />
     <Compile Include="Rep\View\ViewBodyOdt.cs" />
     <Compile Include="Rep\View\ViewExcel.cs" />
     <Compile Include="Rep\View\ViewMultiExcel.cs" />
+    <Compile Include="Rep\View\ViewOds.cs" />
     <Compile Include="Rep\View\ViewOdt.cs" />
     <Compile Include="Rep\View\ViewStyle.cs" />
     <Compile Include="Rep\View\S5View\ViewStyleAmount.cs" />
+    <Compile Include="Rep\View\ViewStyleOds.cs" />
     <Compile Include="Rep\View\ViewStyleOdt.cs" />
     <Compile Include="Rep\View\ViewWord.cs" />
     <Compile Include="Rep\Word\Word.cs" />
     <Compile Include="Rep\Word\WordReport.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReportX.nuspec" />
+    <None Include="ReportX.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

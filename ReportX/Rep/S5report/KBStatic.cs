@@ -1,4 +1,5 @@
 ﻿using ReportX.Rep.Attributes;
+using ReportX.Rep.Common;
 using ReportX.Rep.Model;
 using ReportX.Rep.View.S5View;
 using System;
@@ -11,15 +12,15 @@ using System.Threading.Tasks;
 
 namespace ReportX.Rep.S5report
 {
-    public class KBStatic
+    public class KBStatic : AbsOpenOffice
     {
 
-        protected string[] oldcols;
-        protected string[] newcols;
 
-        public string[] cols;
         private ModelKBStatic kbs;
-        private List<ModelTR> trs;
+        protected override string[] oldcols { get; set; }
+        protected override string[] newcols { get; set; }
+        protected override List<ModelTR> trs { get; }
+        public override string[] cols { get; set; }
         public MemberInfo[] modeli;
         public KBStatic(Type model)
         {
@@ -54,36 +55,15 @@ namespace ReportX.Rep.S5report
             kbs.colNum = cols.Length;
 
         }
-        // 傳入一個陣列 
-        public void changecut(string[] cut)
+        public override void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
             cols = intersectResult.ToArray();
             kbs.colNum = cols.Length;
         }
-
-
-        public string formatDate(DateTime dateTime1, DateTime dateTime2)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setTitle(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
-        {
-            if (author != null) kbs.author = author;
-            if (company != null) kbs.company = company;
-            if (sheetName != null) kbs.sheetName = sheetName;
-            if (dateTime != null) kbs.datetime = dateTime;
-            if (dateRange != null) kbs.dateRange = dateRange;
-        }
-
-        public void setCustomStyle(string css)
-        {
-            kbs.style.setCustomCSS(css);
-        }
-
-        public ModelTR appendFullRow(string data, string trStyle = null, string className = null)
+        // 傳入一個陣列 
+        public override ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
             ModelTR tr = new ModelTR();
             ModelTD td = new ModelTD();
@@ -96,120 +76,26 @@ namespace ReportX.Rep.S5report
             trs.Add(tr);
             return tr;
         }
-
-        public ModelTR appendRow(params object[] data)
+        public void setTitle(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
-            ModelTR tr = new ModelTR();
-            tr.tds = new List<ModelTD>();
-            foreach (object cell in data)
-            {
-
-                ModelTD td = new ModelTD();
-                var value = cell.GetType().GetProperty("value");
-
-                if (value == null)
-                {
-                    td.data = cell.ToString();
-                }
-                else
-                {
-                    var colspan = cell.GetType().GetProperty("colspan");
-                    var rowspan = cell.GetType().GetProperty("rowspan");
-                    var fontSize = cell.GetType().GetProperty("fontSize");
-                    var align = cell.GetType().GetProperty("align");
-                    var bold = cell.GetType().GetProperty("bold");
-                    var style = cell.GetType().GetProperty("style");
-                    var className = cell.GetType().GetProperty("className");
-                    var sum_c = cell.GetType().GetProperty("sum_c");
-                    var sum_w = cell.GetType().GetProperty("sum_w");
-
-
-                    if (value != null) td.data = value.GetValue(cell, null);
-                    if (colspan != null) td.colspan = (int)colspan.GetValue(cell, null);
-                    if (rowspan != null) td.rowspan = (int)rowspan.GetValue(cell, null);
-                    if (fontSize != null) td.fontSize = fontSize.GetValue(cell, null).ToString();
-                    if (align != null) td.align = align.GetValue(cell, null).ToString();
-                    if (bold != null) td.bold = true;
-                    if (style != null) td.style = style.GetValue(cell, null).ToString();
-                    if (className != null) td.className = className.GetValue(cell, null).ToString();
-
-                }
-                tr.tds.Add(td);
-            }
-            trs.Add(tr);
-            return tr;
+            if (author != null) kbs.author = author;
+            if (company != null) kbs.company = company;
+            if (sheetName != null) kbs.sheetName = sheetName;
+            if (dateTime != null) kbs.datetime = dateTime;
+            if (dateRange != null) kbs.dateRange = dateRange;
         }
-
-        public void appendTable<T>(T[] data, string trStyle = null, string className = null)
+        public override void setCustomStyle(string css)
         {
-
-            foreach (T tuple in data)
-            {
-                ModelTD[] tds = new ModelTD[cols.Length];
-                ModelTR tr = new ModelTR();
-                tr.tds = new List<ModelTD>();
-                tr.style = trStyle;
-                tr.className = className;
-                foreach (var prop in tuple.GetType().GetProperties())
-                {
-                    try
-                    {
-                        Present attr = prop.GetCustomAttribute<Present>();
-                        if (attr == null) continue;
-                        int colinx = Array.IndexOf(cols, attr.getName());
-                        object value = prop.GetValue(tuple, null);
-                        tds[colinx] = new ModelTD()
-                        {
-                            col = attr.getName(),
-                            data = value
-                        };
-                    }
-                    catch (Exception)
-                    {
-                        continue;
-                    }
-                }
-                foreach (ModelTD td in tds)
-                    tr.tds.Add(td);
-                trs.Add(tr);
-            }
+            kbs.style.setCustomCSS(css);
         }
-
-        public int getColCount()
-        {
-            return cols.Length;
-        }
-
-        public string getsheetName()
-        {
-            return kbs.sheetName;
-        }
-
-        public string render(int? width = null)
+        public override string render(int? width = null)
         {
 
             kbs.body = new ViewBodyKBStatic(trs, width);
             ViewKBStatic report = new ViewKBStatic(kbs);
             return report.render();
         }
-        public void CreateMeta()
-        {
-            var str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-            string dirPath = @".\META-INF";
-            if (Directory.Exists(dirPath))
-            {
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
-            else
-            {
-                Directory.CreateDirectory(dirPath);
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
-        }
+
     }
 
 }
