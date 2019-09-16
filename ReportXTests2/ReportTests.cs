@@ -802,5 +802,102 @@ namespace ReportX.Tests
                     }
             }
         }
+
+        [TestMethod()]
+        public void KBStaticReportOdsTest()
+        {
+                Random r = new Random();
+                int year = DateTime.Now.Year;//當前年
+                int mouth = DateTime.Now.Month;//當前月
+                int beforeYear = 0;
+                int beforeMouth = 0;
+                if (mouth <= 1)//如果當前月是一月，那麽年份就要減1
+                {
+                    beforeYear = year - 1;
+                    beforeMouth = 12;//上個月
+                }
+                else
+                {
+                    beforeYear = year;
+                    beforeMouth = mouth - 1;//上個月
+                }
+                string beforeMouthOneDay = beforeYear + "/" + beforeMouth + "/" + "1"; //上個月第一天
+                string beforeMouthLastDay = beforeYear + "/" + beforeMouth + "/" + DateTime.DaysInMonth(year, beforeMouth); //上個月最後一天
+                ModelKBStaticData[] data = new ModelKBStaticData[5];
+                for (int i = 5 - 1; i >= 0; i--)
+                {
+                    int num = r.Next(0, 30);
+                    int numw = r.Next(0, 5);
+                    string s = Guid.NewGuid().ToString("N");
+                    ModelKBStaticData tmp = new ModelKBStaticData
+                    {
+                        number = i + 1,
+                        knowledge = "目錄" + i,
+                        knowledgeTitle = "標題" + i,
+                        CreatedDate = DateTime.Now.ToString("yyyy/MM/dd hh:mm"),
+                        Creater = "建立者" + i
+
+                    };
+                    data[i] = tmp;
+                }
+
+                var datetime = DateTime.Now.ToString("yyyyMMddhhmmss");
+                string[] cols = new string[5];
+                cols[0] = "編號";
+                cols[1] = "知識目錄";
+                cols[2] = "知識標題";
+                cols[3] = "建立時間";
+                cols[4] = "建立人員";
+                string title = "知識統計表";
+                Report Rpt = new Report();
+                KBStaticOds KBSRes = Rpt.KBStaticReportOds(data, cols, title, DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"), beforeMouthOneDay, beforeMouthLastDay, "林家弘");
+                var width = KBSRes.getColCount();
+                string res = KBSRes.render(width);
+                if (File.Exists("content.xml"))
+                    File.Delete("content.xml");
+                File.AppendAllText("content.xml", res); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+                KBSRes.CreateMeta("ods");
+
+                if (File.Exists("content.xml"))
+                {
+                    string[] test = new string[2];
+                    string inputFile = @"content.xml";
+                    string inputData = @"META-INF/manifest.xml";
+                    test[0] = inputFile;
+                    test[1] = inputData;
+                    string outputFile = @"./KBStatics(" + datetime + ").ods";
+                    using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                        try
+                        {
+
+                            using (var zip = new ZipOutputStream(output))
+                            {
+                                zip.SetLevel(9);
+                                byte[] buffer = new byte[4096];
+                                foreach (string file in test)
+                                {
+                                    ZipEntry entry = new ZipEntry(file);
+                                    entry.DateTime = DateTime.Now;
+                                    zip.PutNextEntry(entry);
+                                    using (FileStream fs = System.IO.File.OpenRead(file))
+                                    {
+                                        int sourceBytes;
+                                        do
+                                        {
+                                            sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                            zip.Write(buffer, 0, sourceBytes);
+                                        } while (sourceBytes > 0);
+                                    }
+                                }
+                                zip.Finish();
+                                zip.Close();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                }
+            
+        }
     }
 }

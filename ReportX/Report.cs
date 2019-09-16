@@ -219,7 +219,27 @@ namespace ReportX
             file.setCreatedDate(dateTime);
             file.setCreatedDayRange(firstday, lastdday);
             file.setColumn();
-            file.setSecondColumn();
+            file.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
+        public KBStaticOds KBStaticReportOds<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
+        {
+            KBStaticReportOds file = new KBStaticReportOds(typeof(T));
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
+
+            file.setTile(title);
+            file.setCreator(Creator);
+            file.setCreatedDate(dateTime);
+            file.setCreatedDayRange(firstday, lastdday);
+            file.setColumn();
             file.setData(data); ;
 
             if (end) //如果要顯示結算筆數 end =true;
