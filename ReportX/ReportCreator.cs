@@ -11,7 +11,8 @@ namespace ReportX
 
     public class ReportCreator<T> where T : IReportX   
     {
-        static T report { get; set; } 
+        static T report { get; set; }
+
 
         public MemberInfo[] modeli;
         protected Type type { get; set; }
@@ -60,10 +61,10 @@ namespace ReportX
             
             excel.colNum = cols.Length;
             word.colNum = cols.Length;
+            report =(T)Activator.CreateInstance(typeof(T), type);
         }
         public string render()
         {
-            report = (T)Activator.CreateInstance(typeof(T));
             return report.render();
         }
 
@@ -75,7 +76,6 @@ namespace ReportX
 
             string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
                    date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-            report = (T)Activator.CreateInstance(typeof(T),sheetName);
             report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
         }
         public void setCreator(string creator)
@@ -85,7 +85,6 @@ namespace ReportX
         }
         public void setTile(string title)
         {
-            report = (T)Activator.CreateInstance(typeof(T), sheetName);
             report.setData(sheetName : title);
             report.appendFullRow(title, null, "r-header-title");
         }
@@ -118,7 +117,6 @@ namespace ReportX
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
-            report = (T)Activator.CreateInstance(typeof(T), sheetName);
             report.changecut(cut);
         }
     }

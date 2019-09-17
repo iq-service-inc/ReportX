@@ -65,8 +65,7 @@ namespace ReportX.Tests
             cols[1] = "資料";
             cols[2] = "ID";
             cols[3] = "電話";
-            cols[4] = "編號";
-            cols[5] = "標題";
+
             string title = "今日工事";
 
             Report Rpt = new Report();
@@ -934,7 +933,7 @@ namespace ReportX.Tests
             cols[3] = "電話";
 
             string title = "今日工事";
-            ReportCreator<WordReport> file = new ReportCreator<WordReport>(typeof(ModelKBStaticData));
+            ReportCreator<WordReport> file = new ReportCreator<WordReport>(typeof(ModelEmployeeTicket));
             //file.setArray(typeof(ModelEmployeeTicket));
             if (cols.Length > 0)
             {

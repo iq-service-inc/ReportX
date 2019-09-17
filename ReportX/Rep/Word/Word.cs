@@ -24,14 +24,7 @@ namespace ReportX.Rep.Word
         public Type model { get; set; }
         public Word(Type model)
         {
-            if (model == null)
-            {
-                trs = new List<ModelTR>();
-                word = new ModelWord();
-                word.style = new ViewStyle();
-            }
-            else
-            {
+            
                 trs = new List<ModelTR>();
                 word = new ModelWord();
                 word.style = new ViewStyle();
@@ -65,7 +58,7 @@ namespace ReportX.Rep.Word
                 oldcols = str_cols; //舊的陣列
                 cols = str_cols;
                 word.colNum = cols.Length;
-            }
+            
         }
 
         // 傳入一個陣列 
