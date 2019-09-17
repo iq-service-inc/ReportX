@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReportCreator.cs" />
     <Compile Include="Rep\Common\AbsOffice.cs" />
     <Compile Include="Rep\Common\AbsOpenOffice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Rep\Attribute\Present.cs" />
-    <Compile Include="Rep\Common\ReportCreate.cs" />
     <Compile Include="Rep\Common\IReportX.cs" />
     <Compile Include="Rep\Excel\Excel.cs" />
     <Compile Include="Rep\Excel\ExcelReport.cs" />

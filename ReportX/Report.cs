@@ -1,4 +1,5 @@
-﻿using ReportX.Rep.Excel;
+﻿using ReportX.Rep.Common;
+using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
 using ReportX.Rep.Odf;
 using ReportX.Rep.S5report;
@@ -11,7 +12,7 @@ namespace ReportX
     public class Report
     {
 
-        public ExcelReport excelResponse<T>(T[] data, string[] cols ,string title, DateTime starting, DateTime ending ,string Creator, bool end = false)
+        public ExcelReport excelResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             ExcelReport erp = new ExcelReport(typeof(T));
             if (cols.Length > 0)
@@ -25,14 +26,34 @@ namespace ReportX
             erp.setColumn();
             erp.setData(data);
 
-            if(end) //如果要顯示結算筆數 end =true;
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                erp.setsum(data);
+            }
+            return erp;
+        }
+        public ExcelReport excelResponse(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            ExcelReport erp = new ExcelReport(data);
+            if (cols.Length > 0)
+            {
+                erp.setcut(cols);
+            }
+            erp.setTile(title);
+            erp.setDate(starting, ending);
+            erp.setCreator(Creator);
+            erp.setCreatedDate();
+            erp.setColumn();
+            erp.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
             {
                 erp.setsum(data);
             }
             return erp;
         }
 
-        public WordReport WordResponse<T>(T[] data,string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public WordReport WordResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             WordReport wrp = new WordReport(typeof(T));
             if (cols.Length > 0)
@@ -51,10 +72,10 @@ namespace ReportX
             {
                 wrp.setsum(data);
             }
-            return wrp;   
+            return wrp;
 
         }
-        public OdtReport OdtResponse<T>( T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public OdtReport OdtResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             OdtReport orp = new OdtReport(typeof(T));
             if (cols.Length > 0)
@@ -120,6 +141,28 @@ namespace ReportX
             return orp;
 
         }
+        public OdsReport OdsResponse<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            OdsReport orp = new OdsReport(typeof(T));
+            if (cols.Length > 0)
+            {
+                orp.setcut(cols);
+            }
+
+            orp.setTile(title);
+            orp.setDate(starting, ending);
+            orp.setCreator(Creator);
+            orp.setCreatedDate();
+            orp.setColumn();
+            orp.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                orp.setsum(data);
+            }
+            return orp;
+
+        }
         //綜合板
         public FileReport FileReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
@@ -142,8 +185,30 @@ namespace ReportX
             }
             return file;
         }
+        public FileReport FileReport(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            FileReport file = new FileReport(data);
+            if (cols.Length > 0)
+            {
+                file.setcut(cols);
+            }
+
+            file.setTile(title);
+            file.setDate(starting, ending);
+            file.setCreator(Creator);
+            file.setCreatedDate();
+            file.setColumn();
+            file.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                file.setsum(data);
+            }
+            return file;
+        }
+
         //s5amount
-        public AmountReport AmountReport<T>(T[] data, string[] cols, string title,string dateTime,  string Creator, bool end = false)
+        public AmountReport AmountReport<T>(T[] data, string[] cols, string title, string dateTime, string Creator, bool end = false)
         {
             AmountReport file = new AmountReport(typeof(T));
             if (cols.Length > 0)
@@ -248,6 +313,26 @@ namespace ReportX
             }
             return file;
         }
+        public ReportCreator<WordReport> Test<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            ReportCreator<WordReport> wrp = new ReportCreator<WordReport>(typeof(T));
+            if (cols.Length > 0)
+            {
+                wrp.setcut(cols);
+            }
 
+            wrp.setTile(title);
+            wrp.setDate(starting, ending);
+            wrp.setCreator(Creator);
+            wrp.setCreatedDate();
+            wrp.setColumn();
+            wrp.setData(data);
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                wrp.setsum(data);
+            }
+            return wrp;
+        }
     }
 }

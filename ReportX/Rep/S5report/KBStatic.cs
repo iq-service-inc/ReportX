@@ -76,7 +76,7 @@ namespace ReportX.Rep.S5report
             trs.Add(tr);
             return tr;
         }
-        public void setTitle(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
+        public override void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) kbs.author = author;
             if (company != null) kbs.company = company;

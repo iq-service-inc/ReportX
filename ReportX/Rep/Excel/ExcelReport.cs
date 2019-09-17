@@ -1,5 +1,7 @@
 ﻿using ReportX.Rep.Model;
 using System;
+using System.Data;
+using System.Linq;
 
 namespace ReportX.Rep.Excel
 {
@@ -41,10 +43,15 @@ namespace ReportX.Rep.Excel
             setCustomStyle(customCSS);
         }
 
+        public ExcelReport(DataTable model) : base(model)
+        {
+            setCustomStyle(customCSS);
+        }
+
         // 設定製表標題
         public void setTile(string title)
         {
-            setExcel(sheetName: title);
+            setData(sheetName: title);
             appendFullRow(title, null, "r-header-title");
         }
 
@@ -63,7 +70,7 @@ namespace ReportX.Rep.Excel
         // 設定製表人
         public void setCreator(string creator)
         {
-            setExcel(author: creator);
+            setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
         }
 
@@ -87,7 +94,10 @@ namespace ReportX.Rep.Excel
         {
             appendTable(data);
         }
-
+        public void setData(DataTable data)
+        {
+            appendTable(data);
+        }
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
@@ -98,6 +108,12 @@ namespace ReportX.Rep.Excel
         {
             string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
             appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+
+        }
+        public void setsum(DataTable data) //總筆數欄位
+        {
+            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
 
         }
     }

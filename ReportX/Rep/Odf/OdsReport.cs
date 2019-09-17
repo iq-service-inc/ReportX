@@ -79,7 +79,7 @@ namespace ReportX.Rep.Odf
         }
         public void setTile(string title)
         {
-            setOds(sheetName: title);
+            setData(sheetName: title);
             appendFullRow(title, "TableCellData", "Title");
         }
 
@@ -96,7 +96,7 @@ namespace ReportX.Rep.Odf
 
         public void setCreator(string creator)
         {
-            setOds(author: creator);
+            setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
         }
 

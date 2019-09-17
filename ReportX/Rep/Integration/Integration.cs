@@ -4,6 +4,7 @@ using ReportX.Rep.Model;
 using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 
@@ -16,6 +17,7 @@ namespace ReportX.Rep.Integration
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
+        public override string[] cut { get; set; }
         private ModelExcel excel;
         private ModelWord word;
 
@@ -62,6 +64,28 @@ namespace ReportX.Rep.Integration
             word.colNum = cols.Length;
 
         }
+        public Integration(DataTable model)
+        {
+            trs = new List<ModelTR>();
+            excel = new ModelExcel();
+            excel.style = new ViewStyle();
+
+            word = new ModelWord();
+            word.style = new ViewStyle();
+
+            string[] str_cols = new string[model.Columns.Count];
+
+            for (int i = 0; i < model.Columns.Count; i++)
+                str_cols[i] = model.Columns[i].ToString();
+
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            excel.colNum = cols.Length;
+            word.colNum = cols.Length;
+
+
+        }
         // 傳入一個陣列 
         public override void changecut(string[] cut)
         {
@@ -72,7 +96,7 @@ namespace ReportX.Rep.Integration
             word.colNum = cols.Length;
         }
 
-        public void setData(string author = null, string company = null, string sheetName = null)
+        public override void  setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null)
                 excel.author = author;

@@ -1,5 +1,7 @@
 ﻿using ReportX.Rep.Model;
 using System;
+using System.Data;
+using System.Linq;
 
 namespace ReportX.Rep.Integration
 {
@@ -39,7 +41,10 @@ namespace ReportX.Rep.Integration
         {
             setCustomStyle(customCSS);
         }
-
+        public FileReport(DataTable model) : base(model)
+        {
+            setCustomStyle(customCSS);
+        }
         public void setTile(string title)
         {
             setData(sheetName: title);
@@ -76,16 +81,28 @@ namespace ReportX.Rep.Integration
                 td.className = "column";
         }
 
+
         public void setData<T>(T[] data)
         {
             appendTable(data);
         }
 
+        public void setData(DataTable data)
+        {
+            appendTable(data);
+        }
         public void setsum<T>(T[] data) //總筆數
         {
             string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
             appendRow (new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
  
+        }
+
+        public void setsum(DataTable data) //總筆數
+        {
+            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
+
         }
 
         // 傳入欲顯示欄位標題 之陣列

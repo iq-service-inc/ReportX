@@ -83,7 +83,7 @@ namespace ReportX.Rep.Odf
             var intersectResult = oldcols.Intersect(newcols);
             odt.colNum = cols.Length;
         }
-        public  void setOdt(string author = null, string company = null, string sheetName = null)
+        public override  void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) odt.author = author;
             if (company != null) odt.company = company;

@@ -59,8 +59,8 @@ namespace ReportX.Rep.View
                                 case "知識目錄":
                                     attributes += string.Format("table:style-name='ContentDataTableCell'");
                                     className = "ContentData";
-                                    var test = td.data.ToString().Substring(0, 1);
-                                    if (test == "◎")
+                                    var cut = td.data.ToString().Substring(0, 1);
+                                    if (cut == "◎")
                                     {
                                         className = "MarkContentData";
                                     }

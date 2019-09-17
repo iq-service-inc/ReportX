@@ -71,8 +71,8 @@ namespace ReportX.Rep.View.S5View
                                     attributes = string.Format("table:style-name='DataFirstWord' office:value-type='float' office:value='{0}'", td.data);
                                     break;
                                 case "知識目錄":
-                                    var test = td.data.ToString().Substring(0, 1);
-                                    if (test == "◎")
+                                    var cut = td.data.ToString().Substring(0, 1);
+                                    if (cut == "◎")
                                     {
                                         attributes = string.Format("table:style-name='DataMarkWord' office:value-type='string'");
                                     }

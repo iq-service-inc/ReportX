@@ -18,44 +18,54 @@ namespace ReportX.Rep.Word
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
+        public override string[] cut { get; set; }
         private ModelWord word;
         private int colspan;
+        public Type model { get; set; }
         public Word(Type model)
         {
-            trs = new List<ModelTR>();
-            word = new ModelWord();
-            word.style = new ViewStyle();
-
-            List<MemberInfo> list_cols = new List<MemberInfo>();
-
-            foreach (var member in model.GetMembers())
+            if (model == null)
             {
-                Present attr = member.GetCustomAttribute<Present>();
-                if (attr == null) continue;
-
-                int MetadataToken = member.MetadataToken,
-                    inserted_index = 0;
-
-                // sory by MetadataToken (declaration)
-                for (int i = 0; i < list_cols.Count; i++)
-                {
-                    inserted_index = i;
-                    if (MetadataToken < list_cols[i].MetadataToken) break;
-                    inserted_index = i + 1;
-                }
-                list_cols.Insert(inserted_index, member);
+                trs = new List<ModelTR>();
+                word = new ModelWord();
+                word.style = new ViewStyle();
             }
+            else
+            {
+                trs = new List<ModelTR>();
+                word = new ModelWord();
+                word.style = new ViewStyle();
 
-            string[] str_cols = new string[list_cols.Count];
+                List<MemberInfo> list_cols = new List<MemberInfo>();
 
-            for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
+                foreach (var member in model.GetMembers())
+                {
+                    Present attr = member.GetCustomAttribute<Present>();
+                    if (attr == null) continue;
+
+                    int MetadataToken = member.MetadataToken,
+                        inserted_index = 0;
+
+                    // sory by MetadataToken (declaration)
+                    for (int i = 0; i < list_cols.Count; i++)
+                    {
+                        inserted_index = i;
+                        if (MetadataToken < list_cols[i].MetadataToken) break;
+                        inserted_index = i + 1;
+                    }
+                    list_cols.Insert(inserted_index, member);
+                }
+
+                string[] str_cols = new string[list_cols.Count];
+
+                for (int i = 0; i < list_cols.Count; i++)
+                    str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
 
 
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            word.colNum = cols.Length;
-
+                oldcols = str_cols; //舊的陣列
+                cols = str_cols;
+                word.colNum = cols.Length;
+            }
         }
 
         // 傳入一個陣列 
@@ -67,7 +77,7 @@ namespace ReportX.Rep.Word
             word.colNum = cols.Length;
         }
 
-        public void setWord(string author = null, string company = null, string sheetName = null)
+        public override void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) word.author = author;
             if (company != null) word.company = company;

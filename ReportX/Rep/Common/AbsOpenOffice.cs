@@ -115,10 +115,10 @@ namespace ReportX.Rep.Common
                 {
                     try
                     {
-                        var test = prop;
-                        int colinx = Array.IndexOf(cols, test.ToString());
+                        var column = prop;
+                        int colinx = Array.IndexOf(cols, column.ToString());
                         if (colinx == -1) continue;
-                        var value = data.Rows[i][test.ToString()];
+                        var value = data.Rows[i][column.ToString()];
                         tds[colinx] = new ModelTD()
                         {
                             data = value
@@ -167,5 +167,6 @@ namespace ReportX.Rep.Common
                 File.AppendAllText("META-INF/manifest.xml", str);
             }
         }
+        public abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null);
     }
 }

@@ -14,10 +14,7 @@ namespace ReportX.Rep.Odf
  string customCSS = @"
 <office:automatic-styles>
     <style:style style:name='TableColumn' style:family='table-column'>
-      <style:table-column-properties />
-    </style:style>
-    <style:style style:name='TableColumn' style:family='table-column'>
-      <style:table-column-properties />
+      <style:table-column-properties style:column-width='auto'/>
     </style:style>
     <style:style style:name='Table' style:family='table' style:master-page-name='MP0'>
       <style:table-properties  fo:margin-left='0in' table:align='center'/>
@@ -79,7 +76,7 @@ namespace ReportX.Rep.Odf
         }
         public void setTile(string title)
         {
-            setOdt(sheetName: title);
+            setData(sheetName: title);
             appendFullRow(title, "TableCellData", "Title");
         }
         public void setDate(DateTime from, DateTime? to = null)
@@ -94,7 +91,7 @@ namespace ReportX.Rep.Odf
         }
         public void setCreator(string creator)
         {
-            setOdt(author: creator);
+            setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
         }
         public void setCreatedDate()

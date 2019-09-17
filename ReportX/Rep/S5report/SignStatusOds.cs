@@ -61,7 +61,7 @@ namespace ReportX.Rep.S5report
             ss.colNum = cols.Length;
         }
 
-        public void setTitle(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
+        public override void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) ss.author = author;
             if (company != null) ss.company = company;

@@ -46,7 +46,7 @@ namespace ReportX.Rep.Word
 
         public void setTile(string title)
         {
-            setWord(sheetName: title);
+            setData(sheetName: title);
             appendFullRow(title, null, "r-header-title");
         }
 
@@ -63,7 +63,7 @@ namespace ReportX.Rep.Word
 
         public void setCreator(string creator)
         {
-            setWord(author: creator);
+            setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
         }
 

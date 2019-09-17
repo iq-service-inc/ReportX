@@ -85,20 +85,20 @@ namespace ReportX.Rep.S5report
         }
         public void setTile(string title)
         {
-            setTitle(sheetName: title);
+            setData(sheetName: title);
         }
 
         public void setCreator(string creator)
         {
-            setTitle(author: creator);
+            setData(author: creator);
         }
         public void setCreatedDayRange(string firstday,string lastday)
         {
-            setTitle(dateRange: firstday+" - "+lastday);
+            setData(dateRange: firstday+" - "+lastday);
         }
         public void setCreatedDate(string dateTime)
         {
-            setTitle(dateTime: dateTime);
+            setData(dateTime: dateTime);
         }
         public void setColumn()
         {

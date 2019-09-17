@@ -16,6 +16,7 @@ namespace ReportX.Rep.Common
         protected abstract string[] newcols { get; set; }
 
         public abstract string[] cols { get; set; }
+        public abstract string[] cut { get; set; }
         protected abstract List<ModelTR> trs { get; }
 
         public virtual string render(int? width = null, string File_type = null)
@@ -85,7 +86,6 @@ namespace ReportX.Rep.Common
                     {
                         Present attr = prop.GetCustomAttribute<Present>();
                         if (attr == null) continue;
-                        var asdf = attr.getName();
                         int colinx = Array.IndexOf(cols, attr.getName());
                         object value = prop.GetValue(tuple, null);
                         tds[colinx] = new ModelTD()
@@ -119,10 +119,10 @@ namespace ReportX.Rep.Common
                 {
                     try
                     {
-                        var test = prop;
-                        int colinx = Array.IndexOf(cols, test.ToString());
+                        var column = prop;
+                        int colinx = Array.IndexOf(cols, column.ToString());
                         if (colinx == -1) continue;
-                        var value = data.Rows[i][test.ToString()];
+                        var value = data.Rows[i][column.ToString()];
                         tds[colinx] = new ModelTD()
                         {
                             data = value
@@ -142,5 +142,7 @@ namespace ReportX.Rep.Common
         {
             return cols.Length;
         }
+        public abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null);
+
     }
 }
