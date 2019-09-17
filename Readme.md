@@ -19,6 +19,8 @@ PM> Install-Package ReportX -Version 1.2.0
 * ExcelReport：
 * WordReport
 * FileReport  `2018.10.01 updata` 
+* OdtReport  `2019.09.17 updata` 
+* OdsReport  `2019.09.17 updata` 
 
 
 ## Default Model
@@ -120,8 +122,101 @@ File.AppendAllText("word檔案.doc", word );
 //另存為Excel檔
 File.AppendAllText("excel檔案.doc", excel );  
 ```
+`2019/09/17` 新增openOffice(Odt,Ods)   宣告 `Odt `,`Ods `   
+帶入參數產生Odt 報表
+```csharp
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+    Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
+//產生odt 報表
+string odt = odtRes.render();
+//產生META-INF(OpenOffice設定檔)
+   odtRes.CreateMeta("odt");
+//壓縮檔案成odt
+                string[] input = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                input[0] = inputFile;
+                input[1] = inputData;
+                string outputFile = @".\result.odt";
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in input)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            
 
+```
+帶入參數產生Ods 報表
+```csharp
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+    Ods odsRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
+//產生ods 報表
+string ods = odsRes.render();
+//產生META-INF(OpenOffice設定檔)
+   odtRes.CreateMeta("ods");
+//壓縮檔案成ods
+                string[] input = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                input[0] = inputFile;
+                input[1] = inputData;
+                string outputFile = @".\result.ods";
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in input)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            
 
+```
 ## Customized Word and Excel 
 
 * `v1.2.0` 自訂表格排序和欄位，可以製作成`Word`和`excel`檔，使用範例如下：
@@ -201,7 +296,10 @@ string res = multiExcel.render();
 ![excel](https://i.imgur.com/heC8f8i.png)
 * Word 
 ![word](https://i.imgur.com/CQCqfcu.png)
-
+* Odt
+![Odt](https://i.imgur.com/ENBBLp2.jpg)
+* Ods
+![Ods](https://i.imgur.com/9Ij8V8q.jpg)
 ## License
 
    Copyright 2018 LinSol
