@@ -17,7 +17,6 @@ namespace ReportX.Rep.Integration
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        public override string[] cut { get; set; }
         private ModelExcel excel;
         private ModelWord word;
 

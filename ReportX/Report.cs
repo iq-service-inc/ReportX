@@ -313,26 +313,93 @@ namespace ReportX
             }
             return file;
         }
-        public ReportCreator<WordReport> Test<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public ReportCreator<WordReport> WordReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
-            ReportCreator<WordReport> wrp = new ReportCreator<WordReport>(typeof(T));
+            ReportCreator<WordReport> wd = new ReportCreator<WordReport>(typeof(T));
             if (cols.Length > 0)
             {
-                wrp.setcut(cols);
+                wd.setcut(cols);
             }
 
-            wrp.setTile(title);
-            wrp.setDate(starting, ending);
-            wrp.setCreator(Creator);
-            wrp.setCreatedDate();
-            wrp.setColumn();
-            wrp.setData(data);
+            wd.setTile(title, "Word");
+            wd.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Word");
+            wd.setCreator(Creator, "Word");
+            wd.setCreatedDate("Word");
+            wd.setColumn();
+            wd.setData(data);
+            wd.setsum(data, "Word");
 
             if (end) //如果要顯示結算筆數 end =true;
             {
-                wrp.setsum(data);
+                wd.setsum(data,"Word");
             }
-            return wrp;
+            return wd;
+        }
+        public ReportCreator<OdsReport> OdsReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            ReportCreator<OdsReport> ods = new ReportCreator<OdsReport>(typeof(T));
+            if (cols.Length > 0)
+            {
+                ods.setcut(cols);
+            }
+
+            ods.setTile(title, "Ods");
+            ods.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Ods");
+            ods.setCreator(Creator, "Ods");
+            ods.setCreatedDate("Ods");
+            ods.setColumn();
+            ods.setData(data);
+            ods.setsum(data, "Ods");
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                ods.setsum(data, "Ods");
+            }
+            return ods;
+        }
+        public ReportCreator<ExcelReport> ExcelReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            ReportCreator<ExcelReport> exc = new ReportCreator<ExcelReport>(typeof(T));
+            if (cols.Length > 0)
+            {
+                exc.setcut(cols);
+            }
+
+            exc.setTile(title, "Excel");
+            exc.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Excel");
+            exc.setCreator(Creator, "Excel");
+            exc.setCreatedDate("Excel");
+            exc.setColumn();
+            exc.setData(data);
+            exc.setsum(data, "Excel");
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                exc.setsum(data, "Excel");
+            }
+            return exc;
+        }
+        public ReportCreator<OdtReport> OdtReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        {
+            ReportCreator<OdtReport> odt = new ReportCreator<OdtReport>(typeof(T));
+            if (cols.Length > 0)
+            {
+                odt.setcut(cols);
+            }
+
+            odt.setTile(title, "Odt");
+            odt.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Odt");
+            odt.setCreator(Creator, "Odt");
+            odt.setCreatedDate("Odt");
+            odt.setColumn();
+            odt.setData(data);
+            odt.setsum(data, "Odt");
+
+            if (end) //如果要顯示結算筆數 end =true;
+            {
+                odt.setsum(data, "Odt");
+            }
+            return odt;
         }
     }
 }

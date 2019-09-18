@@ -18,10 +18,8 @@ namespace ReportX.Rep.Word
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        public override string[] cut { get; set; }
         private ModelWord word;
         private int colspan;
-        public Type model { get; set; }
         public Word(Type model)
         {
             
@@ -101,11 +99,6 @@ namespace ReportX.Rep.Word
             word.body = new ViewBody(trs, width);
             ViewWord report = new ViewWord(word);
             return report.render();
-        }
-
-        public override string render(int? width = null, string File_type = null)
-        {
-            throw new NotImplementedException();
         }
     }
 }

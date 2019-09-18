@@ -16,7 +16,6 @@ namespace ReportX.Rep.Common
         protected abstract string[] newcols { get; set; }
 
         public abstract string[] cols { get; set; }
-        public abstract string[] cut { get; set; }
         protected abstract List<ModelTR> trs { get; }
 
         public virtual string render(int? width = null, string File_type = null)

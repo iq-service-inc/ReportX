@@ -81,6 +81,7 @@ namespace ReportX.Rep.Odf
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
+            cols = intersectResult.ToArray();
             odt.colNum = cols.Length;
         }
         public override  void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)

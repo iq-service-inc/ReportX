@@ -134,11 +134,12 @@ namespace ReportX.Tests
             cols[1] = "資料";
             cols[2] = "ID";
             cols[3] = "電話";
+            cols[4] = "編號";
             string title = "今日工事";
             Report Rpt = new Report();
-            Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            //Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
             //dataTable 資料
-           // Odt odtRes = Rpt.OdtResponse(dtTable, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+           Odt odtRes = Rpt.OdtResponse(dtTable, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
             var width = odtRes.getColCount();
             string res = odtRes.render(width);
             if (File.Exists("content.xml"))
@@ -907,7 +908,7 @@ namespace ReportX.Tests
         }
         [TestMethod()]
         //綜合版測試 加入 datatable 資料輸入 (不額外寫 word test)
-        public void TestReport()
+        public void ReportCreatorTest()
         {
             ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];
             for (int i = 50 - 1; i >= 0; i--)
@@ -931,22 +932,170 @@ namespace ReportX.Tests
             cols[1] = "資料";
             cols[2] = "ID";
             cols[3] = "電話";
-
+            cols[4] = "標題";
+            cols[5] = "編號";
             string title = "今日工事";
-            ReportCreator<WordReport> file = new ReportCreator<WordReport>(typeof(ModelEmployeeTicket));
-            //file.setArray(typeof(ModelEmployeeTicket));
-            if (cols.Length > 0)
+            Report res = new Report();
+            //ReportCreator<WordReport> wd = new ReportCreator<WordReport>(typeof(ModelEmployeeTicket));
+            ////file.setArray(typeof(ModelEmployeeTicket));
+            //if (cols.Length > 0)
+            //{
+            //    wd.setcut(cols);
+            //}
+            //wd.setTile(title, "Word");
+            //wd.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Word");
+            //wd.setCreator(Creator, "Word");
+            //wd.setCreatedDate("Word");
+            //wd.setColumn();
+            //wd.setData(data);
+            //wd.setsum(data, "Word");
+            ReportCreator<WordReport> wd = res.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            string word = wd.render();
+            //ReportCreator<ExcelReport> exc = new ReportCreator<ExcelReport>(typeof(ModelEmployeeTicket));
+            //if (cols.Length > 0)
+            //{
+            //    exc.setcut(cols);
+            //}
+            //exc.setTile(title, "Excel");
+            //exc.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Excel");
+            //exc.setCreator(Creator, "Excel");
+            //exc.setCreatedDate("Excel");
+            //exc.setColumn();
+            //exc.setData(data);
+            //exc.setsum(data, "Excel");
+            ReportCreator<ExcelReport> exc = res.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            string excel = exc.render();
+            if (File.Exists("creator.doc") && File.Exists("creator.xls"))
             {
-                file.setcut(cols);
-            }
-            file.setTile(title);
-            file.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            file.setCreatedDate();
-            file.setColumn();
-            file.setData(data);
-            file.setsum(data);
+                File.Delete("creator.doc");
+                File.Delete("creator.xls");
 
-            string word = file.render();
+                File.AppendAllText("creator.doc", word);
+                File.AppendAllText("creator.xls", excel);
+            }
+            else
+            {
+                File.AppendAllText("creator.doc", word);
+                File.AppendAllText("creator.xls", excel);
+            }
+            //ReportCreator<OdtReport> orp = new ReportCreator<OdtReport>(typeof(ModelEmployeeTicket));
+            //if (cols.Length > 0)
+            //{
+            //    orp.setcut(cols);
+            //}
+            //orp.setTile(title,"Odt");
+            //orp.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Odt");
+            //orp.setCreator(Creator,"Odt");
+            //orp.setCreatedDate("Odt");
+            //orp.setColumn();
+            //orp.setData(data);
+            //orp.setsum(data,"Odt");
+            ReportCreator<OdtReport> orp = res.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            var width = orp.getColCount();
+            string odtRes = orp.render(width);
+            if (File.Exists("content.xml"))
+                File.Delete("content.xml");
+            File.AppendAllText("content.xml", odtRes); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            orp.CreateMeta("odt");
+            Assert.IsNotNull(odtRes);
+            if (File.Exists("content.xml"))
+            {
+                string[] input = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                input[0] = inputFile;
+                input[1] = inputData;
+                string outputFile = @"./creator.odt";
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in input)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            }
+            //ReportCreator<OdsReport> osp = new ReportCreator<OdsReport>(typeof(ModelEmployeeTicket));
+            //if (cols.Length > 0)
+            //{
+            //    osp.setcut(cols);
+            //}
+            //osp.setTile(title, "Odt");
+            //osp.setDate(DateTime.Now.AddDays(-1), DateTime.Now, "Odt");
+            //osp.setCreator(Creator, "Odt");
+            //osp.setCreatedDate("Odt");
+            //osp.setColumn();
+            //osp.setData(data);
+            //osp.setsum(data, "Odt");
+            ReportCreator<OdsReport> osp = res.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+            string odsRes = osp.render();
+            if (File.Exists("content.xml"))
+                File.Delete("content.xml");
+            File.AppendAllText("content.xml", odsRes); // 檔案存在 路徑: D:\CSharp\ReportX\ReportXTests2\bin\Debug
+            orp.CreateMeta("ods");
+            Assert.IsNotNull(odsRes);
+            if (File.Exists("content.xml"))
+            {
+                string[] input = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                input[0] = inputFile;
+                input[1] = inputData;
+                string outputFile = @"./creator.ods";
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in input)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            }
         }
+
     }
 }
