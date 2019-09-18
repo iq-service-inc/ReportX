@@ -20,7 +20,8 @@ PM> Install-Package ReportX -Version 1.2.0
 * WordReport
 * FileReport  `2018.10.01 updata` 
 * OdtReport  `2019.09.17 updata` 
-* OdsReport  `2019.09.17 updata` 
+* OdsReport  `2019.09.17 update` 
+* ReportCreatorReport `2019.09.18 update`
 
 
 ## Default Model
@@ -217,6 +218,62 @@ string ods = odsRes.render();
             
 
 ```
+`2019/09/18` 新增綜合版(包括Odt,Ods)   宣告 `ReportCreator<T> `
+//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
+ ReportCreator<WordReport> wd = res.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+ ReportCreator<ExcelReport> exc = res.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+ ReportCreator<OdtReport> orp = res.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+ ReportCreator<OdsReport> osp = res.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
+//產生報表
+string word = wd.render();
+string excel = exc.render();
+string ods = odsRes.render(width); (odt要帶入寬度width)
+string odsRes = osp.render();
+//另存為Word檔
+File.AppendAllText("word檔案.doc", word );
+//另存為Excel檔
+File.AppendAllText("excel檔案.doc", excel );  
+//產生META-INF(OpenOffice設定檔)
+orp.CreateMeta("odt");
+orp.CreateMeta("ods");
+//壓縮檔案成odt,ods
+                string[] input = new string[2];
+                string inputFile = @"content.xml";
+                string inputData = @"META-INF/manifest.xml";
+                input[0] = inputFile;
+                input[1] = inputData;
+                string outputFile = @".\result.ods";(副檔名要改)
+                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                    try
+                    {
+                        using (var zip = new ZipOutputStream(output))
+                        {
+                            zip.SetLevel(9);
+                            byte[] buffer = new byte[4096];
+                            foreach (string file in input)
+                            {
+                                ZipEntry entry = new ZipEntry(file);
+                                entry.DateTime = DateTime.Now;
+                                zip.PutNextEntry(entry);
+                                using (FileStream fs = System.IO.File.OpenRead(file))
+                                {
+                                    int sourceBytes;
+                                    do
+                                    {
+                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
+                                        zip.Write(buffer, 0, sourceBytes);
+                                    } while (sourceBytes > 0);
+                                }
+                            }
+                            zip.Finish();
+                            zip.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+            
+
 ## Customized Word and Excel 
 
 * `v1.2.0` 自訂表格排序和欄位，可以製作成`Word`和`excel`檔，使用範例如下：
@@ -229,6 +286,7 @@ string ods = odsRes.render();
 |setDate    |表格日期|DateTime    |setDate(`starting`, `ending`)|
 |setCreator|製表人|string         |setCreator("`作者`")|
 |setCreatedDate  |製表時間`DateTime.Now`|`null`  |setCreatedDate()|
+|setCreatedDayRange |報表時間範圍| string |setCreatedDayRange(firstday, lastdday); `2019.09.17 update`
 |setColumn |表格屬性|`null`    |setColumn()|
 |setData   |表格內容  |T []data     |setData(data)|
 |setcut    |欲顯示欄位|string[] cols| setcut(cols)|
