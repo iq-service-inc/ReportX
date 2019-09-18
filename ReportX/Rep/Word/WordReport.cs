@@ -44,7 +44,10 @@ namespace ReportX.Rep.Word
         {
             setCustomStyle(customCSS);
         }
-
+        public WordReport(DataTable model) : base(model)
+        {
+            setCustomStyle(customCSS);
+        }
         public void setTile(string title)
         {
             setData(sheetName: title);
@@ -101,7 +104,7 @@ namespace ReportX.Rep.Word
             appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
 
         }
-        public void setsum<T>(DataTable data) //總筆數
+        public void setsum(DataTable data) //總筆數
         {
             string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
             appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數

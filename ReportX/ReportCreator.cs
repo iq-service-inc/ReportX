@@ -31,8 +31,6 @@ namespace ReportX
 
         public ReportCreator(Type type)
         {
-
-
             List<MemberInfo> list_cols = new List<MemberInfo>();
             modeli = type.GetMembers();
             foreach (var member in type.GetMembers())
@@ -60,6 +58,23 @@ namespace ReportX
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
             report = (T)Activator.CreateInstance(typeof(T), type);
+        }
+        public ReportCreator(DataTable data)
+        {
+            trs = new List<ModelTR>();
+            word = new ModelWord();
+            word.style = new ViewStyle();
+
+
+            string[] str_cols = new string[data.Columns.Count];
+
+            for (int i = 0; i < data.Columns.Count; i++)
+                str_cols[i] = data.Columns[i].ToString();
+
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            report = (T)Activator.CreateInstance(typeof(T), data);
         }
         public string render(int? width = null)
         {
@@ -172,6 +187,10 @@ namespace ReportX
         {
             report.appendTable(data);
         }
+        public void setData(DataTable data)
+        {
+            report.appendTable(data);
+        }
         public void setsum<T>(T[] data, string type) //總筆數
         {
             string lastRowStyle = "";
@@ -199,6 +218,37 @@ namespace ReportX
                 default:
                     break;
             }
+
+        }
+        public void setsum(DataTable data,string type) //總筆數
+        {
+            string lastRowStyle = "";
+            string lastClassName = "";
+            switch (type)
+            {
+                case "Word":
+                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
+                    break;
+                case "Excel":
+                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
+                    break;
+                case "Odt":
+                    lastRowStyle = "TotalCell"; //預設CSS
+                    lastClassName = "Word";
+                    report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數                    break;
+                    break;
+                case "Ods":
+                    lastRowStyle = "TotalCell"; //預設CSS
+                    lastClassName = "Word";
+                    report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
+                    break;
+                default:
+                    break;
+            }
+
+
 
         }
         // 傳入欲顯示欄位標題 之陣列
