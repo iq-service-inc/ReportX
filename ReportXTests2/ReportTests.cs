@@ -907,7 +907,6 @@ namespace ReportX.Tests
 
         }
         [TestMethod()]
-        //綜合版測試 加入 datatable 資料輸入 (不額外寫 word test)
         public void ReportCreatorTest()
         {
             ModelEmployeeTicket[] data = new ModelEmployeeTicket[50];

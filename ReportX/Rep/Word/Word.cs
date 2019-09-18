@@ -4,6 +4,7 @@ using ReportX.Rep.Model;
 using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,9 +21,8 @@ namespace ReportX.Rep.Word
         public override string[] cols { get; set; }
         private ModelWord word;
         private int colspan;
-        public Word(Type model)
-        {
-            
+        public Word(Type model,DataTable data= null)
+        {            
                 trs = new List<ModelTR>();
                 word = new ModelWord();
                 word.style = new ViewStyle();
@@ -58,7 +58,25 @@ namespace ReportX.Rep.Word
                 word.colNum = cols.Length;
             
         }
+        public Word(DataTable model)
+        {
+            trs = new List<ModelTR>();
+            word = new ModelWord();
+            word.style = new ViewStyle();
 
+
+            string[] str_cols = new string[model.Columns.Count];
+
+            for (int i = 0; i < model.Columns.Count; i++)
+                str_cols[i] = model.Columns[i].ToString();
+
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            word.colNum = cols.Length;
+
+
+        }
         // 傳入一個陣列 
         public override void changecut(string[] cut)
         {

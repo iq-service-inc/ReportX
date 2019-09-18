@@ -4,6 +4,7 @@ using ReportX.Rep.Model;
 using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -18,6 +19,7 @@ namespace ReportX
 
         public MemberInfo[] modeli;
         protected Type type { get; set; }
+        protected DataTable data { get; set; }
         protected string[] oldcols { get; set; }
         protected string[] newcols { get; set; }
         protected List<ModelTR> trs { get; }
@@ -170,7 +172,6 @@ namespace ReportX
         {
             report.appendTable(data);
         }
-
         public void setsum<T>(T[] data, string type) //總筆數
         {
             string lastRowStyle = "";
@@ -200,7 +201,6 @@ namespace ReportX
             }
 
         }
-
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +85,10 @@ namespace ReportX.Rep.Word
         {
             appendTable(data);
         }
-
+        public void setData(DataTable data)
+        {
+            appendTable(data);
+        }
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
@@ -97,7 +101,12 @@ namespace ReportX.Rep.Word
             appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
 
         }
+        public void setsum<T>(DataTable data) //總筆數
+        {
+            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
 
+        }
     }
 
 }
