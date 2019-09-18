@@ -314,6 +314,35 @@ for (int i = 50 - 1; i >= 0; i--)
     data[i] = tmp;
 }
 ```
+DataTable範例模型
+
+```csharp
+DataTable dtTable = new DataTable("dTable");
+            DataRow row;
+            DataColumn[] colss ={
+                                  new DataColumn("ID",typeof(int)),
+                                  new DataColumn("標題",typeof(string)),
+                                  new DataColumn("姓名",typeof(string)),
+                                  new DataColumn("編號",typeof(decimal)),
+                                  new DataColumn("資料",typeof(string)),
+                                  new DataColumn("電話",typeof(string))
+                              };
+            dtTable.Columns.AddRange(colss);
+            // 建立欄位
+            // 新增資料到DataTable
+            for (int i = 1; i <= 10; i++)
+            {
+                string a = Guid.NewGuid().ToString("N");
+                row = dtTable.NewRow();
+                row["ID"] = i;
+                row["標題"] = "測試 " + i.ToString();
+                row["姓名"] = "SOL_" + i;
+                row["編號"] = "123";
+                row["資料"] = a.ToString();
+                row["電話"] = "0923456789";
+                dtTable.Rows.Add(row);
+            }
+```
 自定義表格欄位 
 * warning
 自定義欄位必須按照： 
@@ -360,6 +389,21 @@ string res = multiExcel.render();
 ![Odt](https://i.imgur.com/ENBBLp2.jpg)
 * Ods
 ![Ods](https://i.imgur.com/9Ij8V8q.jpg)
+
+## UML
+1 -> 2,3 -> 4,5 -> 6 
+![1](https://i.imgur.com/xvpBucR.jpg)
+
+![2](https://i.imgur.com/q73eNVj.jpg)
+
+![3](https://i.imgur.com/wvHgHnX.jpg)
+
+![4](https://i.imgur.com/76yxpjQ.jpg)
+
+![5](https://i.imgur.com/RuKQyx6.jpg)
+
+![6](https://i.imgur.com/OiPelSm.jpg)
+
 ## License
 
    Copyright 2018 LinSol
