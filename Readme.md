@@ -219,6 +219,8 @@ string ods = odsRes.render();
 
 ```
 `2019/09/18` 新增綜合版(包括Odt,Ods)   宣告 `ReportCreator<T> `
+帶入參數，使用ReportCreator
+```csharp=
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
  ReportCreator<WordReport> wd = res.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
  ReportCreator<ExcelReport> exc = res.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
@@ -273,7 +275,7 @@ orp.CreateMeta("ods");
                     {
                     }
             
-
+```
 ## Customized Word and Excel 
 
 * `v1.2.0` 自訂表格排序和欄位，可以製作成`Word`和`excel`檔，使用範例如下：
