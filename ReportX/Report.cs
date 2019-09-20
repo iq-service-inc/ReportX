@@ -2,7 +2,6 @@
 using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
 using ReportX.Rep.Odf;
-using ReportX.Rep.S5report;
 using ReportX.Rep.Word;
 using System;
 using System.Data;
@@ -207,112 +206,6 @@ namespace ReportX
             return file;
         }
 
-        //s5amount
-        public AmountReport AmountReport<T>(T[] data, string[] cols, string title, string dateTime, string Creator, bool end = false)
-        {
-            AmountReport file = new AmountReport(typeof(T));
-            if (cols.Length > 0)
-            {
-                file.setcut(cols);
-            }
-
-            file.setTile(title);
-            file.setCreator(Creator);
-            file.setCreatedDate(dateTime);
-            file.setColumn();
-            file.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                file.setsum(data);
-            }
-            return file;
-        }
-        public KBStaticReport KBStaticReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
-        {
-            KBStaticReport file = new KBStaticReport(typeof(T));
-            if (cols.Length > 0)
-            {
-                file.setcut(cols);
-            }
-
-            file.setTile(title);
-            file.setCreator(Creator);
-            file.setCreatedDate(dateTime);
-            file.setCreatedDayRange(firstday, lastdday);
-            file.setColumn();
-            file.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                file.setsum(data);
-            }
-            return file;
-        }
-        public SignStatusReport SignStatusReport<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
-        {
-            SignStatusReport file = new SignStatusReport(typeof(T));
-            if (cols.Length > 0)
-            {
-                file.setcut(cols);
-            }
-
-            file.setTile(title);
-            file.setCreator(Creator);
-            file.setCreatedDate(dateTime);
-            file.setCreatedDayRange(firstday, lastdday);
-            file.setColumn();
-            file.setSecondColumn();
-            file.setData(data); ;
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                file.setsum(data);
-            }
-            return file;
-        }
-        public SignStatusReportOds SignStatusReportOds<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
-        {
-            SignStatusReportOds file = new SignStatusReportOds(typeof(T));
-            if (cols.Length > 0)
-            {
-                file.setcut(cols);
-            }
-
-            file.setTile(title);
-            file.setCreator(Creator);
-            file.setCreatedDate(dateTime);
-            file.setCreatedDayRange(firstday, lastdday);
-            file.setColumn();
-            file.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                file.setsum(data);
-            }
-            return file;
-        }
-        public KBStaticOds KBStaticReportOds<T>(T[] data, string[] cols, string title, string dateTime, string firstday, string lastdday, string Creator, bool end = false)
-        {
-            KBStaticReportOds file = new KBStaticReportOds(typeof(T));
-            if (cols.Length > 0)
-            {
-                file.setcut(cols);
-            }
-
-            file.setTile(title);
-            file.setCreator(Creator);
-            file.setCreatedDate(dateTime);
-            file.setCreatedDayRange(firstday, lastdday);
-            file.setColumn();
-            file.setData(data); ;
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                file.setsum(data);
-            }
-            return file;
-        }
         public ReportCreator<WordReport> WordReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
         {
             ReportCreator<WordReport> wd = new ReportCreator<WordReport>(typeof(T));

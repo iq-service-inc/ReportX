@@ -60,9 +60,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Model\ModelEmployeeTicket.cs" />
-    <Compile Include="Model\ModelKBStaticData.cs" />
-    <Compile Include="Model\ModelKnowledgeAmount.cs" />
-    <Compile Include="Model\ModelSignStatusData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportTests.cs" />
     <Compile Include="Rep\Excel\ExcelReportTests.cs" />
