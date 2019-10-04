@@ -1,0 +1,177 @@
+﻿
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head>
+                <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+                <meta name=ProgId content=Excel.Sheet>
+                <meta name=Generator content='Microsoft Excel 11'>
+
+                <!--[if gte mso 9]><xml>
+                <o:DocumentProperties>
+                <o:Author>測試人員</o:Author>
+                <o:Company>IQ-data</o:Company>
+                </o:DocumentProperties>
+                </xml><![endif]-->
+
+                <!--[if gte mso 9]><xml>
+                <x:ExcelWorkbook>
+                <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                <x:Name>測試資料</x:Name>
+                <x:WorksheetOptions>
+                <x:DefaultRowHeight>200</x:DefaultRowHeight>
+                <x:Selected/>
+                <x:ProtectContents>False</x:ProtectContents>
+                <x:ProtectObjects>False</x:ProtectObjects>
+                <x:ProtectScenarios>False</x:ProtectScenarios>
+                </x:WorksheetOptions>
+                </x:ExcelWorksheet>
+                </x:ExcelWorksheets>
+                <x:WindowHeight>8160</x:WindowHeight>
+                <x:WindowWidth>11715</x:WindowWidth>
+                <x:WindowTopX>240</x:WindowTopX>
+                <x:WindowTopY>75</x:WindowTopY>
+                <x:ProtectStructure>False</x:ProtectStructure>
+                <x:ProtectWindows>False</x:ProtectWindows>
+                </x:ExcelWorkbook>
+                </xml><![endif]-->          
+                
+            <style>
+                <!--        
+                
+            table{
+                mso-number-format:'\@';
+                mso-displayed-decimal-separator:'\.';
+                mso-displayed-thousand-separator:'\,';
+                font-family: 微軟正黑體, Microsoft JhengHei, PMingLiU, serif;
+                border-collapse: collapse;
+                table-layout:fixed;
+            }
+            @page{
+                margin:1.0in .75in 1.0in .75in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+            }
+            tr{
+                mso-height-source:auto;
+                mso-ruby-visibility:none; 
+            }
+            table, th, td{
+                border: 1px #AAA solid;
+                padding: 0px 2px;
+                white-space: pre;
+            }
+            col{
+                mso-width-source:auto;
+                mso-ruby-visibility:none;
+            }
+            br{
+                mso-data-placement:same-cell;
+            }
+            .tac{
+                text-align: center;
+            }
+            .fz8{font-size:8px;}.fz9{font-size:9px;}.fz10{font-size:10px;}.fz11{font-size:11px;}.fz12{font-size:12px;}.fz13{font-size:13px;}.fz14{font-size:14px;}.fz15{font-size:15px;}.fz16{font-size:16px;}.fz17{font-size:17px;}.fz18{font-size:18px;}.fz19{font-size:19px;}.fz20{font-size:20px;}.fz21{font-size:21px;}.fz22{font-size:22px;}.fz23{font-size:23px;}.fz24{font-size:24px;}.fz25{font-size:25px;}.fz26{font-size:26px;}.fz27{font-size:27px;}.fz28{font-size:28px;}.fz29{font-size:29px;}.fz30{font-size:30px;}.fz31{font-size:31px;}.fz32{font-size:32px;}.fz33{font-size:33px;}.fz34{font-size:34px;}.fz35{font-size:35px;}.fz36{font-size:36px;}
+            
+            .r-header-title{
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-date{
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .column{
+                color: #FFF;
+                text-align: center;
+                background-color: #555 !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-secondary{
+                color: #555;
+                font-size: 14px;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }             
+        
+        
+                -->
+                @media print{
+                
+            table{
+                mso-number-format:'\@';
+                mso-displayed-decimal-separator:'\.';
+                mso-displayed-thousand-separator:'\,';
+                font-family: 微軟正黑體, Microsoft JhengHei, PMingLiU, serif;
+                border-collapse: collapse;
+                table-layout:fixed;
+            }
+            @page{
+                margin:1.0in .75in 1.0in .75in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+            }
+            tr{
+                mso-height-source:auto;
+                mso-ruby-visibility:none; 
+            }
+            table, th, td{
+                border: 1px #AAA solid;
+                padding: 0px 2px;
+                white-space: pre;
+            }
+            col{
+                mso-width-source:auto;
+                mso-ruby-visibility:none;
+            }
+            br{
+                mso-data-placement:same-cell;
+            }
+            .tac{
+                text-align: center;
+            }
+            .fz8{font-size:8px;}.fz9{font-size:9px;}.fz10{font-size:10px;}.fz11{font-size:11px;}.fz12{font-size:12px;}.fz13{font-size:13px;}.fz14{font-size:14px;}.fz15{font-size:15px;}.fz16{font-size:16px;}.fz17{font-size:17px;}.fz18{font-size:18px;}.fz19{font-size:19px;}.fz20{font-size:20px;}.fz21{font-size:21px;}.fz22{font-size:22px;}.fz23{font-size:23px;}.fz24{font-size:24px;}.fz25{font-size:25px;}.fz26{font-size:26px;}.fz27{font-size:27px;}.fz28{font-size:28px;}.fz29{font-size:29px;}.fz30{font-size:30px;}.fz31{font-size:31px;}.fz32{font-size:32px;}.fz33{font-size:33px;}.fz34{font-size:34px;}.fz35{font-size:35px;}.fz36{font-size:36px;}
+            
+            .r-header-title{
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-date{
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .column{
+                color: #FFF;
+                text-align: center;
+                background-color: #555 !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-secondary{
+                color: #555;
+                font-size: 14px;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }             
+        
+        
+                } 
+            </style>
+        
+            </head>
+            <body>
+                <div align=center x:publishsource='Excel'><table x:str ><tr style="" ><td colspan=4 style="" class="r-header-title" >測試資料</td></tr><tr style="" ><td colspan=4 style="" class="r-header-secondary" >製表人：測試人員</td></tr><tr style="" ><td style="" class="column" >ID</td><td style="" class="column" >姓名</td><td style="" class="column" >資料</td><td style="" class="column" >電話</td></tr><tr style="" ><td style="" class="" >1</td><td style="" class="" >SOL_0</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >2</td><td style="" class="" >SOL_1</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >3</td><td style="" class="" >SOL_2</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >4</td><td style="" class="" >SOL_3</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >5</td><td style="" class="" >SOL_4</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td colspan=3 style="background-color:#DDD;-webkit-print-color-adjust: exact;" class="" >總筆數</td><td style="" class="" >5</td></tr></table></div> 
+            </body>
+            </html>

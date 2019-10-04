@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportX.Rep.Word
+namespace ReportX.Rep.Office.Word
 {
     public class Word : AbsOffice
     {
@@ -77,8 +77,7 @@ namespace ReportX.Rep.Word
                 word.colNum = cols.Length;
             
         }
-        
-        // 傳入一個陣列 
+
         public override void changecut(string[] cut)
         {
             newcols = cut;
@@ -113,11 +112,13 @@ namespace ReportX.Rep.Word
             return tr;
         }
 
-        public override string  render(int? width = null)
+        public override string render(int? width = null)
         {
             word.body = new ViewBody(trs, width);
             ViewWord report = new ViewWord(word);
             return report.render();
         }
+
+        // 傳入一個陣列 
     }
 }

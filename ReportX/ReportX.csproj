@@ -45,11 +45,9 @@
     <Compile Include="Rep\Common\AbsOffice.cs" />
     <Compile Include="Rep\Common\AbsOpenOffice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Report.cs" />
     <Compile Include="Rep\Attribute\Present.cs" />
     <Compile Include="Rep\Common\IReportX.cs" />
-    <Compile Include="Rep\Excel\Excel.cs" />
-    <Compile Include="Rep\Excel\ExcelReport.cs" />
+    <Compile Include="Rep\Office\Excel.cs" />
     <Compile Include="Rep\Excel\MultiExcel.cs" />
     <Compile Include="Rep\Integration\FileReport.cs" />
     <Compile Include="Rep\Integration\Integration.cs" />
@@ -60,10 +58,8 @@
     <Compile Include="Rep\Model\ModelTD.cs" />
     <Compile Include="Rep\Model\ModelTR.cs" />
     <Compile Include="Rep\Model\ModelWord.cs" />
-    <Compile Include="Rep\Odf\Ods.cs" />
-    <Compile Include="Rep\Odf\OdsReport.cs" />
-    <Compile Include="Rep\Odf\Odt.cs" />
-    <Compile Include="Rep\Odf\OdtReport.cs" />
+    <Compile Include="Rep\OpenOffice\Ods.cs" />
+    <Compile Include="Rep\OpenOffice\Odt.cs" />
     <Compile Include="Rep\View\ViewBody.cs" />
     <Compile Include="Rep\View\ViewBodyOds.cs" />
     <Compile Include="Rep\View\ViewBodyOdt.cs" />
@@ -75,8 +71,7 @@
     <Compile Include="Rep\View\ViewStyleOds.cs" />
     <Compile Include="Rep\View\ViewStyleOdt.cs" />
     <Compile Include="Rep\View\ViewWord.cs" />
-    <Compile Include="Rep\Word\Word.cs" />
-    <Compile Include="Rep\Word\WordReport.cs" />
+    <Compile Include="Rep\Office\Word.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReportX.nuspec">

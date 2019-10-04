@@ -5,29 +5,30 @@ using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ReportX.Rep.Excel
+namespace ReportX.Rep.OpenOffice.Ods
 {
-    public class Excel: AbsOffice
+    public class Ods:AbsOpenOffice
     {
-        //存取器
+        private ModelOds ods;
+
         protected override string[] oldcols { get; set; }
         protected override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        private ModelExcel excel;
-        public MemberInfo[] modeli;
-        public Excel(Type model)
+
+        public Ods(Type model)
         {
             trs = new List<ModelTR>();
-            excel = new ModelExcel();
-            excel.style = new ViewStyle();
+            ods = new ModelOds();
+            ods.style = new ViewStyleOds();
 
             List<MemberInfo> list_cols = new List<MemberInfo>();
-            modeli = model.GetMembers();
+
             foreach (var member in model.GetMembers())
             {
                 Present attr = member.GetCustomAttribute<Present>();
@@ -45,64 +46,53 @@ namespace ReportX.Rep.Excel
                 }
                 list_cols.Insert(inserted_index, member);
             }
-            string[] str_cols = new string[list_cols.Count]; //取得標題數量
+
+            string[] str_cols = new string[list_cols.Count];
 
             for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
 
 
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
-            excel.colNum = cols.Length;
-
+            ods.colNum = cols.Length;
 
         }
-        public Excel(DataTable model)
+        public Ods(DataTable data)
         {
             trs = new List<ModelTR>();
-            excel = new ModelExcel();
-            excel.style = new ViewStyle();
+            ods = new ModelOds();
+            ods.style = new ViewStyleOds();
 
 
-            string[] str_cols = new string[model.Columns.Count];
+            string[] str_cols = new string[data.Columns.Count];
 
-            for (int i = 0; i < model.Columns.Count; i++)
-                str_cols[i] = model.Columns[i].ToString();
+            for (int i = 0; i < data.Columns.Count; i++)
+                str_cols[i] = data.Columns[i].ToString();
 
 
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
-            excel.colNum = cols.Length;
-
+            ods.colNum = cols.Length;
 
         }
-        // 傳入一個陣列 
         public override void changecut(string[] cut)
         {
             newcols = cut;
             var intersectResult = oldcols.Intersect(newcols);
             cols = intersectResult.ToArray();
-            excel.colNum = cols.Length;
+            ods.colNum = cols.Length;
         }
-
-
-        public string formatDate(DateTime dateTime1, DateTime dateTime2)
+        public override void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
-            throw new NotImplementedException();
+            if (author != null) ods.author = author;
+            if (company != null) ods.company = company;
+            if (sheetName != null) ods.sheetName = sheetName;
         }
-
-        public override void  setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
-        {
-            if (author != null) excel.author = author;
-            if (company != null) excel.company = company;
-            if (sheetName != null) excel.sheetName = sheetName;
-        }
-
         public override void setCustomStyle(string css)
         {
-            excel.style.setCustomCSS(css);
+            ods.style.setCustomCSS(css);
         }
-
         public override ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
             ModelTR tr = new ModelTR();
@@ -111,26 +101,17 @@ namespace ReportX.Rep.Excel
             td.data = data;
             td.className = className;
             td.style = trStyle;
-            td.colspan = excel.colNum;
+            td.colspan = ods.colNum;
             tr.tds.Add(td);
             trs.Add(tr);
             return tr;
         }
-
-
-        public string getsheetName()
-        {
-            return excel.sheetName;
-        }
-        
         public override string render(int? width = null)
         {
-            
-            excel.body = new ViewBody(trs, width);
-            ViewExcel report = new ViewExcel(excel);
+            ods.body = new ViewBodyOds(trs, width);
+            ViewOds report = new ViewOds(ods);
             return report.render();
-           
-          
         }
+
     }
 }
