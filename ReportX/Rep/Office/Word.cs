@@ -20,7 +20,6 @@ namespace ReportX.Rep.Office.Word
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         private ModelWord word;
-        private int colspan;
         public Word(DataTable model)
         {
             trs = new List<ModelTR>();

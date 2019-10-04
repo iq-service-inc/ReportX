@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReportX.Rep.Excel;
 using ReportX.Rep.Integration;
+using ReportXTests2;
 using ReportXTests2.Model;
 using System;
 using System.Data;
@@ -15,29 +16,14 @@ namespace ReportX.Tests
         [TestMethod()]
         public void renderExcelTest()
         {
-            string[] cols = new string[4];
-            cols[0] = "姓名";
-            cols[1] = "資料";
-            cols[2] = "ID";
-            cols[3] = "電話";
-
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[5];
-            for (int i = 5 - 1; i >= 0; i--)
-            {
-                ModelEmployeeTicket tmp = new ModelEmployeeTicket
-                {
-                    postpid = i + 1,
-                    posttitle = "測試_" + i,
-                    name = "SOL_" + i,
-                    number = "123",
-                    data = "data",
-                    tel = "0923456789"
-                };
-                data[i] = tmp;
-            }
+            SampleData sampleData = new SampleData();
+            var cols = sampleData.ModelCol();
+            var data = sampleData.ModelData();
+            var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<ExcelReport> report = new ReportCreator<ExcelReport>();
-            ReportCreator<ExcelReport> ex = report.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //ReportCreator<ExcelReport> ex = report.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            ReportCreator<ExcelReport> ex = report.ExcelReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             string excel = ex.render();
             Assert.IsNotNull(excel);
             if (File.Exists("creator.xls"))
@@ -53,29 +39,14 @@ namespace ReportX.Tests
         [TestMethod()]
         public void renderWordTest()
         {
-            string[] cols = new string[4];
-            cols[0] = "姓名";
-            cols[1] = "資料";
-            cols[2] = "ID";
-            cols[3] = "電話";
-
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[5];
-            for (int i = 5 - 1; i >= 0; i--)
-            {
-                ModelEmployeeTicket tmp = new ModelEmployeeTicket
-                {
-                    postpid = i + 1,
-                    posttitle = "測試_" + i,
-                    name = "SOL_" + i,
-                    number = "123",
-                    data = "data",
-                    tel = "0923456789"
-                };
-                data[i] = tmp;
-            }
+            SampleData sampleData = new SampleData();
+            var cols = sampleData.ModelCol();
+            var data = sampleData.ModelData();
+            var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<WordReport> report = new ReportCreator<WordReport>();
-            ReportCreator<WordReport> wd = report.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //ReportCreator<WordReport> wd = report.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            ReportCreator<WordReport> wd = report.WordReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             string word = wd.render();
             Assert.IsNotNull(word);
             if (File.Exists("creator.doc"))
@@ -91,29 +62,14 @@ namespace ReportX.Tests
         [TestMethod()]
         public void renderOdtTest()
         {
-            string[] cols = new string[4];
-            cols[0] = "姓名";
-            cols[1] = "資料";
-            cols[2] = "ID";
-            cols[3] = "電話";
-
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[5];
-            for (int i = 5 - 1; i >= 0; i--)
-            {
-                ModelEmployeeTicket tmp = new ModelEmployeeTicket
-                {
-                    postpid = i + 1,
-                    posttitle = "測試_" + i,
-                    name = "SOL_" + i,
-                    number = "123",
-                    data = "data",
-                    tel = "0923456789"
-                };
-                data[i] = tmp;
-            }
+            SampleData sampleData = new SampleData();
+            var cols = sampleData.ModelCol();
+            var data = sampleData.ModelData();
+            var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<OdtReport> report = new ReportCreator<OdtReport>();
-            ReportCreator<OdtReport> odtr = report.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //ReportCreator<OdtReport> odtr = report.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            ReportCreator<OdtReport> odtr = report.OdtReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             report.CreateMeta("odt");
             var width = odtr.getColCount();
             string odt = odtr.render(width);
@@ -143,29 +99,14 @@ namespace ReportX.Tests
         [TestMethod()]
         public void renderOdsTest()
         {
-            string[] cols = new string[4];
-            cols[0] = "姓名";
-            cols[1] = "資料";
-            cols[2] = "ID";
-            cols[3] = "電話";
-
-            ModelEmployeeTicket[] data = new ModelEmployeeTicket[5];
-            for (int i = 5 - 1; i >= 0; i--)
-            {
-                ModelEmployeeTicket tmp = new ModelEmployeeTicket
-                {
-                    postpid = i + 1,
-                    posttitle = "測試_" + i,
-                    name = "SOL_" + i,
-                    number = "123",
-                    data = "data",
-                    tel = "0923456789"
-                };
-                data[i] = tmp;
-            }
+            SampleData sampleData = new SampleData();
+            var cols = sampleData.ModelCol();
+            var data = sampleData.ModelData();
+            var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<OdsReport> report = new ReportCreator<OdsReport>();
-            ReportCreator<OdsReport> odsr = report.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //ReportCreator<OdsReport> odsr = report.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            ReportCreator<OdsReport> odsr = report.OdsReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             report.CreateMeta("ods");
             string ods = odsr.render();
             Assert.IsNotNull(ods);

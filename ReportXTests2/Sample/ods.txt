@@ -1,0 +1,74 @@
+﻿<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<office:document-content xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:of='urn:oasis:names:tc:opendocument:xmlns:of:1.2' office:version='1.2'>
+
+              <office:font-face-decls>
+    <style:font-face style:name='新細明體' svg:font-family='新細明體'/>
+    <style:font-face style:name='微軟正黑體' svg:font-family='微軟正黑體'/>
+  </office:font-face-decls>
+             <office:automatic-styles>
+    <style:style style:name='ColumnWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#555555' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='center'/>
+      <style:text-properties fo:color='#FFFFFF' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+    </style:style>
+    <style:style style:name='Word' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap'/>
+      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+    </style:style>
+    <style:style style:name='TotalWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDDDDD'/>
+      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+    </style:style>
+    <style:style style:name='TitleWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='center'/>
+      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
+    </style:style>
+    <style:style style:name='DateRangeWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='center'/>
+      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
+    </style:style>
+    <style:style style:name='CreaterWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+      <style:paragraph-properties fo:text-align='center'/>
+      <style:text-properties fo:color='#555555' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='11pt' style:font-size-asian='11pt' style:font-size-complex='11pt'/>
+    </style:style>
+    <style:style style:name='TableColumn' style:family='table-column'>
+      <style:table-column-properties />
+    </style:style>
+    <style:style style:name='TableRow' style:family='table-row'>
+      <style:table-row-properties style:row-height='auto' style:use-optimal-row-height='false' fo:break-before='auto'/>
+    </style:style>
+    <style:style style:name='ta1' style:family='table' style:master-page-name='mp1'>
+      <style:table-properties table:display='true' style:writing-mode='lr-tb'/>
+    </style:style>
+    <style:page-layout style:name='pm1'>
+      <style:page-layout-properties fo:margin-top='0.5in' fo:margin-bottom='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' style:print-orientation='portrait' style:print-page-order='ttb' style:first-page-number='continue' style:scale-to='100%' style:table-centering='none' style:print='objects charts drawings'/>
+      <style:header-style>
+        <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-bottom='0in'/>
+      </style:header-style>
+      <style:footer-style>
+        <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-top='0in'/>
+      </style:footer-style>
+    </style:page-layout>
+  </office:automatic-styles>
+  <office:master-styles>
+    <style:master-page style:name='mp1' style:page-layout-name='pm1'>
+      <style:header/>
+      <style:header-left style:display='false'/>
+      <style:footer/>
+      <style:footer-left style:display='false'/>
+    </style:master-page>
+  </office:master-styles>
+        
+        
+  <office:body>
+    <office:spreadsheet>
+      <table:calculation-settings table:case-sensitive='false' table:search-criteria-must-apply-to-whole-cell='true' table:use-wildcards='true' table:use-regular-expressions='false' table:automatic-find-labels='false'/>
+      <table:table table:name='測試資料' table:style-name='ta1'>
+        <table:table-row table:style-name='TableRow'><table:table-cell  office:value-type='string' table:style-name='TitleWord'  table:number-rows-spanned='1' table:number-columns-spanned="4" ><text:p>測試資料</text:p></table:table-cell> <table:covered-table-cell/></table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  office:value-type='string' table:style-name='TitleWord'  table:number-rows-spanned='1' table:number-columns-spanned="4" ><text:p>製表人：測試人員</text:p></table:table-cell> <table:covered-table-cell/></table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='ColumnWord' office:value-type='string'><text:p>ID</text:p></table:table-cell> <table:table-cell  table:style-name='ColumnWord' office:value-type='string'><text:p>姓名</text:p></table:table-cell> <table:table-cell  table:style-name='ColumnWord' office:value-type='string'><text:p>資料</text:p></table:table-cell> <table:table-cell  table:style-name='ColumnWord' office:value-type='string'><text:p>電話</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='Word' office:value-type='string'><text:p>1</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>SOL_0</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>data</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>0923456789</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='Word' office:value-type='string'><text:p>2</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>SOL_1</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>data</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>0923456789</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='Word' office:value-type='string'><text:p>3</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>SOL_2</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>data</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>0923456789</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='Word' office:value-type='string'><text:p>4</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>SOL_3</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>data</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>0923456789</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  table:style-name='Word' office:value-type='string'><text:p>5</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>SOL_4</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>data</text:p></table:table-cell> <table:table-cell  table:style-name='Word' office:value-type='string'><text:p>0923456789</text:p></table:table-cell> </table:table-row><table:table-row table:style-name='TableRow'><table:table-cell  office:value-type='string' table:number-columns-spanned="3" table:number-rows-spanned='1' table:style-name='TotalWord'><text:p>總筆數</text:p></table:table-cell> <table:covered-table-cell/><table:covered-table-cell/><table:table-cell  office:value-type='string' table:style-name='Word'><text:p>5</text:p></table:table-cell></table:table-row>
+      </table:table>
+    </office:spreadsheet>
+  </office:body>
+</office:document-content>

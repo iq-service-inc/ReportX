@@ -33,7 +33,7 @@ namespace ReportX.Rep.View
   <office:body>
     <office:spreadsheet>
       <table:calculation-settings table:case-sensitive='false' table:search-criteria-must-apply-to-whole-cell='true' table:use-wildcards='true' table:use-regular-expressions='false' table:automatic-find-labels='false'/>
-      <table:table table:name='{0}' table:style-name='ta1'>
+      <table:table table:name='{2}' table:style-name='ta1'>
        {4}
       </table:table>
     </office:spreadsheet>

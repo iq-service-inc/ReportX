@@ -1,0 +1,220 @@
+﻿
+            <html xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns:m='http://schemas.microsoft.com/office/2004/12/omml' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head>
+            <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+            <meta name = 'ProgId' content='Word.Document'>
+            <meta name = 'Generator' content='Microsoft Word 15'>
+            <meta name = 'Originator' content='Microsoft Word 15'>
+            <link rel = 'File-List' href='1.files/filelist.xml'>
+
+            <!--[if gte mso 9]><xml>
+             <o:DocumentProperties>
+              <o:Author>測試人員</o:Author>
+              <o:Template>Normal</o:Template>
+              <o:LastAuthor>測試人員</o:LastAuthor>
+              <o:Revision>1</o:Revision>
+              <o:TotalTime>8</o:TotalTime>
+              <o:Created>IQ-data</o:Created>
+              <o:LastSaved>測試資料</o:LastSaved>
+              <o:Pages>1</o:Pages>
+              <o:Words>1</o:Words>
+              <o:Characters>10</o:Characters>
+              <o:Lines>1</o:Lines>
+              <o:Paragraphs>1</o:Paragraphs>
+              <o:CharactersWithSpaces>10</o:CharactersWithSpaces>
+              <o:Version>16.00</o:Version>
+             </o:DocumentProperties>
+             <o:OfficeDocumentSettings>
+              <o:AllowPNG/>
+             </o:OfficeDocumentSettings>
+            </xml><![endif]-->
+            <!--[if gte mso 9]><xml>
+             <w:WordDocument>
+              <w:SpellingState>Clean</w:SpellingState>
+              <w:GrammarState>Clean</w:GrammarState>
+              <w:TrackMoves>false</w:TrackMoves>
+              <w:TrackFormatting/>
+              <w:PunctuationKerning/>
+              <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+              <w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
+              <w:ValidateAgainstSchemas/>
+              <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+              <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+              <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+              <w:DoNotPromoteQF/>
+              <w:LidThemeOther>EN-US</w:LidThemeOther>
+              <w:LidThemeAsian>ZH-TW</w:LidThemeAsian>
+              <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+              <w:Compatibility>
+               <w:SpaceForUL/>
+               <w:BalanceSingleByteDoubleByteWidth/>
+               <w:DoNotLeaveBackslashAlone/>
+               <w:ULTrailSpace/>
+               <w:DoNotExpandShiftReturn/>
+               <w:AdjustLineHeightInTable/>
+               <w:BreakWrappedTables/>
+               <w:SnapToGridInCell/>
+               <w:WrapTextWithPunct/>
+               <w:UseAsianBreakRules/>
+               <w:DontGrowAutofit/>
+               <w:SplitPgBreakAndParaMark/>
+               <w:EnableOpenTypeKerning/>
+               <w:DontFlipMirrorIndents/>
+               <w:OverrideTableStyleHps/>
+               <w:UseFELayout/>
+              </w:Compatibility>
+              <m:mathPr>
+               <m:mathFont m:val='Cambria Math'/>
+               <m:brkBin m:val='before'/>
+               <m:brkBinSub m:val='&#45;-'/>
+               <m:smallFrac m:val='off'/>
+               <m:dispDef/>
+               <m:lMargin m:val='0'/>
+               <m:rMargin m:val='0'/>
+               <m:defJc m:val='centerGroup'/>
+               <m:wrapIndent m:val='1440'/>
+               <m:intLim m:val='subSup'/>
+               <m:naryLim m:val='undOvr'/>
+              </m:mathPr></w:WordDocument>
+            </xml><![endif]-->
+            
+            <style>
+                <!--        
+                
+            table{
+                mso-number-format:'\@';
+                mso-displayed-decimal-separator:'\.';
+                mso-displayed-thousand-separator:'\,';
+                font-family: 微軟正黑體, Microsoft JhengHei, PMingLiU, serif;
+                border-collapse: collapse;
+                table-layout:fixed;
+            }
+            @page{
+                margin:1.0in .75in 1.0in .75in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+            }
+            tr{
+                mso-height-source:auto;
+                mso-ruby-visibility:none; 
+            }
+            table, th, td{
+                border: 1px #AAA solid;
+                padding: 0px 2px;
+                white-space: pre;
+            }
+            col{
+                mso-width-source:auto;
+                mso-ruby-visibility:none;
+            }
+            br{
+                mso-data-placement:same-cell;
+            }
+            .tac{
+                text-align: center;
+            }
+            .fz8{font-size:8px;}.fz9{font-size:9px;}.fz10{font-size:10px;}.fz11{font-size:11px;}.fz12{font-size:12px;}.fz13{font-size:13px;}.fz14{font-size:14px;}.fz15{font-size:15px;}.fz16{font-size:16px;}.fz17{font-size:17px;}.fz18{font-size:18px;}.fz19{font-size:19px;}.fz20{font-size:20px;}.fz21{font-size:21px;}.fz22{font-size:22px;}.fz23{font-size:23px;}.fz24{font-size:24px;}.fz25{font-size:25px;}.fz26{font-size:26px;}.fz27{font-size:27px;}.fz28{font-size:28px;}.fz29{font-size:29px;}.fz30{font-size:30px;}.fz31{font-size:31px;}.fz32{font-size:32px;}.fz33{font-size:33px;}.fz34{font-size:34px;}.fz35{font-size:35px;}.fz36{font-size:36px;}
+            
+            .r-header-title{
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-date{
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .column{
+                color: #FFF;
+                text-align: center;
+                background-color: #555 !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-secondary{
+                color: #555;
+                font-size: 14px;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }             
+        
+        
+                -->
+                @media print{
+                
+            table{
+                mso-number-format:'\@';
+                mso-displayed-decimal-separator:'\.';
+                mso-displayed-thousand-separator:'\,';
+                font-family: 微軟正黑體, Microsoft JhengHei, PMingLiU, serif;
+                border-collapse: collapse;
+                table-layout:fixed;
+            }
+            @page{
+                margin:1.0in .75in 1.0in .75in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+            }
+            tr{
+                mso-height-source:auto;
+                mso-ruby-visibility:none; 
+            }
+            table, th, td{
+                border: 1px #AAA solid;
+                padding: 0px 2px;
+                white-space: pre;
+            }
+            col{
+                mso-width-source:auto;
+                mso-ruby-visibility:none;
+            }
+            br{
+                mso-data-placement:same-cell;
+            }
+            .tac{
+                text-align: center;
+            }
+            .fz8{font-size:8px;}.fz9{font-size:9px;}.fz10{font-size:10px;}.fz11{font-size:11px;}.fz12{font-size:12px;}.fz13{font-size:13px;}.fz14{font-size:14px;}.fz15{font-size:15px;}.fz16{font-size:16px;}.fz17{font-size:17px;}.fz18{font-size:18px;}.fz19{font-size:19px;}.fz20{font-size:20px;}.fz21{font-size:21px;}.fz22{font-size:22px;}.fz23{font-size:23px;}.fz24{font-size:24px;}.fz25{font-size:25px;}.fz26{font-size:26px;}.fz27{font-size:27px;}.fz28{font-size:28px;}.fz29{font-size:29px;}.fz30{font-size:30px;}.fz31{font-size:31px;}.fz32{font-size:32px;}.fz33{font-size:33px;}.fz34{font-size:34px;}.fz35{font-size:35px;}.fz36{font-size:36px;}
+            
+            .r-header-title{
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-date{
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .column{
+                color: #FFF;
+                text-align: center;
+                background-color: #555 !important;
+                -webkit-print-color-adjust: exact; 
+            }
+            .r-header-secondary{
+                color: #555;
+                font-size: 14px;
+                text-align: center;
+                background-color: #DEF !important;
+                -webkit-print-color-adjust: exact; 
+            }             
+        
+        
+                } 
+            </style>
+        
+            </head>
+            <body lang='ZH-TW' style='tab-interval:24.0pt;text-justify-trim:punctuation'>
+            <div align=center x:publishsource='Excel'><table x:str ><tr style="" ><td colspan=4 style="" class="r-header-title" >測試資料</td></tr><tr style="" ><td colspan=4 style="" class="r-header-secondary" >製表人：測試人員</td></tr><tr style="" ><td style="" class="column" >ID</td><td style="" class="column" >姓名</td><td style="" class="column" >資料</td><td style="" class="column" >電話</td></tr><tr style="" ><td style="" class="" >1</td><td style="" class="" >SOL_0</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >2</td><td style="" class="" >SOL_1</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >3</td><td style="" class="" >SOL_2</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >4</td><td style="" class="" >SOL_3</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td style="" class="" >5</td><td style="" class="" >SOL_4</td><td style="" class="" >data</td><td style="" class="" >0923456789</td></tr><tr style="" ><td colspan=3 style="background-color:#DDD;-webkit-print-color-adjust: exact;" class="" >總筆數</td><td style="" class="" >5</td></tr></table></div>
+            </body>
+            </html>
