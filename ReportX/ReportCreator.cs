@@ -32,7 +32,7 @@ namespace ReportX
         public Excel excel { get; set; }
         public Odt odt { get; set; }
         public Ods ods { get; set; }
-        
+
         public ReportCreator(Type type)
         {
             List<MemberInfo> list_cols = new List<MemberInfo>();
@@ -79,7 +79,7 @@ namespace ReportX
 
         public ReportCreator()
         {
-            
+
         }
 
         public string render(int? width = null)
@@ -372,7 +372,7 @@ namespace ReportX
 
             if (end) //如果要顯示結算筆數 end =true;
             {
-                odt.setsum(data,"Odt");
+                odt.setsum(data, "Odt");
             }
             return odt;
         }
@@ -493,7 +493,7 @@ namespace ReportX
                 -webkit-print-color-adjust: exact; 
             }             
         ";
-  
+
 
         public ExcelReport(Type model) : base(model)
         {

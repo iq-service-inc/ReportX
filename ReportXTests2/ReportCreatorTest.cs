@@ -85,7 +85,6 @@ namespace ReportX.Tests
             }
             if (File.Exists("content.xml"))
             {
-                string[] input = new string[2];
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
                 using (var zip = new ZipFile())
@@ -121,7 +120,6 @@ namespace ReportX.Tests
             }
             if (File.Exists("content.xml"))
             {
-                string[] input = new string[2];
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
                 using (var zip = new ZipFile())
