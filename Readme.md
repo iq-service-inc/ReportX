@@ -21,7 +21,7 @@ PM> Install-Package ReportX -Version 1.2.0
 * FileReport  `2018.10.01 update` 
 * OdtReport  `2019.09.17 update` 
 * OdsReport  `2019.09.17 update` 
-* ReportCreatorReport `2019.09.18 update`
+* ReportCreator `2019.09.18 update`
 
 
 ## Default Model
@@ -83,17 +83,18 @@ string title = "今日工事";
 
 宣告使用Report方法
 ```csharp
-Report Rpt = new Report();
+ReportCreator<T> report = new ReportCreator<T>();
 ```
 帶入參數產生Excel 
 
 ```csharp
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
-ExcelReport er = Rpt.excelResponse(data , cols, title , DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
+//ReportCreator<ExcelReport> ex = report.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+ReportCreator<ExcelReport> ex = report.ExcelReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 
 //產生excel 報表
-string exce; = er.render();
-if (File.Exists("excel檔案.doc")) File.Delete("excel檔案.doc");
+string exce; = ex.render();
+if (File.Exists("excel檔案.excel")) File.Delete("excel檔案.excel");
 //另存為excel檔
 File.AppendAllText("excel檔案.xls", excel); 
 
@@ -101,9 +102,10 @@ File.AppendAllText("excel檔案.xls", excel);
 帶入參數產生Word 報表
 ```csharp
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
-WordReport wr =Rpt.WordResponse(data, cols , title, Convert.ToDateTime("2017-01-20"), Convert.ToDateTime("2017-01-20"), "SOL",true);
+//ReportCreator<WordReport> wd = report.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+ReportCreator<WordReport> wd = report.WordReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 //產生word 報表
-string word = wr.render();
+string word = wd.render();
 if (File.Exists("word檔案.doc")) File.Delete("word檔案.doc");
 //另存為word檔
 File.AppendAllText("word檔案.doc", word );  
@@ -121,106 +123,77 @@ string excel = file.render(null, "excel");
 //另存為Word檔
 File.AppendAllText("word檔案.doc", word );
 //另存為Excel檔
-File.AppendAllText("excel檔案.doc", excel );  
+File.AppendAllText("excel檔案.xls", excel );  
 ```
 `2019/09/17` 新增openOffice(Odt,Ods)   宣告 `Odt `,`Ods `   
 帶入參數產生Odt 報表
 ```csharp
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
-    Odt odtRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
+//ReportCreator<OdtReport> odtr = report.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+ReportCreator<OdtReport> odtr = report.OdtReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 //產生odt 報表
-string odt = odtRes.render();
+string odt = odtr.render();
 //產生META-INF(OpenOffice設定檔)
-   odtRes.CreateMeta("odt");
+   odtr.CreateMeta("odt");
 //壓縮檔案成odt
-                string[] input = new string[2];
+              if (File.Exists("content.xml"))
+            {
+                File.Delete("content.xml");
+                File.AppendAllText("content.xml", odt);
+            }
+            else
+            {
+                File.AppendAllText("content.xml", odt);
+            }
+            if (File.Exists("content.xml"))
+            {
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
-                input[0] = inputFile;
-                input[1] = inputData;
-                string outputFile = @".\result.odt";
-                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-                    try
-                    {
-                        using (var zip = new ZipOutputStream(output))
-                        {
-                            zip.SetLevel(9);
-                            byte[] buffer = new byte[4096];
-                            foreach (string file in input)
-                            {
-                                ZipEntry entry = new ZipEntry(file);
-                                entry.DateTime = DateTime.Now;
-                                zip.PutNextEntry(entry);
-                                using (FileStream fs = System.IO.File.OpenRead(file))
-                                {
-                                    int sourceBytes;
-                                    do
-                                    {
-                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
-                                        zip.Write(buffer, 0, sourceBytes);
-                                    } while (sourceBytes > 0);
-                                }
-                            }
-                            zip.Finish();
-                            zip.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-            
+                using (var zip = new ZipFile())
+                {
+                    zip.AddFile(inputFile);
+                    zip.AddFile(inputData);
+                    zip.Save(@"./odt檔案.odt");
+                }
+            }
 
 ```
 帶入參數產生Ods 報表
 ```csharp
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
-    Ods odsRes = Rpt.OdtResponse(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "SOL", true);
+//ReportCreator<OdsReport> odsr = report.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+ReportCreator<OdsReport> odsr = report.OdsReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 //產生ods 報表
-string ods = odsRes.render();
-//產生META-INF(OpenOffice設定檔)
-   odtRes.CreateMeta("ods");
+string ods = odsr.render();
+//產生META-INF(OpenOffice設定檔 META-INF/manifest.xml)
+   odsr.CreateMeta("ods");
 //壓縮檔案成ods
-                string[] input = new string[2];
+         if (File.Exists("content.xml"))
+            {
+                File.Delete("content.xml");
+                File.AppendAllText("content.xml", ods);
+            }
+            else
+            {
+                File.AppendAllText("content.xml", ods);
+            }
+            if (File.Exists("content.xml"))
+            {
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
-                input[0] = inputFile;
-                input[1] = inputData;
-                string outputFile = @".\result.ods";
-                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-                    try
-                    {
-                        using (var zip = new ZipOutputStream(output))
-                        {
-                            zip.SetLevel(9);
-                            byte[] buffer = new byte[4096];
-                            foreach (string file in input)
-                            {
-                                ZipEntry entry = new ZipEntry(file);
-                                entry.DateTime = DateTime.Now;
-                                zip.PutNextEntry(entry);
-                                using (FileStream fs = System.IO.File.OpenRead(file))
-                                {
-                                    int sourceBytes;
-                                    do
-                                    {
-                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
-                                        zip.Write(buffer, 0, sourceBytes);
-                                    } while (sourceBytes > 0);
-                                }
-                            }
-                            zip.Finish();
-                            zip.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                    }
+                using (var zip = new ZipFile())
+                {
+                    zip.AddFile(inputFile);
+                    zip.AddFile(inputData);
+                    zip.Save(@"./ods檔案.ods");
+                }
+            }
             
 
 ```
 `2019/09/18` 新增綜合版(包括Odt,Ods)   宣告 `ReportCreator<T> `
 帶入參數，使用ReportCreator
-```csharp=
+```csharp
 //報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
  ReportCreator<WordReport> wd = res.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
  ReportCreator<ExcelReport> exc = res.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "林家弘", true);
@@ -239,41 +212,14 @@ File.AppendAllText("excel檔案.doc", excel );
 orp.CreateMeta("odt");
 orp.CreateMeta("ods");
 //壓縮檔案成odt,ods
-                string[] input = new string[2];
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
-                input[0] = inputFile;
-                input[1] = inputData;
-                string outputFile = @".\result.ods";(副檔名要改)
-                using (var output = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-                    try
-                    {
-                        using (var zip = new ZipOutputStream(output))
-                        {
-                            zip.SetLevel(9);
-                            byte[] buffer = new byte[4096];
-                            foreach (string file in input)
-                            {
-                                ZipEntry entry = new ZipEntry(file);
-                                entry.DateTime = DateTime.Now;
-                                zip.PutNextEntry(entry);
-                                using (FileStream fs = System.IO.File.OpenRead(file))
-                                {
-                                    int sourceBytes;
-                                    do
-                                    {
-                                        sourceBytes = fs.Read(buffer, 0, buffer.Length);
-                                        zip.Write(buffer, 0, sourceBytes);
-                                    } while (sourceBytes > 0);
-                                }
-                            }
-                            zip.Finish();
-                            zip.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                    }
+                using (var zip = new ZipFile())
+                {
+                    zip.AddFile(inputFile);
+                    zip.AddFile(inputData);
+                    zip.Save(@"./ods檔案.ods");
+                }
             
 ```
 ## Customized Word and Excel 
@@ -395,7 +341,7 @@ string res = multiExcel.render();
 ![Ods](http://192.168.1.136/uploads/-/system/personal_snippet/41/04ac6524c297385718df1633346a1f75/odspt.jpg)
 
 ## UML
-![UML](http://192.168.1.136/uploads/-/system/personal_snippet/41/7b7987feb349690a9508b278cd7b2200/ReportX.png)
+![UML](http://192.168.1.136/uploads/-/system/personal_snippet/41/bb07e5c250d13d472e18f4bd53d96734/ReportX2.png)
 
 
 ## License
