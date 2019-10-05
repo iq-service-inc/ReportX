@@ -18,8 +18,8 @@ PM> Install-Package ReportX -Version 1.2.0
 * Report
 * ExcelReport：
 * WordReport
-* FileReport  `2018.10.01 updata` 
-* OdtReport  `2019.09.17 updata` 
+* FileReport  `2018.10.01 update` 
+* OdtReport  `2019.09.17 update` 
 * OdsReport  `2019.09.17 update` 
 * ReportCreatorReport `2019.09.18 update`
 
@@ -382,27 +382,21 @@ string res = multiExcel.render();
 
 ## Preview
 * Excel
+
 ![excel](https://i.imgur.com/heC8f8i.png)
 * Word 
+ 
 ![word](https://i.imgur.com/CQCqfcu.png)
 * Odt
-![Odt](https://i.imgur.com/ENBBLp2.jpg)
+
+![Odt](http://192.168.1.136/uploads/-/system/personal_snippet/41/3960d355fd93e84e810a0fee998d2a9a/odtpt.jpg)
 * Ods
-![Ods](https://i.imgur.com/9Ij8V8q.jpg)
+
+![Ods](http://192.168.1.136/uploads/-/system/personal_snippet/41/04ac6524c297385718df1633346a1f75/odspt.jpg)
 
 ## UML
-1 -> 2,3 -> 4,5 -> 6 
-![1](https://i.imgur.com/xvpBucR.jpg)
+![UML](http://192.168.1.136/uploads/-/system/personal_snippet/41/7b7987feb349690a9508b278cd7b2200/ReportX.png)
 
-![2](https://i.imgur.com/q73eNVj.jpg)
-
-![3](https://i.imgur.com/wvHgHnX.jpg)
-
-![4](https://i.imgur.com/76yxpjQ.jpg)
-
-![5](https://i.imgur.com/RuKQyx6.jpg)
-
-![6](https://i.imgur.com/OiPelSm.jpg)
 
 ## License
 
