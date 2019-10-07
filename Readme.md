@@ -93,7 +93,7 @@ ReportCreator<T> report = new ReportCreator<T>();
 ReportCreator<ExcelReport> ex = report.ExcelReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 
 //產生excel 報表
-string exce; = ex.render();
+string excel = ex.render();
 if (File.Exists("excel檔案.excel")) File.Delete("excel檔案.excel");
 //另存為excel檔
 File.AppendAllText("excel檔案.xls", excel); 
@@ -202,15 +202,18 @@ string ods = odsr.render();
 //產生報表
 string word = wd.render();
 string excel = exc.render();
-string ods = odsRes.render(width); (odt要帶入寬度width)
-string odsRes = osp.render();
+string odt = orp.render(width); (odt要帶入寬度width)
+string ods = osp.render();
 //另存為Word檔
 File.AppendAllText("word檔案.doc", word );
 //另存為Excel檔
 File.AppendAllText("excel檔案.doc", excel );  
 //產生META-INF(OpenOffice設定檔)
 orp.CreateMeta("odt");
-orp.CreateMeta("ods");
+osp.CreateMeta("ods");
+//產生odt、ods content檔
+File.AppendAllText("content.xml", odt );
+File.AppendAllText("content.xml", ods );  
 //壓縮檔案成odt,ods
                 string inputFile = @"content.xml";
                 string inputData = @"META-INF/manifest.xml";
