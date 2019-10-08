@@ -28,10 +28,6 @@ namespace ReportX
         protected List<ModelTR> trs { get; }
         public static string[] cols { get; set; }
         public string sheetName { get; set; }
-        public Word word { get; set; }
-        public Excel excel { get; set; }
-        public Odt odt { get; set; }
-        public Ods ods { get; set; }
 
         public ReportCreator(Type type)
         {
@@ -70,111 +66,59 @@ namespace ReportX
 
             for (int i = 0; i < data.Columns.Count; i++)
                 str_cols[i] = data.Columns[i].ToString();
-
-
             oldcols = str_cols; //舊的陣列
             cols = str_cols;
             report = (T)Activator.CreateInstance(typeof(T), data);
         }
-
         public ReportCreator()
         {
-
         }
 
         public string render(int? width = null)
         {
-
             return report.render(width);
         }
         public void setDate(DateTime from, DateTime? to = null)
         {
             if (from == null) return;
             if (to == null) to = DateTime.Now;
-
+            string classname = typeof(T).Name;
             string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
                    date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-            switch (typeof(T).Name)
-            {
-                case "WordReport":
-                    report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
-                    break;
-                case "ExcelReport":
-                    report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
-                    break;
-                case "OdtReport":
-                    report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
-                    break;
-                case "OdsReport":
-                    report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
-                    break;
-                default:
-                    break;
-            }
+            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
+                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
+            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
+                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
         }
         public void setCreator(string creator)
         {
+            string classname = typeof(T).Name;
             report.setData(author: creator);
-            switch (typeof(T).Name)
-            {
-                case "WordReport":
-                    report.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
-                    break;
-                case "ExcelReport":
-                    report.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
-                    break;
-                case "OdtReport":
-                    report.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
-                    break;
-                case "OdsReport":
-                    report.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
-                    break;
-                default:
-                    break;
-            }
+            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
+                report.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
+            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
+                report.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
+
+
         }
         public void setTile(string title)
         {
+            string classname = typeof(T).Name;
             report.setData(sheetName: title);
-            switch (typeof(T).Name)
-            {
-                case "WordReport":
-                    report.appendFullRow(title, null, "r-header-title");
-                    break;
-                case "ExcelReport":
-                    report.appendFullRow(title, null, "r-header-title");
-                    break;
-                case "OdtReport":
-                    report.appendFullRow(title, "TableCellData", "Title");
-                    break;
-                case "OdsReport":
-                    report.appendFullRow(title, "TableCellData", "Title");
-                    break;
-                default:
-                    break;
-            }
+            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
+                report.appendFullRow(title, null, "r-header-title");
+            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
+                report.appendFullRow(title, "TableCellData", "Title");
 
         }
         public void setCreatedDate()
         {
+            string classname = typeof(T).Name;
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            switch (typeof(T).Name)
-            {
-                case "WordReport":
-                    report.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
-                    break;
-                case "ExcelReport":
-                    report.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
-                    break;
-                case "OdtReport":
-                    report.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
-                    break;
-                case "OdsReport":
-                    report.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
-                    break;
-                default:
-                    break;
-            }
+            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
+                report.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
+            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
+                report.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
         }
         public void setColumn()
         {
@@ -192,65 +136,39 @@ namespace ReportX
         {
             report.appendTable(data);
         }
-        public void setsum<T>(T[] data, string type = null) //總筆數
+        public void setsum<T>(T[] data, Type type) //總筆數
         {
             string lastRowStyle = "";
             string lastClassName = "";
-            switch (type)
+            if (typeof(ExcelReport).Name == type.Name || typeof(WordReport).Name == type.Name)
             {
-                case "Word":
-                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-                    break;
-                case "Excel":
-                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-                    break;
-                case "Odt":
-                    lastRowStyle = "TotalCell"; //預設CSS
-                    lastClassName = "Word";
-                    report.appendRow(new { value = data.Length, colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數                    break;
-                    break;
-                case "Ods":
-                    lastRowStyle = "TotalCell"; //預設CSS
-                    lastClassName = "Word";
-                    report.appendRow(new { value = data.Length, colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-                    break;
-                default:
-                    break;
+                lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+                report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
             }
-
+            else if (typeof(OdtReport).Name == type.Name || typeof(OdsReport).Name == type.Name)
+            {
+                lastRowStyle = "TotalCell"; //預設CSS
+                lastClassName = "Word";
+                report.appendRow(new { value = data.Length, colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數 
+            }
         }
         public void setsum(DataTable data) //總筆數
         {
+            string classname = typeof(T).Name;
             string lastRowStyle = "";
             string lastClassName = "";
-            switch (typeof(T).Name)
+
+            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
             {
-                case "WordReport":
-                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
-                    break;
-                case "ExcelReport":
-                    lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                    report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
-                    break;
-                case "OdtReport":
-                    lastRowStyle = "TotalCell"; //預設CSS
-                    lastClassName = "Word";
-                    report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數                    break;
-                    break;
-                case "OdsReport":
-                    lastRowStyle = "TotalCell"; //預設CSS
-                    lastClassName = "Word";
-                    report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-                    break;
-                default:
-                    break;
+                lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
+                report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
             }
-
-
-
+            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
+            {
+                lastRowStyle = "TotalCell"; //預設CSS
+                lastClassName = "Word";
+                report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
+            }
         }
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
@@ -258,208 +176,87 @@ namespace ReportX
             newcols = cut;
             report.changecut(cut);
         }
-        public void CreateMeta(string type)
+        public string CreateMeta(Type type)
         {
+            var classname = type.Name;
             var str = "";
-            switch (type)
-            {
-                case "odt":
-                    str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-                    break;
-                case "ods":
-                    str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-                    break;
-                default:
-                    break;
-            }
-            string dirPath = @".\META-INF";
-            if (Directory.Exists(dirPath))
-            {
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
-            else
-            {
-                Directory.CreateDirectory(dirPath);
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
+            if (typeof(OdtReport).Name == classname)
+                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            if (typeof(OdsReport).Name == classname)
+                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            return str;
         }
         public int getColCount()
         {
             return cols.Length;
         }
-
-        public ReportCreator<WordReport> WordReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public string render<T,S>(S[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false) where T : IReportX
         {
-            ReportCreator<WordReport> wd = new ReportCreator<WordReport>(typeof(T));
+            ReportCreator<T> report = new ReportCreator<T>(typeof(S));
+            string res = "";
             if (cols.Length > 0)
             {
-                wd.setcut(cols);
+                report.setcut(cols);
             }
 
-            wd.setTile(title);
-            wd.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            wd.setCreator(Creator);
-            wd.setCreatedDate();
-            wd.setColumn();
-            wd.setData(data);
-
+            report.setTile(title);
+            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+            report.setCreator(Creator);
+            report.setCreatedDate();
+            report.setColumn();
+            report.setData(data);
             if (end) //如果要顯示結算筆數 end =true;
             {
-                wd.setsum(data, "Word");
+                report.setsum(data,typeof(T));
             }
-            return wd;
+            if (typeof(T) == typeof(OdtReport) || typeof(T) == typeof(Odt))
+            {
+                int width = report.getColCount();
+                res = report.render(width);
+            }
+            else
+            {
+                res = report.render();
+
+            }
+            return res;
         }
-        public ReportCreator<OdsReport> OdsReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public string render<T>(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false) where T : IReportX
         {
-            ReportCreator<OdsReport> ods = new ReportCreator<OdsReport>(typeof(T));
+            ReportCreator<T> report = new ReportCreator<T>(data);
+            string res = "";
             if (cols.Length > 0)
             {
-                ods.setcut(cols);
+                report.setcut(cols);
             }
 
-            ods.setTile(title);
-            ods.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            ods.setCreator(Creator);
-            ods.setCreatedDate();
-            ods.setColumn();
-            ods.setData(data);
-
+            report.setTile(title);
+            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+            report.setCreator(Creator);
+            report.setCreatedDate();
+            report.setColumn();
+            report.setData(data);
             if (end) //如果要顯示結算筆數 end =true;
             {
-                ods.setsum(data, "Ods");
+                report.setsum(data);
             }
-            return ods;
+            if (typeof(T) == typeof(OdtReport) || typeof(T) == typeof(Odt))
+            {
+                int width = report.getColCount();
+                res = report.render(width);
+            }
+            else
+            {
+                res = report.render();
+
+            }
+            return res;
         }
-        public ReportCreator<ExcelReport> ExcelReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
+        public string renderOpenOfficeMeta()
         {
-            ReportCreator<ExcelReport> exc = new ReportCreator<ExcelReport>(typeof(T));
-            if (cols.Length > 0)
-            {
-                exc.setcut(cols);
-            }
-
-            exc.setTile(title);
-            exc.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            exc.setCreator(Creator);
-            exc.setCreatedDate();
-            exc.setColumn();
-            exc.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                exc.setsum(data, "Excel");
-            }
-            return exc;
-        }
-        public ReportCreator<OdtReport> OdtReport<T>(T[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
-        {
-            ReportCreator<OdtReport> odt = new ReportCreator<OdtReport>(typeof(T));
-            if (cols.Length > 0)
-            {
-                odt.setcut(cols);
-            }
-
-            odt.setTile(title);
-            odt.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            odt.setCreator(Creator);
-            odt.setCreatedDate();
-            odt.setColumn();
-            odt.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                odt.setsum(data, "Odt");
-            }
-            return odt;
-        }
-        public ReportCreator<WordReport> WordReport(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
-        {
-            ReportCreator<WordReport> wd = new ReportCreator<WordReport>(data);
-            if (cols.Length > 0)
-            {
-                wd.setcut(cols);
-            }
-
-            wd.setTile(title);
-            wd.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            wd.setCreator(Creator);
-            wd.setCreatedDate();
-            wd.setColumn();
-            wd.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                wd.setsum(data);
-            }
-            return wd;
-        }
-        public ReportCreator<OdsReport> OdsReport(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
-        {
-            ReportCreator<OdsReport> ods = new ReportCreator<OdsReport>(data);
-            if (cols.Length > 0)
-            {
-                ods.setcut(cols);
-            }
-
-            ods.setTile(title);
-            ods.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            ods.setCreator(Creator);
-            ods.setCreatedDate();
-            ods.setColumn();
-            ods.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                ods.setsum(data);
-            }
-            return ods;
-        }
-        public ReportCreator<ExcelReport> ExcelReport(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
-        {
-            ReportCreator<ExcelReport> exc = new ReportCreator<ExcelReport>(data);
-            if (cols.Length > 0)
-            {
-                exc.setcut(cols);
-            }
-
-            exc.setTile(title);
-            exc.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            exc.setCreator(Creator);
-            exc.setCreatedDate();
-            exc.setColumn();
-            exc.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                exc.setsum(data);
-            }
-            return exc;
-        }
-        public ReportCreator<OdtReport> OdtReport(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false)
-
-        {
-            ReportCreator<OdtReport> odt = new ReportCreator<OdtReport>(data);
-            if (cols.Length > 0)
-            {
-                odt.setcut(cols);
-            }
-
-            odt.setTile(title);
-            odt.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            odt.setCreator(Creator);
-            odt.setCreatedDate();
-            odt.setColumn();
-            odt.setData(data);
-
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                odt.setsum(data);
-            }
-            return odt;
+            ReportCreator<AbsOpenOffice> meta = new ReportCreator<AbsOpenOffice>();
+            string metaStr = meta.CreateMeta(typeof(T));
+            return metaStr;
         }
     }
     public class ExcelReport : Excel

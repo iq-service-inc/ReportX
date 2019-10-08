@@ -29,9 +29,9 @@ namespace ReportX.Rep.Office.Word.Tests
                 report.setcut(cols);
             }
             report.setTile(title);
-            //report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
             report.setCreator(Creator);
-            //report.setCreatedDate();
+            report.setCreatedDate();
             report.setColumn();
 
             //Model資料格式

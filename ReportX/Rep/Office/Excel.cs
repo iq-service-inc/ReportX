@@ -84,10 +84,6 @@ namespace ReportX.Rep.Office.Excel
             cols = intersectResult.ToArray();
             excel.colNum = cols.Length;
         }
-        public string formatDate(DateTime dateTime1, DateTime dateTime2)
-        {
-            throw new NotImplementedException();
-        }
         public override void  setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) excel.author = author;
@@ -117,12 +113,9 @@ namespace ReportX.Rep.Office.Excel
         }       
         public override string render(int? width = null)
         {
-            
             excel.body = new ViewBody(trs, width);
             ViewExcel report = new ViewExcel(excel);
             return report.render();
-           
-          
         }
     }
 }

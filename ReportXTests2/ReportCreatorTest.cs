@@ -1,7 +1,6 @@
 ﻿using Ionic.Zip;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ReportX.Rep.Excel;
-using ReportX.Rep.Integration;
+
 using ReportXTests2;
 using ReportXTests2.Model;
 using System;
@@ -22,9 +21,8 @@ namespace ReportX.Tests
             var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<ExcelReport> report = new ReportCreator<ExcelReport>();
-            //ReportCreator<ExcelReport> ex = report.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            ReportCreator<ExcelReport> ex = report.ExcelReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            string excel = ex.render();
+            string excel = report.render<ExcelReport,ModelEmployeeTicket>(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //string excel = report.render<ExcelReport>(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             Assert.IsNotNull(excel);
             if (File.Exists("creator.xls"))
             {
@@ -45,9 +43,8 @@ namespace ReportX.Tests
             var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<WordReport> report = new ReportCreator<WordReport>();
-            //ReportCreator<WordReport> wd = report.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            ReportCreator<WordReport> wd = report.WordReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            string word = wd.render();
+            //string word = report.render<WordReport,ModelEmployeeTicket>(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string word = report.render<WordReport>(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
             Assert.IsNotNull(word);
             if (File.Exists("creator.doc"))
             {
@@ -68,11 +65,24 @@ namespace ReportX.Tests
             var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<OdtReport> report = new ReportCreator<OdtReport>();
-            //ReportCreator<OdtReport> odtr = report.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            ReportCreator<OdtReport> odtr = report.OdtReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            report.CreateMeta("odt");
-            var width = odtr.getColCount();
-            string odt = odtr.render(width);
+            string odt= report.render<OdtReport,ModelEmployeeTicket>(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //string odt = report.render<OdtReport>(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string metaStr = report.renderOpenOfficeMeta();
+            string dirPath = @".\META-INF";
+            Assert.IsNotNull(metaStr);
+            if (Directory.Exists(dirPath))
+            {
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", metaStr);
+            }
+            else
+            {
+                Directory.CreateDirectory(dirPath);
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", metaStr);
+            }
             Assert.IsNotNull(odt);
             if (File.Exists("content.xml"))
             {
@@ -104,10 +114,24 @@ namespace ReportX.Tests
             var dtData = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<OdsReport> report = new ReportCreator<OdsReport>();
-            //ReportCreator<OdsReport> odsr = report.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            ReportCreator<OdsReport> odsr = report.OdsReport(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-            report.CreateMeta("ods");
-            string ods = odsr.render();
+            string ods = report.render<OdsReport,ModelEmployeeTicket>(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            //string ods = report.render<OdsReport>(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string metaStr = report.renderOpenOfficeMeta();
+            string dirPath = @".\META-INF";
+            Assert.IsNotNull(metaStr);
+            if (Directory.Exists(dirPath))
+            {
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", metaStr);
+            }
+            else
+            {
+                Directory.CreateDirectory(dirPath);
+                if (File.Exists("META-INF/manifest.xml"))
+                    File.Delete("META-INF/manifest.xml");
+                File.AppendAllText("META-INF/manifest.xml", metaStr);
+            }
             Assert.IsNotNull(ods);
             if (File.Exists("content.xml"))
             {

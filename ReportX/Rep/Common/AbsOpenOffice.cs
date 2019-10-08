@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ReportX.Rep.Common
 {
-    public abstract class AbsOpenOffice: IReportX
+    public abstract class AbsOpenOffice : IReportX
     {
         protected abstract string[] oldcols { get; set; }
         protected abstract string[] newcols { get; set; }
@@ -20,10 +20,10 @@ namespace ReportX.Rep.Common
         protected abstract List<ModelTR> trs { get; }
 
 
-        public abstract string render( int? width = null);
+        public abstract string render(int? width = null);
         public abstract void changecut(string[] cut);
         public abstract void setCustomStyle(string css);
-        public abstract ModelTR appendFullRow(string data, string trStyle = null, string className = null);  
+        public abstract ModelTR appendFullRow(string data, string trStyle = null, string className = null);
 
         public ModelTR appendRow(params object[] data)
         {
@@ -138,34 +138,15 @@ namespace ReportX.Rep.Common
         {
             return cols.Length;
         }
-        public void CreateMeta(string type)
+        public string CreateMeta(Type type)
         {
+            var classname = type.Name;
             var str = "";
-            switch (type)
-            {
-                case "odt":
-                    str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-                    break;
-                case "ods":
-                    str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-                    break;
-                default:
-                    break;
-            }
-         string dirPath = @".\META-INF";
-            if (Directory.Exists(dirPath))
-            {
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
-            else
-            {
-                Directory.CreateDirectory(dirPath);
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", str);
-            }
+            if (typeof(OdtReport).Name == classname)
+                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            if (typeof(OdsReport).Name == classname)
+                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+            return str;
         }
         public abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null);
     }

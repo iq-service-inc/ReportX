@@ -20,17 +20,17 @@ namespace ReportX.Rep.Office.Word
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         private ModelWord word;
-        public Word(DataTable model)
+        public Word(DataTable dtTable)
         {
             trs = new List<ModelTR>();
             word = new ModelWord();
             word.style = new ViewStyle();
 
 
-            string[] str_cols = new string[model.Columns.Count];
+            string[] str_cols = new string[dtTable.Columns.Count];
 
-            for (int i = 0; i < model.Columns.Count; i++)
-                str_cols[i] = model.Columns[i].ToString();
+            for (int i = 0; i < dtTable.Columns.Count; i++)
+                str_cols[i] = dtTable.Columns[i].ToString();
 
 
             oldcols = str_cols; //舊的陣列
