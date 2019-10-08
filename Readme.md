@@ -79,8 +79,25 @@ string[] cols = new string[5];
 string title = "今日工事";
 string Creator = "測試人員";
 ```
-
-產生Excel
+產生標準版報表 使用 ReportCreator<T>
+```csharp
+//宣告 ReportCreator(以excel為例)
+ReportCreator<ExcelReport> report = new ReportCreator<ExcelReport>();
+//產生報表字串
+string excel = report.render<ExcelReport,ModelEmployeeTicket>(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+//string excel = report.render<ExcelReport>(dtData, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+Assert.IsNotNull(excel);
+if (File.Exists("creator.xls"))
+{
+    File.Delete("creator.xls");
+    File.AppendAllText("creator.xls", excel);
+}
+else
+{
+    File.AppendAllText("creator.xls", excel);
+}
+```
+產生Excel 報表
 
 ```csharp
 ExcelReport report = new ExcelReport(typeof(ModelEmployeeTicket));
@@ -203,9 +220,9 @@ if (cols.Length > 0)
     report.setcut(cols);
 }
 report.setTile(title);
-//report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
+report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
 report.setCreator(Creator);
-//report.setCreatedDate();
+report.setCreatedDate();
 report.setColumn();
 
 //data資料格式 可為 model or DataTable
@@ -239,45 +256,7 @@ if (File.Exists("content.xml"))
     }
 }
 ```
-`2019/09/18` 新增綜合版(標準版報表產生)
 
-帶入參數，使用ReportCreator
-
-宣告 `ReportCreator<T>`
-```csharp
-ReportCreator<T> report = new ReportCreator<T>();
-```
-```csharp
-//報表 (原始資料 ,欄位陣列 , 標題 , 開始時間 , 結束時間 , 製表人 ,是否顯示結尾(總筆數)欄位)
- ReportCreator<WordReport> wd = res.WordReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
- ReportCreator<ExcelReport> exc = res.ExcelReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
- ReportCreator<OdtReport> orp = res.OdtReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
- ReportCreator<OdsReport> osp = res.OdsReport(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-//產生報表
-string word = wd.render();
-string excel = exc.render();
-string odt = orp.render(width); // width = orp.getColCount();
-string ods = osp.render();
-//另存為Word檔
-File.AppendAllText("word檔案.doc", word );
-//另存為Excel檔
-File.AppendAllText("excel檔案.xls", excel );  
-//產生META-INF(OpenOffice設定檔 META-INF/manifest.xml)
-orp.CreateMeta("odt");
-osp.CreateMeta("ods");
-//產生odt、ods content檔
-File.AppendAllText("content.xml", odt );
-File.AppendAllText("content.xml", ods );  
-//壓縮檔案成odt,ods
-string inputFile = @"content.xml";
-string inputData = @"META-INF/manifest.xml";
-using (var zip = new ZipFile())
-{
-    zip.AddFile(inputFile);
-    zip.AddFile(inputData);
-    zip.Save(@"./ods檔案.ods");
-}
- ```
 
 ## Customized Word and Excel
 
@@ -385,7 +364,7 @@ ExcelReport file = new ExcelReport(typeof(ModelEmployeeTicket));
 
 ## UML
 
-![UML](http://192.168.1.136/uploads/-/system/personal_snippet/41/bb07e5c250d13d472e18f4bd53d96734/ReportX2.png)
+![UML](http://192.168.1.136/uploads/-/system/personal_snippet/41/fb0ad0010256d286592faf8b1eb35127/ReportX3.png)
 
 ## License
 
