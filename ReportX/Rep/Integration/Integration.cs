@@ -13,8 +13,8 @@ namespace ReportX.Rep.Integration
     public class Integration : AbsOffice
     {
         //存取器
-        protected override string[] oldcols { get; set; }
-        protected override string[] newcols { get; set; }
+        public override string[] oldcols { get; set; }
+        public override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         private ModelExcel excel;

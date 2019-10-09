@@ -14,8 +14,8 @@ namespace ReportX.Rep.Common
 {
     public abstract class AbsOpenOffice : IReportX
     {
-        protected abstract string[] oldcols { get; set; }
-        protected abstract string[] newcols { get; set; }
+        public abstract string[] oldcols { get; set; }
+        public abstract string[] newcols { get; set; }
         public abstract string[] cols { get; set; }
         protected abstract List<ModelTR> trs { get; }
 

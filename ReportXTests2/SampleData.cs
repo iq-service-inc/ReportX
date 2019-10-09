@@ -44,9 +44,9 @@ namespace ReportXTests2
             new DataColumn("ID",typeof(int)),
             new DataColumn("標題",typeof(string)),
             new DataColumn("姓名",typeof(string)),
-            new DataColumn("電話",typeof(string)),
             new DataColumn("編號",typeof(string)),
-            new DataColumn("資料",typeof(string))
+            new DataColumn("資料",typeof(string)),
+            new DataColumn("電話",typeof(string))
             };
             dtTable.Columns.AddRange(cols);
 

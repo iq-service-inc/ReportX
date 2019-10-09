@@ -18,8 +18,8 @@ namespace ReportX.Rep.OpenOffice.Odt
 
         private ModelOdt odt;
 
-        protected override string[] oldcols { get; set; }
-        protected override string[] newcols { get; set; }
+        public override string[] oldcols { get; set; }
+        public override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         public Odt(Type model)

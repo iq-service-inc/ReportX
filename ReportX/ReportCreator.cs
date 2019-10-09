@@ -18,65 +18,21 @@ namespace ReportX
 
     public class ReportCreator<T> where T : IReportX
     {
-        static T report { get; set; }
-
-        public MemberInfo[] modeli;
-        protected Type type { get; set; }
-        protected DataTable data { get; set; }
-        public string[] oldcols { get; set; }
-        public string[] newcols { get; set; }
-        protected List<ModelTR> trs { get; }
-        public static string[] cols { get; set; }
-        public string sheetName { get; set; }
-
+        static T creator { get; set; }
         public ReportCreator(Type type)
         {
-            List<MemberInfo> list_cols = new List<MemberInfo>();
-            modeli = type.GetMembers();
-            foreach (var member in type.GetMembers())
-            {
-                Present attr = member.GetCustomAttribute<Present>();
-                if (attr == null) continue;
-
-                int MetadataToken = member.MetadataToken,
-                    inserted_index = 0;
-
-                // sory by MetadataToken (declaration)
-                for (int i = 0; i < list_cols.Count; i++)
-                {
-                    inserted_index = i;
-                    if (MetadataToken < list_cols[i].MetadataToken) break;
-                    inserted_index = i + 1;
-                }
-                list_cols.Insert(inserted_index, member);
-            }
-            string[] str_cols = new string[list_cols.Count]; //取得標題數量
-
-            for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            report = (T)Activator.CreateInstance(typeof(T), type);
+            creator = (T)Activator.CreateInstance(typeof(T), type);
         }
         public ReportCreator(DataTable data)
         {
-            trs = new List<ModelTR>();
-            string[] str_cols = new string[data.Columns.Count];
-
-            for (int i = 0; i < data.Columns.Count; i++)
-                str_cols[i] = data.Columns[i].ToString();
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            report = (T)Activator.CreateInstance(typeof(T), data);
+            creator = (T)Activator.CreateInstance(typeof(T), data);
         }
         public ReportCreator()
         {
         }
-
         public string render(int? width = null)
         {
-            return report.render(width);
+            return creator.render(width);
         }
         public void setDate(DateTime from, DateTime? to = null)
         {
@@ -86,29 +42,29 @@ namespace ReportX
             string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
                    date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
             if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
+                creator.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
             else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
+                creator.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
         }
         public void setCreator(string creator)
         {
             string classname = typeof(T).Name;
-            report.setData(author: creator);
+            ReportCreator<T>.creator.setData(author: creator);
             if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                report.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
+                ReportCreator<T>.creator.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
             else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                report.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
+                ReportCreator<T>.creator.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
 
 
         }
         public void setTile(string title)
         {
             string classname = typeof(T).Name;
-            report.setData(sheetName: title);
+            creator.setData(sheetName: title);
             if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                report.appendFullRow(title, null, "r-header-title");
+                creator.appendFullRow(title, null, "r-header-title");
             else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                report.appendFullRow(title, "TableCellData", "Title");
+                creator.appendFullRow(title, "TableCellData", "Title");
 
         }
         public void setCreatedDate()
@@ -116,25 +72,23 @@ namespace ReportX
             string classname = typeof(T).Name;
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
             if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                report.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
+                creator.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
             else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                report.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
+                creator.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
         }
         public void setColumn()
         {
-            var intersectResult = oldcols.Intersect(newcols);
-            cols = intersectResult.ToArray();
-            ModelTR col = report.appendRow(cols);
+            ModelTR col = creator.appendRow(creator.cols);
             foreach (ModelTD td in col.tds)
                 td.className = "column";
         }
         public void setData<T>(T[] data)
         {
-            report.appendTable(data);
+            creator.appendTable(data);
         }
         public void setData(DataTable data)
         {
-            report.appendTable(data);
+            creator.appendTable(data);
         }
         public void setsum<T>(T[] data, Type type) //總筆數
         {
@@ -143,13 +97,13 @@ namespace ReportX
             if (typeof(ExcelReport).Name == type.Name || typeof(WordReport).Name == type.Name)
             {
                 lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
+                creator.appendRow(new { value = "總筆數", colspan = creator.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
             }
             else if (typeof(OdtReport).Name == type.Name || typeof(OdsReport).Name == type.Name)
             {
                 lastRowStyle = "TotalCell"; //預設CSS
                 lastClassName = "Word";
-                report.appendRow(new { value = data.Length, colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數 
+                creator.appendRow(new { value = data.Length, colspan = creator.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數 
             }
         }
         public void setsum(DataTable data) //總筆數
@@ -161,20 +115,19 @@ namespace ReportX
             if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
             {
                 lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                report.appendRow(new { value = "總筆數", colspan = report.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
+                creator.appendRow(new { value = "總筆數", colspan = creator.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
             }
             else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
             {
                 lastRowStyle = "TotalCell"; //預設CSS
                 lastClassName = "Word";
-                report.appendRow(new { value = data.Select().Count(), colspan = report.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
+                creator.appendRow(new { value = data.Select().Count(), colspan = creator.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
             }
         }
         // 傳入欲顯示欄位標題 之陣列
         public void setcut(string[] cut)
         {
-            newcols = cut;
-            report.changecut(cut);
+            creator.changecut(cut);
         }
         public string CreateMeta(Type type)
         {
@@ -188,7 +141,7 @@ namespace ReportX
         }
         public int getColCount()
         {
-            return cols.Length;
+            return creator.cols.Length;
         }
         public string render<T,S>(S[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false) where T : IReportX
         {
@@ -306,7 +259,6 @@ namespace ReportX
             setData(sheetName: title);
             appendFullRow(title, null, "r-header-title");
         }
-
         // 設定製表日期 : 帶入參數 yyyy/MM/dd yyyy/MM/dd
         public void setDate(DateTime from, DateTime? to = null)
         {
@@ -318,21 +270,18 @@ namespace ReportX
 
             appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
         }
-
         // 設定製表人
         public void setCreator(string creator)
         {
             setData(author: creator);
             appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
         }
-
         // 設定製表時間 :取得現在時間
         public void setCreatedDate()
         {
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
             appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
         }
-
         // 設定資料欄位
         public void setColumn()
         {
@@ -340,7 +289,6 @@ namespace ReportX
             foreach (ModelTD td in col.tds)
                 td.className = "column";
         }
-
         // 塞入資料
         public void setData<T>(T[] data)
         {
@@ -355,7 +303,6 @@ namespace ReportX
         {
             changecut(cut);
         }
-
         public void setsum<T>(T[] data) //總筆數欄位
         {
             string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS

@@ -15,8 +15,8 @@ namespace ReportX.Rep.Office.Word
     public class Word : AbsOffice
     {
         //存取器
-        protected override string[] oldcols { get; set; }
-        protected override string[] newcols { get; set; }
+        public override string[] oldcols { get; set; }
+        public override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         private ModelWord word;

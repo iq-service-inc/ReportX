@@ -10,6 +10,9 @@ namespace ReportX.Rep.Common
 {
     public interface IReportX
     {
+        string[] oldcols { get; set; }
+        string[] newcols { get; set; }
+        string[] cols { get; set; }
         string render(int? width = null);
         void changecut(string[] cut);
         void setCustomStyle(string css);
