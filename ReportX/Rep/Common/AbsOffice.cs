@@ -3,28 +3,23 @@ using ReportX.Rep.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 
 namespace ReportX.Rep.Common
 {
-    public abstract class AbsOffice: IReportX
+    public abstract class AbsOffice : IReportX
     {
         public abstract string[] oldcols { get; set; }
         public abstract string[] newcols { get; set; }
         public abstract string[] cols { get; set; }
         protected abstract List<ModelTR> trs { get; }
 
-        public virtual string render(int? width = null, string File_type = null)
-        {
-            throw new NotImplementedException();
-        }
         public virtual string render(int? width = null)
         {
             throw new NotImplementedException();
         }
+       
         public abstract void changecut(string[] cut);
         public abstract void setCustomStyle(string css);
         public abstract ModelTR appendFullRow(string data, string trStyle = null, string className = null);
@@ -70,7 +65,6 @@ namespace ReportX.Rep.Common
         }
         public void appendTable<T>(T[] data, string trStyle = null, string className = null)
         {
-
             foreach (T tuple in data)
             {
                 ModelTD[] tds = new ModelTD[cols.Length];
@@ -84,7 +78,8 @@ namespace ReportX.Rep.Common
                     {
                         Present attr = prop.GetCustomAttribute<Present>();
                         if (attr == null) continue;
-                        int colinx = Array.IndexOf(cols, attr.getName());
+                        string attrName = attr.getName();
+                        int colinx = Array.IndexOf(cols, attrName); 
                         object value = prop.GetValue(tuple, null);
                         tds[colinx] = new ModelTD()
                         {
@@ -92,8 +87,9 @@ namespace ReportX.Rep.Common
                             data = value
                         };
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Trace.WriteLine(e.ToString());
                         continue;
                     }
                 }
@@ -102,6 +98,8 @@ namespace ReportX.Rep.Common
 
                 trs.Add(tr);
             }
+
+            Console.WriteLine("break");
         }
         public void appendTable(DataTable data, string trStyle = null, string className = null)
         {
@@ -140,6 +138,49 @@ namespace ReportX.Rep.Common
         {
             return cols.Length;
         }
+
+
+        public void setCol(DataTable data)
+        {
+            string[] str_cols = new string[data.Columns.Count];
+            for (int i = 0; i < data.Columns.Count; i++)
+                str_cols[i] = data.Columns[i].ToString();
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            setReportColNum();
+        }
+
+        public void setCol<T>(T[] data)
+        {
+            List<MemberInfo> list_cols = new List<MemberInfo>();
+            Type type = typeof(T);
+
+            foreach (var member in type.GetMembers())
+            {
+                Present attr = member.GetCustomAttribute<Present>();
+                if (attr == null) continue;
+                int MetadataToken = member.MetadataToken,
+                    inserted_index = 0;
+                for (int i = 0; i < list_cols.Count; i++)
+                {
+                    inserted_index = i;
+                    if (MetadataToken < list_cols[i].MetadataToken) break;
+                    inserted_index = i + 1;
+                }
+                list_cols.Insert(inserted_index, member);
+            }
+            string[] str_cols = new string[list_cols.Count]; //取得標題數量
+
+            for (int i = 0; i < list_cols.Count; i++)
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            setReportColNum();
+        }
+
+        protected abstract void setReportColNum();
+
         public abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null);
 
     }

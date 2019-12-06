@@ -1,9 +1,5 @@
-﻿using System;
+﻿using ReportX.Rep.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReportX.Rep.Model;
 
 namespace ReportX.Rep.View
 {
@@ -20,8 +16,8 @@ namespace ReportX.Rep.View
 
         public string render()
         {
-            string table_width = width == null ? "" : string.Format("width={0}", width),
-                   trs = "";
+            string table_width = width == null ? "" : string.Format("width={0}", width);
+            string trs = "";
 
             foreach (ModelTR tr in model)
             {
@@ -70,7 +66,6 @@ namespace ReportX.Rep.View
         }
 
         string template = @"<div align=center x:publishsource='Excel'><table x:str {1}>{0}</table></div>";
-
         string template_td = "<td {0}>{1}</td>";
         string template_tr = "<tr {0}>{1}</tr>";
 

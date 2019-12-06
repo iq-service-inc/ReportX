@@ -1,220 +1,237 @@
-﻿using ReportX.Rep.Attributes;
-using ReportX.Rep.Common;
+﻿using ReportX.Rep.Common;
 using ReportX.Rep.Model;
-using ReportX.Rep.Office.Excel;
-using ReportX.Rep.Office.Word;
 using ReportX.Rep.OpenOffice.Ods;
 using ReportX.Rep.OpenOffice.Odt;
-using ReportX.Rep.View;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace ReportX
 {
-
-    public class ReportCreator<T> where T : IReportX
+    /// <summary>
+    /// 標準報表產生器
+    /// </summary>
+    /// <typeparam name="T">產出的報表類型</typeparam>
+    public class ReportCreator<T> where T : IReportX, new()
     {
-        static T creator { get; set; }
-        public ReportCreator(Type type)
-        {
-            creator = (T)Activator.CreateInstance(typeof(T), type);
-        }
-        public ReportCreator(DataTable data)
-        {
-            creator = (T)Activator.CreateInstance(typeof(T), data);
-        }
+        /// <summary>
+        /// 報表物件
+        /// </summary>
+        public T report { get; set; }
+
+        /// <summary>
+        /// 建構子，建立報表物件
+        /// </summary>
         public ReportCreator()
         {
+            report = new T();
         }
-        public string render(int? width = null)
-        {
-            return creator.render(width);
-        }
+
+        /// <summary>
+        /// 顯示報表資料時間範圍
+        /// </summary>
+        /// <param name="from">開始時間</param>
+        /// <param name="to">結束時間，預設現在</param>
         public void setDate(DateTime from, DateTime? to = null)
         {
             if (from == null) return;
             if (to == null) to = DateTime.Now;
-            string classname = typeof(T).Name;
             string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
                    date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                creator.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
-            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                creator.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
+            if (report is AbsOffice)
+                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
+            else if (report is AbsOpenOffice)
+                report.appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
         }
+
+        /// <summary>
+        /// 顯示報表建立人員
+        /// </summary>
+        /// <param name="creator">建立人員姓名</param>
         public void setCreator(string creator)
         {
-            string classname = typeof(T).Name;
-            ReportCreator<T>.creator.setData(author: creator);
-            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                ReportCreator<T>.creator.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
-            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                ReportCreator<T>.creator.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
-
-
+            if (creator == null) return;
+            report.setData(author: creator);
+            if (report is AbsOffice)
+                report.appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
+            else if (report is AbsOpenOffice)
+                report.appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
         }
+
+        /// <summary>
+        /// 顯示報表標題
+        /// </summary>
+        /// <param name="title">標題文字</param>
         public void setTile(string title)
         {
-            string classname = typeof(T).Name;
-            creator.setData(sheetName: title);
-            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                creator.appendFullRow(title, null, "r-header-title");
-            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                creator.appendFullRow(title, "TableCellData", "Title");
-
+            report.setData(sheetName: title);
+            if (report is AbsOffice)
+                report.appendFullRow(title, null, "r-header-title");
+            else if (report is AbsOpenOffice)
+                report.appendFullRow(title, "TableCellData", "Title");
         }
+
+        /// <summary>
+        /// 顯示報表建立時間 (現在)
+        /// </summary>
         public void setCreatedDate()
         {
-            string classname = typeof(T).Name;
             string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-                creator.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
-            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-                creator.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
+            if (report is AbsOffice)
+                report.appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
+            else if (report is AbsOpenOffice)
+                report.appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
         }
+
+        /// <summary>
+        /// 顯示報表欄位說明列，需要在 setData 之後才能呼叫
+        /// </summary>
         public void setColumn()
         {
-            ModelTR col = creator.appendRow(creator.cols);
+            ModelTR col = report.appendRow(report.cols);
             foreach (ModelTD td in col.tds)
                 td.className = "column";
         }
-        public void setData<T>(T[] data)
+
+        /// <summary>
+        /// 顯示報表表格資料
+        /// </summary>
+        /// <param name="data">模型陣列式資料</param>
+        public void setData<R>(R[] data)
         {
-            creator.appendTable(data);
+            report.appendTable(data);
         }
+
+        /// <summary>
+        /// 設定報表表格資料
+        /// </summary>
+        /// <param name="data">DataTable 格式的資料</param>
         public void setData(DataTable data)
         {
-            creator.appendTable(data);
+            report.appendTable(data);
         }
-        public void setsum<T>(T[] data, Type type) //總筆數
-        {
-            string lastRowStyle = "";
-            string lastClassName = "";
-            if (typeof(ExcelReport).Name == type.Name || typeof(WordReport).Name == type.Name)
-            {
-                lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                creator.appendRow(new { value = "總筆數", colspan = creator.getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-            }
-            else if (typeof(OdtReport).Name == type.Name || typeof(OdsReport).Name == type.Name)
-            {
-                lastRowStyle = "TotalCell"; //預設CSS
-                lastClassName = "Word";
-                creator.appendRow(new { value = data.Length, colspan = creator.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數 
-            }
-        }
-        public void setsum(DataTable data) //總筆數
-        {
-            string classname = typeof(T).Name;
-            string lastRowStyle = "";
-            string lastClassName = "";
 
-            if (typeof(ExcelReport).Name == classname || typeof(WordReport).Name == classname)
-            {
-                lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-                creator.appendRow(new { value = "總筆數", colspan = creator.getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
-            }
-            else if (typeof(OdtReport).Name == classname || typeof(OdsReport).Name == classname)
-            {
-                lastRowStyle = "TotalCell"; //預設CSS
-                lastClassName = "Word";
-                creator.appendRow(new { value = data.Select().Count(), colspan = creator.getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-            }
-        }
-        // 傳入欲顯示欄位標題 之陣列
-        public void setcut(string[] cut)
+        /// <summary>
+        /// 顯示報表表格資料總筆數 
+        /// </summary>
+        /// <param name="data">資料模型陣列</param>
+        public void setSum<R>(R[] data)
         {
-            creator.changecut(cut);
+            _setSum(data.Length);
         }
-        public string CreateMeta(Type type)
-        {
-            var classname = type.Name;
-            var str = "";
-            if (typeof(OdtReport).Name == classname)
-                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-            if (typeof(OdsReport).Name == classname)
-                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-            return str;
-        }
-        public int getColCount()
-        {
-            return creator.cols.Length;
-        }
-        public string render<T,S>(S[] data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false) where T : IReportX
-        {
-            ReportCreator<T> report = new ReportCreator<T>(typeof(S));
-            string res = "";
-            if (cols.Length > 0)
-            {
-                report.setcut(cols);
-            }
 
-            report.setTile(title);
-            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            report.setCreator(Creator);
-            report.setCreatedDate();
-            report.setColumn();
-            report.setData(data);
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                report.setsum(data,typeof(T));
-            }
-            if (typeof(T) == typeof(OdtReport) || typeof(T) == typeof(Odt))
-            {
-                int width = report.getColCount();
-                res = report.render(width);
-            }
-            else
-            {
-                res = report.render();
-
-            }
-            return res;
-        }
-        public string render<T>(DataTable data, string[] cols, string title, DateTime starting, DateTime ending, string Creator, bool end = false) where T : IReportX
+        /// <summary>
+        /// 顯示報表表格資料總筆數 
+        /// </summary>
+        /// <param name="data">DataTable 資料</param>
+        public void setSum(DataTable data)
         {
-            ReportCreator<T> report = new ReportCreator<T>(data);
-            string res = "";
-            if (cols.Length > 0)
-            {
-                report.setcut(cols);
-            }
-
-            report.setTile(title);
-            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            report.setCreator(Creator);
-            report.setCreatedDate();
-            report.setColumn();
-            report.setData(data);
-            if (end) //如果要顯示結算筆數 end =true;
-            {
-                report.setsum(data);
-            }
-            if (typeof(T) == typeof(OdtReport) || typeof(T) == typeof(Odt))
-            {
-                int width = report.getColCount();
-                res = report.render(width);
-            }
-            else
-            {
-                res = report.render();
-
-            }
-            return res;
+            _setSum(data.Select().Count());
         }
-        public string renderOpenOfficeMeta()
+
+        /// <summary>
+        /// 集中優化，顯示報表表格資料總筆數 
+        /// </summary>
+        /// <param name="count">資料筆數</param>
+        private void _setSum(int count)
         {
-            ReportCreator<AbsOpenOffice> meta = new ReportCreator<AbsOpenOffice>();
-            string metaStr = meta.CreateMeta(typeof(T));
-            return metaStr;
+            if (report is AbsOffice)
+            {
+                report.appendRow(new
+                {
+                    value = "總筆數",
+                    colspan = report.getColCount() - 1,
+                    style = "background-color:#DDD;-webkit-print-color-adjust: exact;"
+                }, count);
+            }
+            else if (report is AbsOpenOffice)
+            {
+                report.appendRow(new
+                {
+                    value = count,
+                    colspan = report.getColCount() - 1,
+                    style = "TotalCell",
+                    className = "Word"
+                });
+            }
         }
-    }
-    public class ExcelReport : Excel
-    {
-        string customCSS = @"
+
+        /// <summary>
+        /// 需要在 setData 之後才能呼叫，過濾資料的顯示欄位，從既有的欄位定義中，過濾出指定顯示的欄位
+        /// </summary>
+        /// <param name="cut">欄位陣列</param>
+        public void setFileterColumn(string[] cut)
+        {
+            report.changecut(cut);
+        }
+
+
+        /// <summary>
+        /// 設定預設報表的CSS樣式
+        /// </summary>
+        public void setDefaultCss()
+        {
+            if (report is AbsOffice) report.setCustomStyle(customOfficeCSS);
+            else if (report is Odt) report.setCustomStyle(customOdtCss);
+            else if (report is Ods) report.setCustomStyle(customOdsCss);
+        }
+
+
+
+        /// <summary>
+        /// 建立標準報表 (使用資料模型)
+        /// </summary>
+        /// <param name="data">資料</param>
+        /// <param name="cols">欲顯示的欄位</param>
+        /// <param name="title">標題</param>
+        /// <param name="from">資料開始時間</param>
+        /// <param name="to">資料結束時間</param>
+        /// <param name="creator">報表建立人</param>
+        /// <param name="showTotal">是否顯示資料總數</param>
+        /// <returns>報表字串</returns>
+        public string render<R>(R[] data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
+        {
+            report.setCol(data);
+            if (cols != null && cols.Length > 0) setFileterColumn(cols);
+            setDefaultCss();
+            setTile(title);
+            setDate(from, to);
+            setCreator(creator);
+            setCreatedDate();
+            setColumn();
+            setData(data);
+            if (showTotal) setSum(data);
+            return report.render();
+        }
+
+
+        /// <summary>
+        /// 建立標準報表 (使用DataTable)
+        /// </summary>
+        /// <param name="data">資料</param>
+        /// <param name="cols">欲顯示的欄位</param>
+        /// <param name="title">標題</param>
+        /// <param name="from">資料開始時間</param>
+        /// <param name="to">資料結束時間</param>
+        /// <param name="creator">報表建立人</param>
+        /// <param name="showTotal">是否顯示資料總數</param>
+        /// <returns>報表字串</returns>
+        public string render(DataTable data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
+        {
+            report.setCol(data);
+            if (cols != null && cols.Length > 0) setFileterColumn(cols);
+            setDefaultCss();
+            setTile(title);
+            setDate(from, to);
+            setCreator(creator);
+            setCreatedDate();
+            setColumn();
+            setData(data);
+            if (showTotal) setSum(data);
+            return report.render();
+        }
+
+        const string customOfficeCSS = @"
             .r-header-title{
                 font-size: 24px;
                 font-weight: bold;
@@ -241,432 +258,115 @@ namespace ReportX
                 text-align: center;
                 background-color: #DEF !important;
                 -webkit-print-color-adjust: exact; 
-            }             
-        ";
-
-
-        public ExcelReport(Type model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public ExcelReport(DataTable model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        // 設定製表標題
-        public void setTile(string title)
-        {
-            setData(sheetName: title);
-            appendFullRow(title, null, "r-header-title");
-        }
-        // 設定製表日期 : 帶入參數 yyyy/MM/dd yyyy/MM/dd
-        public void setDate(DateTime from, DateTime? to = null)
-        {
-            if (from == null) return;
-            if (to == null) to = DateTime.Now;
-
-            string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
-                   date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-
-            appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
-        }
-        // 設定製表人
-        public void setCreator(string creator)
-        {
-            setData(author: creator);
-            appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
-        }
-        // 設定製表時間 :取得現在時間
-        public void setCreatedDate()
-        {
-            string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
-        }
-        // 設定資料欄位
-        public void setColumn()
-        {
-            ModelTR col = appendRow(cols);
-            foreach (ModelTD td in col.tds)
-                td.className = "column";
-        }
-        // 塞入資料
-        public void setData<T>(T[] data)
-        {
-            appendTable(data);
-        }
-        public void setData(DataTable data)
-        {
-            appendTable(data);
-        }
-        // 傳入欲顯示欄位標題 之陣列
-        public void setcut(string[] cut)
-        {
-            changecut(cut);
-        }
-        public void setsum<T>(T[] data) //總筆數欄位
-        {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-
-        }
-        public void setsum(DataTable data) //總筆數欄位
-        {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
-
-        }
-    }
-    public class WordReport : Word
-    {
-        string customCSS = @"
-            .r-header-title{
-                font-size: 24px;
-                font-weight: bold;
-                text-align: center;
-                background-color: #DEF !important;
-                -webkit-print-color-adjust: exact; 
-            }
-            .r-header-date{
-                font-size: 20px;
-                font-weight: bold;
-                text-align: center;
-                background-color: #DEF !important;
-                -webkit-print-color-adjust: exact; 
-            }
-            .column{
-                color: #FFF;
-                text-align: center;
-                background-color: #555 !important;
-                -webkit-print-color-adjust: exact; 
-            }
-            .r-header-secondary{
-                color: #555;
-                font-size: 14px;
-                text-align: center;
-                background-color: #DEF !important;
-                -webkit-print-color-adjust: exact; 
-            }             
-        ";
-
-        public WordReport(Type model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public WordReport(DataTable model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public void setTile(string title)
-        {
-            setData(sheetName: title);
-            appendFullRow(title, null, "r-header-title");
-        }
-
-        public void setDate(DateTime from, DateTime? to = null)
-        {
-            if (from == null) return;
-            if (to == null) to = DateTime.Now;
-
-            string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
-                   date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-
-            appendFullRow(string.Format("{0} - {1}", date_start, date_end), null, "r-header-date");
-        }
-
-        public void setCreator(string creator)
-        {
-            setData(author: creator);
-            appendFullRow(string.Format("製表人：{0}", creator), null, "r-header-secondary");
-        }
-
-        public void setCreatedDate()
-        {
-            string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            appendFullRow(string.Format("製表時間：{0}", now), null, "r-header-secondary");
-        }
-
-        public void setColumn()
-        {
-            ModelTR col = appendRow(cols);
-            foreach (ModelTD td in col.tds)
-                td.className = "column";
-        }
-
-        public void setData<T>(T[] data)
-        {
-            appendTable(data);
-        }
-        public void setData(DataTable data)
-        {
-            appendTable(data);
-        }
-        // 傳入欲顯示欄位標題 之陣列
-        public void setcut(string[] cut)
-        {
-            changecut(cut);
-        }
-
-        public void setsum<T>(T[] data) //總筆數
-        {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Length);//統計資料數
-
-        }
-        public void setsum(DataTable data) //總筆數
-        {
-            string lastRowStyle = "background-color:#DDD;-webkit-print-color-adjust: exact;"; //預設CSS
-            appendRow(new { value = "總筆數", colspan = getColCount() - 1, style = lastRowStyle }, data.Select().Count());//統計資料數
-
-        }
-    }
-    public class OdsReport : Ods
-    {
-        string customCSS = @" <office:automatic-styles>
-    <style:style style:name='ColumnWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#555555' style:repeat-content='false'/>
-      <style:paragraph-properties fo:text-align='center'/>
-      <style:text-properties fo:color='#FFFFFF' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
-    </style:style>
-    <style:style style:name='Word' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap'/>
-      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
-    </style:style>
-    <style:style style:name='TotalWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDDDDD'/>
-      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
-    </style:style>
-    <style:style style:name='TitleWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
-      <style:paragraph-properties fo:text-align='center'/>
-      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
-    </style:style>
-    <style:style style:name='DateRangeWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
-      <style:paragraph-properties fo:text-align='center'/>
-      <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
-    </style:style>
-    <style:style style:name='CreaterWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
-      <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
-      <style:paragraph-properties fo:text-align='center'/>
-      <style:text-properties fo:color='#555555' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='11pt' style:font-size-asian='11pt' style:font-size-complex='11pt'/>
-    </style:style>
-    <style:style style:name='TableColumn' style:family='table-column'>
-      <style:table-column-properties />
-    </style:style>
-    <style:style style:name='TableRow' style:family='table-row'>
-      <style:table-row-properties style:row-height='auto' style:use-optimal-row-height='false' fo:break-before='auto'/>
-    </style:style>
-    <style:style style:name='ta1' style:family='table' style:master-page-name='mp1'>
-      <style:table-properties table:display='true' style:writing-mode='lr-tb'/>
-    </style:style>
-    <style:page-layout style:name='pm1'>
-      <style:page-layout-properties fo:margin-top='0.5in' fo:margin-bottom='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' style:print-orientation='portrait' style:print-page-order='ttb' style:first-page-number='continue' style:scale-to='100%' style:table-centering='none' style:print='objects charts drawings'/>
-      <style:header-style>
-        <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-bottom='0in'/>
-      </style:header-style>
-      <style:footer-style>
-        <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-top='0in'/>
-      </style:footer-style>
-    </style:page-layout>
-  </office:automatic-styles>
-  <office:master-styles>
-    <style:master-page style:name='mp1' style:page-layout-name='pm1'>
-      <style:header/>
-      <style:header-left style:display='false'/>
-      <style:footer/>
-      <style:footer-left style:display='false'/>
-    </style:master-page>
-  </office:master-styles>
-        ";
-
-        public OdsReport(Type model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public OdsReport(DataTable model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public void setTile(string title)
-        {
-            setData(sheetName: title);
-            appendFullRow(title, "TableCellData", "Title");
-        }
-        public void setDate(DateTime from, DateTime? to = null)
-        {
-            if (from == null) return;
-            if (to == null) to = DateTime.Now;
-
-            string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
-                   date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-
-            appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
-        }
-        public void setCreator(string creator)
-        {
-            setData(author: creator);
-            appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
-        }
-        public void setCreatedDate()
-        {
-            string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
-        }
-        public void setColumn()
-        {
-            ModelTR col = appendRow(cols);
-            foreach (ModelTD td in col.tds)
-                td.className = "column";
-        }
-        public void setData<T>(T[] data)
-        {
-            appendTable(data);
-        }
-        public void setData(DataTable data)
-        {
-            appendTable(data);
-        }
-        public void setcut(string[] cut)
-        {
-            changecut(cut);
-        }
-        public void setsum<T>(T[] data) //總筆數
-        {
-            string lastRowStyle = "TotalCell"; //預設CSS
-            string lastClassName = "Word";
-            appendRow(new { value = data.Length, colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-
-        }
-        public void setsum(DataTable data) //總筆數
-        {
-            string lastRowStyle = "TotalCell"; //預設CSS
-            string lastClassName = "Word";
-            appendRow(new { value = data.Select().Count(), colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-
-        }
-    }
-    public class OdtReport : Odt
-    {
-
-        string customCSS = @"
-    <office:automatic-styles>
-        <style:style style:name='TableColumn' style:family='table-column'>
-          <style:table-column-properties style:column-width='auto'/>
-        </style:style>
-        <style:style style:name='Table' style:family='table' style:master-page-name='MP0'>
-          <style:table-properties  fo:margin-left='0in' table:align='center'/>
-        </style:style>
-        <style:style style:name='TableRow' style:family='table-row'>
-          <style:table-row-properties/>
-        </style:style>
-        <style:style style:name='TableCellData' style:family='table-cell'>
-          <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDEEFF' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
-        </style:style>
-        <style:style style:name='Title' style:parent-style-name='內文' style:family='paragraph'>
-          <style:paragraph-properties fo:widows='2' fo:orphans='2' fo:break-before='page' fo:text-align='center'/>
-        </style:style>
-        <style:style style:name='TitleWord' style:parent-style-name='預設段落字型' style:family='text'>
-          <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt'/>
-        </style:style>
-        <style:style style:name='TitleDateWord' style:parent-style-name='內文' style:family='paragraph'>
-          <style:paragraph-properties fo:text-align='center'/>
-          <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt'/>
-        </style:style>
-        <style:style style:name='TitleTimeWord' style:parent-style-name='內文' style:family='paragraph'>
-          <style:paragraph-properties fo:text-align='center'/>
-          <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#555555' fo:font-size='10.5pt' style:font-size-asian='10.5pt' style:font-size-complex='10.5pt'/>
-        </style:style>
-        <style:style style:name='TitleCell' style:family='table-cell'>
-          <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#555555' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
-        </style:style>
-        <style:style style:name='TitleCellWord' style:parent-style-name='內文' style:family='paragraph'>
-          <style:paragraph-properties fo:text-align='center'/>
-          <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#FFFFFF'/>
-        </style:style>
-        <style:style style:name='CellWord' style:family='table-cell'>
-          <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
-        </style:style>
-        <style:style style:name='Word' style:parent-style-name='內文' style:family='paragraph'>
-          <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體'/>
-        </style:style>
-        <style:style style:name='TotalCell' style:family='table-cell'>
-          <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDDDDD' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
-        </style:style>
-        <style:page-layout style:name='PL0'>
-          <style:page-layout-properties fo:page-width='8.268in' fo:page-height='11.693in' style:print-orientation='portrait' fo:margin-top='1in' fo:margin-left='1.25in' fo:margin-bottom='1in' fo:margin-right='1.25in' style:num-format='1' style:writing-mode='lr-tb'>
-            <style:footnote-sep style:width='0.007in' style:rel-width='33%' style:color='#000000' style:line-style='solid' style:adjustment='left'/>
-          </style:page-layout-properties>
-        </style:page-layout>
-      </office:automatic-styles>
-      <office:master-styles>
-        <style:master-page style:name='MP0' style:page-layout-name='PL0'/>
-      </office:master-styles>           
-        ";
-
-        public OdtReport(Type model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public OdtReport(DataTable model) : base(model)
-        {
-            setCustomStyle(customCSS);
-        }
-        public void setTile(string title)
-        {
-            setData(sheetName: title);
-            appendFullRow(title, "TableCellData", "Title");
-        }
-        public void setDate(DateTime from, DateTime? to = null)
-        {
-            if (from == null) return;
-            if (to == null) to = DateTime.Now;
-
-            string date_start = Convert.ToDateTime(from).ToString("yyyy/MM/dd"),
-                   date_end = Convert.ToDateTime(to).ToString("yyyy/MM/dd");
-
-            appendFullRow(string.Format("{0} - {1}", date_start, date_end), "TableCellData", "TitleDateWord");
-        }
-        public void setCreator(string creator)
-        {
-            setData(author: creator);
-            appendFullRow(string.Format("製表人：{0}", creator), "TableCellData", "TitleTimeWord");
-        }
-        public void setCreatedDate()
-        {
-            string now = Convert.ToDateTime(DateTime.Now).ToString("yyyy/MM/dd hh:mm:tt");
-            appendFullRow(string.Format("製表時間：{0}", now), "TableCellData", "TitleTimeWord");
-        }
-        public void setColumn()
-        {
-            ModelTR col = appendRow(cols);
-            foreach (ModelTD td in col.tds)
-                td.className = "column";
-        }
-        public void setData<T>(T[] data)
-        {
-            appendTable(data);
-        }
-        public void setData(DataTable data)
-        {
-            appendTable(data);
-        }
-        public void setcut(string[] cut)
-        {
-            changecut(cut);
-        }
-        public void setsum<T>(T[] data) //總筆數
-        {
-            string lastRowStyle = "TotalCell"; //預設CSS
-            string lastClassName = "Word";
-            appendRow(new { value = data.Length, colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-
-        }
-        public void setsum(DataTable data) //總筆數
-        {
-            string lastRowStyle = "TotalCell"; //預設CSS
-            string lastClassName = "Word";
-            appendRow(new { value = data.Select().Count(), colspan = getColCount() - 1, style = lastRowStyle, className = lastClassName });//統計資料數
-
-        }
+            }";
+        const string customOdtCss = @"
+            <office:automatic-styles>
+            <style:style style:name='TableColumn' style:family='table-column'>
+              <style:table-column-properties style:column-width='auto'/>
+            </style:style>
+            <style:style style:name='Table' style:family='table' style:master-page-name='MP0'>
+              <style:table-properties  fo:margin-left='0in' table:align='center'/>
+            </style:style>
+            <style:style style:name='TableRow' style:family='table-row'>
+              <style:table-row-properties/>
+            </style:style>
+            <style:style style:name='TableCellData' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDEEFF' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='Title' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:widows='2' fo:orphans='2' fo:break-before='page' fo:text-align='center'/>
+            </style:style>
+            <style:style style:name='TitleWord' style:parent-style-name='預設段落字型' style:family='text'>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt'/>
+            </style:style>
+            <style:style style:name='TitleDateWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt'/>
+            </style:style>
+            <style:style style:name='TitleTimeWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#555555' fo:font-size='10.5pt' style:font-size-asian='10.5pt' style:font-size-complex='10.5pt'/>
+            </style:style>
+            <style:style style:name='TitleCell' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#555555' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='TitleCellWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#FFFFFF'/>
+            </style:style>
+            <style:style style:name='CellWord' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='Word' style:parent-style-name='內文' style:family='paragraph'>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體'/>
+            </style:style>
+            <style:style style:name='TotalCell' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDDDDD' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:page-layout style:name='PL0'>
+              <style:page-layout-properties fo:page-width='8.268in' fo:page-height='11.693in' style:print-orientation='portrait' fo:margin-top='1in' fo:margin-left='1.25in' fo:margin-bottom='1in' fo:margin-right='1.25in' style:num-format='1' style:writing-mode='lr-tb'>
+                <style:footnote-sep style:width='0.007in' style:rel-width='33%' style:color='#000000' style:line-style='solid' style:adjustment='left'/>
+              </style:page-layout-properties>
+            </style:page-layout>
+          </office:automatic-styles>
+          <office:master-styles>
+            <style:master-page style:name='MP0' style:page-layout-name='PL0'/>
+          </office:master-styles>";
+        const string customOdsCss = @"<office:automatic-styles>
+            <style:style style:name='ColumnWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#555555' style:repeat-content='false'/>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties fo:color='#FFFFFF' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+            </style:style>
+            <style:style style:name='Word' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+            </style:style>
+            <style:style style:name='TotalWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDDDDD'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體'/>
+            </style:style>
+            <style:style style:name='TitleWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
+            </style:style>
+            <style:style style:name='DateRangeWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold'/>
+            </style:style>
+            <style:style style:name='CreaterWord' style:family='table-cell' style:parent-style-name='Default' style:data-style-name='N0'>
+              <style:table-cell-properties fo:border='2pt solid #AAAAAA' style:vertical-align='middle' fo:wrap-option='wrap' fo:background-color='#DDEEFF' style:repeat-content='false'/>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties fo:color='#555555' style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' style:font-name-complex='微軟正黑體' fo:font-size='11pt' style:font-size-asian='11pt' style:font-size-complex='11pt'/>
+            </style:style>
+            <style:style style:name='TableColumn' style:family='table-column'>
+              <style:table-column-properties />
+            </style:style>
+            <style:style style:name='TableRow' style:family='table-row'>
+              <style:table-row-properties style:row-height='auto' style:use-optimal-row-height='false' fo:break-before='auto'/>
+            </style:style>
+            <style:style style:name='ta1' style:family='table' style:master-page-name='mp1'>
+              <style:table-properties table:display='true' style:writing-mode='lr-tb'/>
+            </style:style>
+            <style:page-layout style:name='pm1'>
+              <style:page-layout-properties fo:margin-top='0.5in' fo:margin-bottom='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' style:print-orientation='portrait' style:print-page-order='ttb' style:first-page-number='continue' style:scale-to='100%' style:table-centering='none' style:print='objects charts drawings'/>
+              <style:header-style>
+                <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-bottom='0in'/>
+              </style:header-style>
+              <style:footer-style>
+                <style:header-footer-properties fo:min-height='0.5in' fo:margin-left='0.75in' fo:margin-right='0.75in' fo:margin-top='0in'/>
+              </style:footer-style>
+            </style:page-layout>
+          </office:automatic-styles>
+          <office:master-styles>
+            <style:master-page style:name='mp1' style:page-layout-name='pm1'>
+              <style:header/>
+              <style:header-left style:display='false'/>
+              <style:footer/>
+              <style:footer-left style:display='false'/>
+            </style:master-page>
+          </office:master-styles>";
     }
 }

@@ -1,14 +1,6 @@
-﻿using Ionic.Zip;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ReportX.Rep.OpenOffice.Odt;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ReportX.Rep.Model;
 using ReportXTests2;
-using ReportXTests2.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX.Rep.OpenOffice.Odt.Tests
 {
@@ -17,75 +9,86 @@ namespace ReportX.Rep.OpenOffice.Odt.Tests
     {
         [TestMethod()]
         public void renderTest()
-        {
-
+        { 
             SampleData sampleData = new SampleData();
             var cols = sampleData.ModelCol();
             var data = sampleData.ModelData();
-            var dtData = sampleData.Dtdata();
-            string title = "測試資料";
-            string Creator = "測試人員";
-            OdtReport report = new OdtReport(typeof(ModelEmployeeTicket));
-            if (cols.Length > 0)
-            {
-                report.setcut(cols);
-            }
-            report.setTile(title);
-            report.setDate(DateTime.Now.AddDays(-1), DateTime.Now);
-            report.setCreator(Creator);
-            report.setCreatedDate();
-            report.setColumn();
 
-            //Model資料格式
-            //report.setData(data);
-            //report.setsum(data);
+            Odt report = new Odt();
+            report.setCol(data);
+            if (cols != null && cols.Length > 0) report.changecut(cols);
 
-            //DateTime資料格式
-            report.setData(dtData);
-            report.setsum(dtData);
-            string metaStr = report.CreateMeta(typeof(OdtReport));
-            string dirPath = @".\META-INF";
-            Assert.IsNotNull(metaStr);
-            if (Directory.Exists(dirPath))
-            {
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", metaStr);
-            }
-            else
-            {
-                Directory.CreateDirectory(dirPath);
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", metaStr);
-            }
-            var width = report.getColCount();
-            var rpData = report.render(width);
-            Assert.IsNotNull(rpData);
-            if (File.Exists("content.xml"))
-            {
-                File.Delete("content.xml");
-                File.AppendAllText("content.xml", rpData);
-            }
-            else
-            {
-                File.AppendAllText("content.xml", rpData);
-            }
-            if (File.Exists("content.xml"))
-            {
-                string inputFile = @"content.xml";
-                string inputData = @"META-INF/manifest.xml";
-                using (var zip = new ZipFile())
-                {
-                    zip.AddFile(inputFile);
-                    zip.AddFile(inputData);
-                    zip.Save(@"./report.odt");
-                }
-            }
-            //StreamReader str = new StreamReader(@"D:\ReportX\ReportXTests2\Sample\odt.txt");
-            //var ste = str.ReadToEnd();
-            //此測試時，忽略時間資料，需註解掉 setDate,setCreateDate()
-            //Assert.AreEqual(rpData, ste);
+            report.appendFullRow("測試增加一個 Header", "TableCellData", "Title");
+            report.appendFullRow("測試客製化 Word", "TableCellData", "TitleTimeWord");
+            report.appendFullRow("測試 CSS", "TableCellData", "TitleDateWord");
+
+            report.setCustomStyle(customOfficeCSS);
+
+            // 測試寫入欄位
+            ModelTR col = report.appendRow(report.cols);
+            foreach (ModelTD td in col.tds)
+                td.className = "column";
+
+            report.appendTable(data);
+
+            string res = report.render();
+            string fileName = sampleData.FileName + ".odt";
+            ReportSaver.saveOpenOfficeReport(fileName, res, report.meta);
+
+            Assert.IsNotNull(res);
         }
+
+        const string customOfficeCSS = @"<office:automatic-styles>
+            <style:style style:name='TableColumn' style:family='table-column'>
+              <style:table-column-properties style:column-width='auto'/>
+            </style:style>
+            <style:style style:name='Table' style:family='table' style:master-page-name='MP0'>
+              <style:table-properties  fo:margin-left='0in' table:align='center'/>
+            </style:style>
+            <style:style style:name='TableRow' style:family='table-row'>
+              <style:table-row-properties/>
+            </style:style>
+            <style:style style:name='TableCellData' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDEEFF' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='Title' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:widows='2' fo:orphans='2' fo:break-before='page' fo:text-align='center'/>
+            </style:style>
+            <style:style style:name='TitleWord' style:parent-style-name='預設段落字型' style:family='text'>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='18pt' style:font-size-asian='18pt' style:font-size-complex='18pt'/>
+            </style:style>
+            <style:style style:name='TitleDateWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:font-weight='bold' style:font-weight-asian='bold' style:font-weight-complex='bold' fo:font-size='15pt' style:font-size-asian='15pt' style:font-size-complex='15pt'/>
+            </style:style>
+            <style:style style:name='TitleTimeWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#555555' fo:font-size='10.5pt' style:font-size-asian='10.5pt' style:font-size-complex='10.5pt'/>
+            </style:style>
+            <style:style style:name='TitleCell' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#555555' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='TitleCellWord' style:parent-style-name='內文' style:family='paragraph'>
+              <style:paragraph-properties fo:text-align='center'/>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體' fo:color='#FFFFFF'/>
+            </style:style>
+            <style:style style:name='CellWord' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:style style:name='Word' style:parent-style-name='內文' style:family='paragraph'>
+              <style:text-properties style:font-name='微軟正黑體' style:font-name-asian='微軟正黑體'/>
+            </style:style>
+            <style:style style:name='TotalCell' style:family='table-cell'>
+              <style:table-cell-properties fo:border='0.0104in solid #AAAAAA' fo:background-color='#DDDDDD' style:writing-mode='lr-tb' style:vertical-align='middle' fo:padding-top='0in' fo:padding-left='0.0208in' fo:padding-bottom='0in' fo:padding-right='0.0208in'/>
+            </style:style>
+            <style:page-layout style:name='PL0'>
+              <style:page-layout-properties fo:page-width='8.268in' fo:page-height='11.693in' style:print-orientation='portrait' fo:margin-top='1in' fo:margin-left='1.25in' fo:margin-bottom='1in' fo:margin-right='1.25in' style:num-format='1' style:writing-mode='lr-tb'>
+                <style:footnote-sep style:width='0.007in' style:rel-width='33%' style:color='#000000' style:line-style='solid' style:adjustment='left'/>
+              </style:page-layout-properties>
+            </style:page-layout>
+          </office:automatic-styles>
+          <office:master-styles>
+            <style:master-page style:name='MP0' style:page-layout-name='PL0'/>
+          </office:master-styles>";
     }
 }

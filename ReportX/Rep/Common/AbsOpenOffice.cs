@@ -1,14 +1,9 @@
 ﻿using ReportX.Rep.Attributes;
 using ReportX.Rep.Model;
-using ReportX.Rep.View;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX.Rep.Common
 {
@@ -18,7 +13,7 @@ namespace ReportX.Rep.Common
         public abstract string[] newcols { get; set; }
         public abstract string[] cols { get; set; }
         protected abstract List<ModelTR> trs { get; }
-
+        public abstract string meta { get; }
 
         public abstract string render(int? width = null);
         public abstract void changecut(string[] cut);
@@ -67,7 +62,6 @@ namespace ReportX.Rep.Common
         }
         public void appendTable<T>(T[] data, string trStyle = null, string className = null)
         {
-
             foreach (T tuple in data)
             {
                 ModelTD[] tds = new ModelTD[cols.Length];
@@ -138,16 +132,50 @@ namespace ReportX.Rep.Common
         {
             return cols.Length;
         }
-        public string CreateMeta(Type type)
+
+
+        public void setCol(DataTable data)
         {
-            var classname = type.Name;
-            var str = "";
-            if (typeof(OdtReport).Name == classname)
-                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-            if (typeof(OdsReport).Name == classname)
-                str = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
-            return str;
+            string[] str_cols = new string[data.Columns.Count];
+            for (int i = 0; i < data.Columns.Count; i++)
+                str_cols[i] = data.Columns[i].ToString();
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            setReportColNum();
         }
+
+        public void setCol<T>(T[] data)
+        {
+            List<MemberInfo> list_cols = new List<MemberInfo>();
+            Type type = typeof(T);
+            foreach (var member in type.GetMembers())
+            {
+                Present attr = member.GetCustomAttribute<Present>();
+                if (attr == null) continue;
+
+                int MetadataToken = member.MetadataToken,
+                    inserted_index = 0;
+
+                for (int i = 0; i < list_cols.Count; i++)
+                {
+                    inserted_index = i;
+                    if (MetadataToken < list_cols[i].MetadataToken) break;
+                    inserted_index = i + 1;
+                }
+                list_cols.Insert(inserted_index, member);
+            }
+            string[] str_cols = new string[list_cols.Count]; //取得標題數量
+
+            for (int i = 0; i < list_cols.Count; i++)
+                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();//取得標題名稱
+
+            oldcols = str_cols; //舊的陣列
+            cols = str_cols;
+            setReportColNum();
+        }
+
+        protected abstract void setReportColNum();
+
         public abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null);
     }
 }

@@ -1,14 +1,8 @@
-﻿using ReportX.Rep.Attributes;
-using ReportX.Rep.Common;
+﻿using ReportX.Rep.Common;
 using ReportX.Rep.Model;
 using ReportX.Rep.View;
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX.Rep.Office.Word
 {
@@ -20,63 +14,17 @@ namespace ReportX.Rep.Office.Word
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
         private ModelWord word;
-        public Word(DataTable dtTable)
+        public Word()
         {
             trs = new List<ModelTR>();
             word = new ModelWord();
             word.style = new ViewStyle();
-
-
-            string[] str_cols = new string[dtTable.Columns.Count];
-
-            for (int i = 0; i < dtTable.Columns.Count; i++)
-                str_cols[i] = dtTable.Columns[i].ToString();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            word.colNum = cols.Length;
-
-
-        }
-        public Word(Type model)
-        {            
-                trs = new List<ModelTR>();
-                word = new ModelWord();
-                word.style = new ViewStyle();
-
-                List<MemberInfo> list_cols = new List<MemberInfo>();
-
-                foreach (var member in model.GetMembers())
-                {
-                    Present attr = member.GetCustomAttribute<Present>();
-                    if (attr == null) continue;
-
-                    int MetadataToken = member.MetadataToken,
-                        inserted_index = 0;
-
-                    // sory by MetadataToken (declaration)
-                    for (int i = 0; i < list_cols.Count; i++)
-                    {
-                        inserted_index = i;
-                        if (MetadataToken < list_cols[i].MetadataToken) break;
-                        inserted_index = i + 1;
-                    }
-                    list_cols.Insert(inserted_index, member);
-                }
-
-                string[] str_cols = new string[list_cols.Count];
-
-                for (int i = 0; i < list_cols.Count; i++)
-                    str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
-
-
-                oldcols = str_cols; //舊的陣列
-                cols = str_cols;
-                word.colNum = cols.Length;
-            
         }
 
+        /// <summary>
+        /// 過濾顯示欄位，需要在 setData 之後才能呼叫
+        /// </summary>
+        /// <param name="cut">需要顯示的欄位陣列</param>
         public override void changecut(string[] cut)
         {
             newcols = cut;
@@ -118,6 +66,9 @@ namespace ReportX.Rep.Office.Word
             return report.render();
         }
 
-        // 傳入一個陣列 
+        protected override void setReportColNum()
+        {
+            word.colNum = cols.Length;
+        }
     }
 }

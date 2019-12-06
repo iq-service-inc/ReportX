@@ -42,7 +42,7 @@ namespace ReportX.Rep.View
                     {
                         if (td == null) continue;
                         string attributes = "",
-                               text_style = "",
+                               //text_style = "",
                                td_style = "",
                                table_cell = "",
                                className = td.className == null ? "" : td.className,

@@ -1,15 +1,17 @@
 ﻿using ReportXTests2.Model;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportXTests2
 {
     public class SampleData
     {
+        public string FileName = "";
+        public SampleData()
+        {
+            FileName = DateTime.Now.ToString("MM-dd-yy-hh-mm-ss");
+        }
+
         public string[] ModelCol()
         {
             string[] cols = new string[4];

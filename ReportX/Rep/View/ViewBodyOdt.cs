@@ -1,40 +1,33 @@
 ﻿using ReportX.Rep.Model;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
+// 改用 string builder 更好 (zap)
 namespace ReportX.Rep.View
 {
     public class ViewBodyOdt
     {
         private List<ModelTR> model;
-        private int? width; // if not set, keep it is auto
-        public ViewBodyOdt(List<ModelTR> model, int? width = null)
+        private int colNum;
+        public ViewBodyOdt(List<ModelTR> model, int colNum)
         {
             this.model = model;
-            this.width = width;
+            this.colNum = colNum;
         }
         public string render()
         {
-            string table_width = width == null ? "" : string.Format("width={0}", width),
-                   trs = "";
-            if(width != null)
-            {
-                table_width = "";
-                for (int i = 0; i < width; i++)
-                {
-                   
-                    table_width += "<table:table-column table:style-name='TableColumn'/>";
-                }
-            }
+            string table_width = "", trs = "";
+
+            for (int i = 0; i < colNum; i++)
+                table_width += "<table:table-column table:style-name='TableColumn'/>";
+
+            //Trace.WriteLine(JsonConvert.SerializeObject(model));
             foreach (ModelTR tr in model)
             {
                 string tr_className = tr.className == null ? "" : string.Format("class=\"{0}\" ", tr.className),
                        tr_customStyle = tr.style ?? "",
                        tr_style = string.Format("style=\"{0}\" ", tr_customStyle) + tr_className,
                        tds = "";
+
 
                 if (tr.tds != null)
                 {
@@ -99,12 +92,10 @@ namespace ReportX.Rep.View
         }
 
 
-        string template = @"<table:table table:style-name='Table'>
-        <table:table-columns>{1}</table:table-columns>{0}</table:table>";
-
-        string template_td = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell> {3}";
-        string template_tr = "<table:table-row table:style-name='TableRow'>{1}</table:table-row>";
-        string lastRow = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>";
-        string titleRow = "<text:span text:style-name='TitleWord'>{0}</text:span>";
+        const string template = @"<table:table table:style-name='Table'><table:table-columns>{1}</table:table-columns>{0}</table:table>";
+        const string template_td = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell> {3}";
+        const string template_tr = "<table:table-row table:style-name='TableRow'>{1}</table:table-row>";
+        const string lastRow = "<table:table-cell  {0}><text:p {1}>{2}</text:p></table:table-cell>";
+        const string titleRow = "<text:span text:style-name='TitleWord'>{0}</text:span>";
     }
 }

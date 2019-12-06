@@ -1,82 +1,28 @@
-﻿using ReportX.Rep.Attributes;
-using ReportX.Rep.Common;
+﻿using ReportX.Rep.Common;
 using ReportX.Rep.Model;
 using ReportX.Rep.View;
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX.Rep.OpenOffice.Odt
 {
     public  class Odt:AbsOpenOffice
     {
-
         private ModelOdt odt;
 
         public override string[] oldcols { get; set; }
         public override string[] newcols { get; set; }
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
-        public Odt(Type model)
+
+
+        public Odt()
         {
             trs = new List<ModelTR>();
             odt = new ModelOdt();
             odt.style = new ViewStyleOdt();
-
-            List<MemberInfo> list_cols = new List<MemberInfo>();
-
-            foreach (var member in model.GetMembers())
-            {
-                Present attr = member.GetCustomAttribute<Present>();
-                if (attr == null) continue;
-
-                int MetadataToken = member.MetadataToken,
-                    inserted_index = 0;
-
-                // sory by MetadataToken (declaration)
-                for (int i = 0; i < list_cols.Count; i++)
-                {
-                    inserted_index = i;
-                    if (MetadataToken < list_cols[i].MetadataToken) break;
-                    inserted_index = i + 1;
-                }
-                list_cols.Insert(inserted_index, member);
-            }
-
-            string[] str_cols = new string[list_cols.Count];
-
-            for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            odt.colNum = cols.Length;
-
         }
-        public Odt(DataTable data)
-        {
-            trs = new List<ModelTR>();
-            odt = new ModelOdt();
-            odt.style = new ViewStyleOdt();
-
-
-            string[] str_cols = new string[data.Columns.Count];
-
-            for (int i = 0; i < data.Columns.Count; i++)
-                str_cols[i] = data.Columns[i].ToString();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            odt.colNum = cols.Length;
-
-        }
+      
         public override void changecut(string[] cut)
         {
             newcols = cut;
@@ -90,10 +36,12 @@ namespace ReportX.Rep.OpenOffice.Odt
             if (company != null) odt.company = company;
             if (sheetName != null) odt.sheetName = sheetName;
         }
+
         public override void setCustomStyle(string css)
         {
             odt.style.setCustomCSS(css);
         }
+
         public override ModelTR appendFullRow(string data, string trStyle = null, string className = null)
         {
             ModelTR tr = new ModelTR();
@@ -109,10 +57,20 @@ namespace ReportX.Rep.OpenOffice.Odt
         }
         public override string render(int? width = null)
         {
-            odt.body = new ViewBodyOdt(trs  , width);
+            odt.body = new ViewBodyOdt(trs, cols.Length);
             ViewOdt report = new ViewOdt(odt);
             return report.render();
         }
-        
+
+        protected override void setReportColNum()
+        {
+            odt.colNum = cols.Length;
+        }
+
+        /// <summary>
+        ///  Odt file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
+        /// </summary>
+        public override string meta => "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.text'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='settings.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
+
     }
 }

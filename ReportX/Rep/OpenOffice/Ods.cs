@@ -1,14 +1,8 @@
-﻿using ReportX.Rep.Attributes;
-using ReportX.Rep.Common;
+﻿using ReportX.Rep.Common;
 using ReportX.Rep.Model;
 using ReportX.Rep.View;
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReportX.Rep.OpenOffice.Ods
 {
@@ -21,61 +15,17 @@ namespace ReportX.Rep.OpenOffice.Ods
         protected override List<ModelTR> trs { get; }
         public override string[] cols { get; set; }
 
-        public Ods(Type model)
+        public Ods()
         {
             trs = new List<ModelTR>();
             ods = new ModelOds();
             ods.style = new ViewStyleOds();
-
-            List<MemberInfo> list_cols = new List<MemberInfo>();
-
-            foreach (var member in model.GetMembers())
-            {
-                Present attr = member.GetCustomAttribute<Present>();
-                if (attr == null) continue;
-
-                int MetadataToken = member.MetadataToken,
-                    inserted_index = 0;
-
-                // sory by MetadataToken (declaration)
-                for (int i = 0; i < list_cols.Count; i++)
-                {
-                    inserted_index = i;
-                    if (MetadataToken < list_cols[i].MetadataToken) break;
-                    inserted_index = i + 1;
-                }
-                list_cols.Insert(inserted_index, member);
-            }
-
-            string[] str_cols = new string[list_cols.Count];
-
-            for (int i = 0; i < list_cols.Count; i++)
-                str_cols[i] = list_cols[i].GetCustomAttribute<Present>().getName();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            ods.colNum = cols.Length;
-
         }
-        public Ods(DataTable data)
-        {
-            trs = new List<ModelTR>();
-            ods = new ModelOds();
-            ods.style = new ViewStyleOds();
-
-
-            string[] str_cols = new string[data.Columns.Count];
-
-            for (int i = 0; i < data.Columns.Count; i++)
-                str_cols[i] = data.Columns[i].ToString();
-
-
-            oldcols = str_cols; //舊的陣列
-            cols = str_cols;
-            ods.colNum = cols.Length;
-
-        }
+       
+        /// <summary>
+        /// 過濾顯示欄位，需要在 setData 之後才能呼叫
+        /// </summary>
+        /// <param name="cut">需要顯示的欄位陣列</param>
         public override void changecut(string[] cut)
         {
             newcols = cut;
@@ -83,6 +33,7 @@ namespace ReportX.Rep.OpenOffice.Ods
             cols = intersectResult.ToArray();
             ods.colNum = cols.Length;
         }
+
         public override void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)
         {
             if (author != null) ods.author = author;
@@ -113,5 +64,14 @@ namespace ReportX.Rep.OpenOffice.Ods
             return report.render();
         }
 
+        protected override void setReportColNum()
+        {
+            ods.colNum = cols.Length;
+        }
+
+        /// <summary>
+        ///  Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
+        /// </summary>
+        public override string meta => "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><manifest:manifest xmlns:manifest='urn:oasis:names:tc:opendocument:xmlns:manifest:1.0'><manifest:file-entry manifest:full-path='/' manifest:media-type='application/vnd.oasis.opendocument.spreadsheet'/><manifest:file-entry manifest:full-path='styles.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='content.xml' manifest:media-type='text/xml'/><manifest:file-entry manifest:full-path='meta.xml' manifest:media-type='text/xml'/></manifest:manifest>";
     }
 }
