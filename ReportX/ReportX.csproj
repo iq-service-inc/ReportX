@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultiExcelCreator.cs" />
+    <Compile Include="MultiExcelBundler.cs" />
     <Compile Include="ReportCreator.cs" />
     <Compile Include="ReportFile.cs" />
     <Compile Include="Rep\Common\AbsOffice.cs" />
