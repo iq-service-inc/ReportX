@@ -4,7 +4,7 @@ using ReportX.Rep.View;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ReportX.Rep.Office.Excel
+namespace ReportX.Rep.Office
 {
     public class Excel: AbsOffice
     {

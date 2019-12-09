@@ -4,7 +4,7 @@ using ReportX.Rep.View;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ReportX.Rep.OpenOffice.Ods
+namespace ReportX.Rep.OpenOffice
 {
     public class Ods:AbsOpenOffice
     {

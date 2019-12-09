@@ -19,7 +19,7 @@ namespace ReportX.Rep.Common
         {
             throw new NotImplementedException();
         }
-       
+
         public abstract void changecut(string[] cut);
         public abstract void setCustomStyle(string css);
         public abstract ModelTR appendFullRow(string data, string trStyle = null, string className = null);
@@ -72,6 +72,7 @@ namespace ReportX.Rep.Common
                 tr.tds = new List<ModelTD>();
                 tr.style = trStyle;
                 tr.className = className;
+
                 foreach (var prop in tuple.GetType().GetProperties())
                 {
                     try
@@ -79,7 +80,8 @@ namespace ReportX.Rep.Common
                         Present attr = prop.GetCustomAttribute<Present>();
                         if (attr == null) continue;
                         string attrName = attr.getName();
-                        int colinx = Array.IndexOf(cols, attrName); 
+                        int colinx = Array.IndexOf(cols, attrName);
+                        if (colinx < 0) continue;
                         object value = prop.GetValue(tuple, null);
                         tds[colinx] = new ModelTD()
                         {
@@ -93,13 +95,9 @@ namespace ReportX.Rep.Common
                         continue;
                     }
                 }
-                foreach (ModelTD td in tds)
-                    tr.tds.Add(td);
-
+                foreach (ModelTD td in tds) tr.tds.Add(td);
                 trs.Add(tr);
             }
-
-            Console.WriteLine("break");
         }
         public void appendTable(DataTable data, string trStyle = null, string className = null)
         {

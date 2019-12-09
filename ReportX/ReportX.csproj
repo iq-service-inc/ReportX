@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.13.4.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.13.4\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reflection.Context" />
@@ -42,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ReportCreator.cs" />
+    <Compile Include="ReportFile.cs" />
     <Compile Include="Rep\Common\AbsOffice.cs" />
     <Compile Include="Rep\Common\AbsOpenOffice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +73,7 @@
     <Compile Include="Rep\Office\Word.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="ReportX.nuspec">
       <SubType>Designer</SubType>
     </None>

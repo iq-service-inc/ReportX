@@ -2,7 +2,7 @@
 using ReportX.Rep.Model;
 using ReportXTests2;
 
-namespace ReportX.Rep.OpenOffice.Ods.Tests
+namespace ReportX.Rep.OpenOffice.Tests
 {
     [TestClass()]
     public class OdsTests

@@ -1,7 +1,6 @@
 ﻿using ReportX.Rep.Common;
 using ReportX.Rep.Model;
-using ReportX.Rep.OpenOffice.Ods;
-using ReportX.Rep.OpenOffice.Odt;
+using ReportX.Rep.OpenOffice;
 using System;
 using System.Data;
 using System.Linq;

@@ -2,7 +2,7 @@
 using ReportX.Rep.Model;
 using ReportXTests2;
 
-namespace ReportX.Rep.Office.Excel.Tests
+namespace ReportX.Rep.Office.Tests
 {
     [TestClass()]
     public class ExcelTests

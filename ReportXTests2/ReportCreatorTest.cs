@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ReportX.Rep.Office.Excel;
-using ReportX.Rep.Office.Word;
-using ReportX.Rep.OpenOffice.Ods;
-using ReportX.Rep.OpenOffice.Odt;
+using ReportX.Rep.Office;
+using ReportX.Rep.OpenOffice;
 using ReportXTests2;
 using System;
 
