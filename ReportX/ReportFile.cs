@@ -7,9 +7,13 @@ using System.IO;
 
 namespace ReportX
 {
+    /// <summary>
+    /// 將報表字串存檔成實體檔案專用工具，支援 IReport 與 MultiExcelCreator 兩種規格的檔案產生
+    /// </summary>
     public class ReportFile
     {
         private IReportX report;
+        private MultiExcelBundler excel_creator;
 
         /// <summary>
         /// 報表隔離區路徑
@@ -21,11 +25,25 @@ namespace ReportX
         /// </summary>
         public string fileName { get; private set; }
 
-
+        /// <summary>
+        /// 單一報表檔案建立專用
+        /// </summary>
+        /// <param name="report"></param>
         public ReportFile(IReportX report)
         {
             if (report == null) throw new Exception("Report Object is null");
             this.report = report;
+            isolatedPath = createIsolated();
+        }
+
+        /// <summary>
+        /// 複數 Excel 報表合成一個專用
+        /// </summary>
+        /// <param name="excel_creator"></param>
+        public ReportFile(MultiExcelBundler excel_creator)
+        {
+            if (excel_creator == null) throw new Exception("MultiExcelCreator is null");
+            this.excel_creator = excel_creator;
             isolatedPath = createIsolated();
         }
 
@@ -38,12 +56,23 @@ namespace ReportX
         public string saveFile(string name, int? width = null)
         {
             fileName = string.IsNullOrEmpty(name) ? Guid.NewGuid().ToString() : name;
-            string file_ext = getFileExtensionName();
-            fileName = $"{name}.{file_ext}";
-            string path = $"{isolatedPath}\\{fileName}";
-            string content = report.render(width);
-            if (report is AbsOpenOffice) saveOpenOfficeReport(path, content);
-            else saveOfficeReport(path, content);
+            string path = "";
+            if (excel_creator != null)
+            {
+                fileName = $"{name}.xls";
+                path = $"{isolatedPath}\\{fileName}";
+                string content = excel_creator.render(width);
+                saveOfficeReport(path, content);
+            }
+            else
+            {
+                string file_ext = getFileExtensionName();
+                fileName = $"{name}{file_ext}";
+                path = $"{isolatedPath}\\{fileName}";
+                string content = report.render(width);
+                if (report is AbsOpenOffice) saveOpenOfficeReport(path, content);
+                else saveOfficeReport(path, content);
+            }
             return path;
         }
 
@@ -59,7 +88,11 @@ namespace ReportX
             }
         }
 
-
+        /// <summary>
+        /// 建立隔離區(目錄)避免在建立報表的過程中與其他報表產生的暫存檔案產生衝突  
+        /// e.g. content.xml (OpenOffice)
+        /// </summary>
+        /// <returns></returns>
         private string createIsolated()
         {
             string isolatedName = Guid.NewGuid().ToString();
@@ -68,14 +101,17 @@ namespace ReportX
             return isolatedName;
         }
 
+
         private string getFileExtensionName()
         {
-            if (report is Excel) return "xls";
-            else if (report is Word) return "doc";
-            else if (report is Ods) return "ods";
-            else if (report is Odt) return "odt";
+            if (report is Excel) return ".xls";
+            else if (report is Word) return ".doc";
+            else if (report is Ods) return ".ods";
+            else if (report is Odt) return ".odt";
+            
             else return "";
         }
+
 
         private void saveOfficeReport(string fileName, string content)
         {

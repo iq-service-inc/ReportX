@@ -17,8 +17,8 @@ namespace ReportX.Tests
             var data = sampleData.ModelData();
             string title = "測試資料";
             ReportCreator<Excel> report = new ReportCreator<Excel>();
-            string excel = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string excel = report.render();
             Assert.IsNotNull(excel);
             string fileName = sampleData.FileName + ".xls";
             ReportSaver.saveOfficeReport(fileName, excel);
@@ -31,8 +31,8 @@ namespace ReportX.Tests
             var data = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<Excel> report = new ReportCreator<Excel>();
-            string excel = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
-
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string excel = report.render();
             Assert.IsNotNull(excel);
             string fileName = sampleData.FileName + ".xls";
             ReportSaver.saveOfficeReport(fileName, excel);
@@ -46,7 +46,8 @@ namespace ReportX.Tests
             var data = sampleData.ModelData();
             string title = "測試資料";
             ReportCreator<Word> report = new ReportCreator<Word>();
-            string word = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string word = report.render();
             Assert.IsNotNull(word);
             string fileName = sampleData.FileName + ".doc";
             ReportSaver.saveOfficeReport(fileName, word);
@@ -60,7 +61,8 @@ namespace ReportX.Tests
             var data = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<Word> report = new ReportCreator<Word>();
-            string word = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string word = report.render();
             Assert.IsNotNull(word);
             string fileName = sampleData.FileName + ".doc";
             ReportSaver.saveOfficeReport(fileName, word);
@@ -74,7 +76,8 @@ namespace ReportX.Tests
             var data = sampleData.ModelData();
             string title = "測試資料";
             ReportCreator<Odt> report = new ReportCreator<Odt>();
-            string odt = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string odt = report.render();
             string fileName = sampleData.FileName + ".odt";
             ReportSaver.saveOpenOfficeReport(fileName, odt, report.report.meta);
         }
@@ -87,7 +90,8 @@ namespace ReportX.Tests
             var data = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<Odt> report = new ReportCreator<Odt>();
-            string odt = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string odt = report.render();
             string fileName = sampleData.FileName + ".odt";
             ReportSaver.saveOpenOfficeReport(fileName, odt, report.report.meta);
         }
@@ -100,7 +104,8 @@ namespace ReportX.Tests
             var data = sampleData.ModelData();
             string title = "測試資料";
             ReportCreator<Ods> report = new ReportCreator<Ods>();
-            string ods = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string ods = report.render();
             string fileName = sampleData.FileName + ".ods";
             ReportSaver.saveOpenOfficeReport(fileName, ods, report.report.meta);
         }
@@ -113,7 +118,8 @@ namespace ReportX.Tests
             var data = sampleData.Dtdata();
             string title = "測試資料";
             ReportCreator<Ods> report = new ReportCreator<Ods>();
-            string ods = report.render(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string ods = report.render();
             string fileName = sampleData.FileName + ".ods";
             ReportSaver.saveOpenOfficeReport(fileName, ods, report.report.meta);
         }

@@ -58,6 +58,16 @@ namespace ReportX
         }
 
         /// <summary>
+        /// 設定報表名稱(如果是試算表會顯示在頁籤上)
+        /// </summary>
+        /// <param name="name">報表名稱</param>
+        public void setSheetName(string name)
+        {
+            report.setData(sheetName: name);
+        }
+
+
+        /// <summary>
         /// 顯示報表標題
         /// </summary>
         /// <param name="title">標題文字</param>
@@ -100,7 +110,7 @@ namespace ReportX
         {
             report.appendTable(data);
         }
-
+        
         /// <summary>
         /// 設定報表表格資料
         /// </summary>
@@ -178,7 +188,7 @@ namespace ReportX
 
 
         /// <summary>
-        /// 建立標準報表 (使用資料模型)
+        /// 設定標準報表 (使用資料模型)
         /// </summary>
         /// <param name="data">資料</param>
         /// <param name="cols">欲顯示的欄位</param>
@@ -187,8 +197,7 @@ namespace ReportX
         /// <param name="to">資料結束時間</param>
         /// <param name="creator">報表建立人</param>
         /// <param name="showTotal">是否顯示資料總數</param>
-        /// <returns>報表字串</returns>
-        public string render<R>(R[] data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
+        public void setInfo<R>(R[] data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
         {
             report.setCol(data);
             if (cols != null && cols.Length > 0) setFileterColumn(cols);
@@ -200,12 +209,11 @@ namespace ReportX
             setColumn();
             setData(data);
             if (showTotal) setSum(data);
-            return report.render();
         }
 
 
         /// <summary>
-        /// 建立標準報表 (使用DataTable)
+        /// 設定標準報表 (使用DataTable)
         /// </summary>
         /// <param name="data">資料</param>
         /// <param name="cols">欲顯示的欄位</param>
@@ -214,8 +222,7 @@ namespace ReportX
         /// <param name="to">資料結束時間</param>
         /// <param name="creator">報表建立人</param>
         /// <param name="showTotal">是否顯示資料總數</param>
-        /// <returns>報表字串</returns>
-        public string render(DataTable data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
+        public void setInfo(DataTable data, string[] cols, string title, DateTime from, DateTime? to = null, string creator = null, bool showTotal = false)
         {
             report.setCol(data);
             if (cols != null && cols.Length > 0) setFileterColumn(cols);
@@ -227,8 +234,18 @@ namespace ReportX
             setColumn();
             setData(data);
             if (showTotal) setSum(data);
+        }
+
+        /// <summary>
+        /// 計算出報表字串
+        /// </summary>
+        /// <returns>報表結果字串</returns>
+        public string render()
+        {
             return report.render();
         }
+
+
 
         const string customOfficeCSS = @"
             .r-header-title{
