@@ -26,6 +26,7 @@ namespace ReportX
         {
             if (report == null) throw new Exception("Report Object is null");
             this.report = report;
+            isolatedPath = createIsolated();
         }
 
         /// <summary>
@@ -37,7 +38,6 @@ namespace ReportX
         public string saveFile(string name, int? width = null)
         {
             fileName = string.IsNullOrEmpty(name) ? Guid.NewGuid().ToString() : name;
-            isolatedPath = createIsolated();
             string file_ext = getFileExtensionName();
             fileName = $"{name}.{file_ext}";
             string path = $"{isolatedPath}\\{fileName}";
@@ -92,44 +92,28 @@ namespace ReportX
 
         private void saveOpenOfficeReport(string fileName, string content)
         {
-            string dirPath = @".\META-INF";
+            string metaDirPath = $"{isolatedPath}\\META-INF";
+            string metaFilePath = $"{metaDirPath}\\manifest.xml";
+            string contentFilePath = $"{isolatedPath}\\content.xml";
             string metaStr = "";
 
             if (report is Ods) metaStr = ((Ods)report).meta;
             else if (report is Odt) metaStr = ((Odt)report).meta;
 
-            if (Directory.Exists(dirPath))
+            if (!Directory.Exists(metaDirPath))
+                Directory.CreateDirectory(metaDirPath);
+
+            if (File.Exists(metaFilePath)) File.Delete(metaFilePath);
+            if (File.Exists(contentFilePath)) File.Delete(contentFilePath);
+
+            File.AppendAllText(metaFilePath, metaStr);
+            File.AppendAllText(contentFilePath, content);
+
+            using (var zip = new ZipFile(""))
             {
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", metaStr);
-            }
-            else
-            {
-                Directory.CreateDirectory(dirPath);
-                if (File.Exists("META-INF/manifest.xml"))
-                    File.Delete("META-INF/manifest.xml");
-                File.AppendAllText("META-INF/manifest.xml", metaStr);
-            }
-            if (File.Exists("content.xml"))
-            {
-                File.Delete("content.xml");
-                File.AppendAllText("content.xml", content);
-            }
-            else
-            {
-                File.AppendAllText("content.xml", content);
-            }
-            if (File.Exists("content.xml"))
-            {
-                string inputFile = @"content.xml";
-                string inputData = @"META-INF/manifest.xml";
-                using (var zip = new ZipFile())
-                {
-                    zip.AddFile(inputFile);
-                    zip.AddFile(inputData);
-                    zip.Save(fileName);
-                }
+                zip.AddFile(contentFilePath, "\\");
+                zip.AddFile(metaFilePath, "\\META-INF");
+                zip.Save(fileName);
             }
         }
     }
