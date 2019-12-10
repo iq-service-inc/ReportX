@@ -1,9 +1,7 @@
-# ReportX 3
+# 📜 ReportX V3 🎉🎉
 
-ReportX 3 可以用簡單的方法，快速建立 Word, Excel, Odt 與 Ods 報表。  
+全新 ReportX V3 可以用簡單的方法，快速建立 Word, Excel, Odt 與 Ods 報表。  
 你可以使用內建的快速產生器建立預設報表，也可以照自己的意思刻出客製化報表。
-
-
 
 
 ## Installation
@@ -21,8 +19,9 @@ PM> Install-Package ReportX -Version 3.0.0
 
 
 
+## 🔰 基本使用範例
 
-## `ReportCreator` 建立標準規格報表
+### 👍 `ReportCreator` 建立標準規格報表
 
 ReportX 提供了一個標準報表產生器  `ReportCreator<T>`，它包含了：
 * **標題**
@@ -31,15 +30,7 @@ ReportX 提供了一個標準報表產生器  `ReportCreator<T>`，它包含了�
 * **報表建立時間**
 * **資料表格 (可設定欲顯示的資料欄位)**
 
-
-> **❗ 注意：**
-> * 只有 `Word` 與 `Excel` 的產生的報表結果支援網頁顯示 (屬於 HTML)，`Odt` 與 `Ods` 不支援 (特殊格式的 XML)
-> * `Odt` 與 `Ods` 因為需要將 meta 檔案與報表內容檔進行 zip 壓縮後才可正常瀏覽，因此需要先存成實體檔案才可使用
-
-
 將 `<T>` 帶入 `Word`, `Excel`, `Odt` 或 `Ods` 就可以產生相應格式的報表：
-
-
 ```csharp
 // 資料
 ModelEmployeeTicket[] data = new ModelEmployeeTicket[] {
@@ -72,7 +63,7 @@ report.setInfo(data, cols, title, date_from, date_to, creator, showTotal);
 string word = report.render();
 ```
 
-其中，關於 `data` 資料模型 `ModelEmployeeTicket` 可以自行定義，可以加上 `[Present("顯示名稱")]` 標籤來設定該欄位要顯示的欄位名稱，請參考以下範例：
+加上 `[Present("顯示名稱")]` 屬性(Attribute) 設定欄位顯示名稱：
 
 ```csharp
 public class ModelEmployeeTicket
@@ -85,8 +76,10 @@ public class ModelEmployeeTicket
     public string tel { get; set; }
 }
 ```
+> 資料模型 `ModelEmployeeTicket` 可以自行定義
 
-使用內建的實體報表存檔工具 `ReportFile` ，將報表存成實際檔案
+
+使用報表存檔類別 `ReportFile` ，將報表存成實際檔案
 
 ```csharp
 // 將報表物件傳入
@@ -96,18 +89,23 @@ string fileName = "我的報表";
 string path = rf.saveFile(fileName);
 ```
 
+**⚠️注意：**
+* 只有 `Word` 與 `Excel` 的產生的報表結果支援網頁顯示 (屬於 HTML)，`Odt` 與 `Ods` 不支援 (特殊格式的 XML)
+* `Odt` 與 `Ods` 因為需要將 meta 檔案與報表內容檔進行 zip 壓縮後才可正常瀏覽，因此需要先存成實體檔案才可使用
+  
 
-
-
-## More Examples
+## 🔰 More Examples
 
 以下展示更多範例，您可自行參閱最符合需求的案例參考
 
+* [產生 OpenOffice 報表](#產生-openoffice-報表)
+* [將多個 Excel 合併成一個](#將多個-excel-合併成一個)
+* [支援 `DataTable` 資料輸入](#支援-datatable-資料輸入)
+* [完全客製化報表](#完全客製化報表)
+
 > 部分範例將使用 [Getting Started](#Getting-Started) 章節中的 `ModelEmployeeTicket` 資料模型
 
-
-
-
+-------------------------------
 
 ### 產生 OpenOffice 報表
 
@@ -129,7 +127,7 @@ string fileName = "My_OpenOffice_Report";
 string path = rf.saveFile(fileName); // 回傳存放路徑 (可再自行移動)
 ```
 
-
+-------------------------------
 
 
 ### 將多個 Excel 合併成一個
@@ -155,7 +153,7 @@ ReportFile rf = new ReportFile(bundler);
 string path = rf.saveFile(fileName);
 ```
 
-
+-------------------------------
 
 
 ### 支援 `DataTable` 資料輸入
@@ -188,6 +186,9 @@ ReportCreator<Word> report = new ReportCreator<Word>();
 report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
 string word = report.render();
 ```
+
+
+-------------------------------
 
 ### 完全客製化報表
 
@@ -262,7 +263,19 @@ string res = report.render();
 
 ## API Reference
 
-ReportX API 參考
+ReportX API 參考一覽
+
+* [ReportCreator<T>](#reportcreatort-class)
+* [ReportFile](#reportfile-class)
+* [MultiExcelBundler](#multiexcelbundler-class)
+* [Word](#word-class)
+* [Excel](#excel-class)
+* [Odt](#odt-class)
+* [Ods](#ods-class)
+* [AbsOffice 與 AbsOpenOffice Class](#absoffice-與-absopenoffice-class)
+* [IReportX](#ireportx-interface)
+
+----------------------------------------
 
 ### `ReportCreator<T>` Class
 
@@ -289,6 +302,7 @@ ReportX API 參考
 
 * `string render()`：畫出目前的報表，回傳報表字串結果
 
+-------------------------------
 
 ### `ReportFile` Class
 
@@ -312,6 +326,7 @@ ReportX API 參考
     * `width`：寬度
 * `void deleteReportFile()`：如果報表已經不需要再使用，則可以呼叫此方法刪除檔案，否則需要自行刪除
 
+-------------------------------
 
 ### `MultiExcelBundler` Class
 
@@ -330,52 +345,58 @@ ReportX API 參考
 * `string render(int? width = null)`：將多個 Excel 綁定成一個，並生成新的內容字串
     * `width`：寬度
 
+-------------------------------
 ### `Word` Class
-∟ 繼承：[`AbsOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+∟ 繼承：[`AbsOffice`](#absoffice-與-absopenoffice-class)  
 Microsoft Office Word 底層操作類別
 #### 成員
-同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
 #### 建構子
 * `Word()`
 #### 方法
-同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
 
+-------------------------------
 ### `Excel` Class
-∟ 繼承：[`AbsOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+∟ 繼承：[`AbsOffice`](#absoffice-與-absopenoffice-class)  
 Microsoft Office Excel 底層操作類別
 #### 成員
-同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
 #### 建構子
 * `Excel()`
 #### 方法
-同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
+
+-------------------------------
 
 ### `Odt` Class
-∟ 繼承：[`AbsOpenOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+∟ 繼承：[`AbsOpenOffice`](#absoffice-與-absopenoffice-class)  
 OpenOffice Odt 底層操作類別
 #### 成員
 * `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
-其餘同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+其餘同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 #### 建構子
-* `Word()`
+* `Odt()`
 #### 方法
-同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 
+-------------------------------
 ### `Ods` Class
-∟ 繼承：[`AbsOpenOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+∟ 繼承：[`AbsOpenOffice`](#absoffice-與-absopenoffice-class)  
 OpenOffice Ods 底層操作類別
 #### 成員
 * `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
-其餘同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+其餘同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 #### 建構子
-* `Word()`
+* `Ods()`
 #### 方法
-同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 
+-------------------------------
 
 ### `AbsOffice` 與 `AbsOpenOffice` Class
 ∟ 繼承：`IReport`   
-定義 Office 相關功能的抽象類別 
+定義 Office 與 OpenOffice 相關功能的抽象類別 
 
 #### 成員
 
@@ -428,6 +449,7 @@ OpenOffice Ods 底層操作類別
     * `dateTime`：建立時間
     * `dateRange`：報表資料時間範圍
 
+-------------------------------
 
 ### `IReportX` interface
 
