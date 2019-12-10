@@ -5,7 +5,6 @@ namespace ReportXTests2.Model
 {
     public class ModelEmployeeTicket
     {
-
         [Present("ID")]
         public Int64 postpid { get; set; }
         [Present("標題")]

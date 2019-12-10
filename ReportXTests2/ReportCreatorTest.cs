@@ -38,6 +38,27 @@ namespace ReportX.Tests
             ReportSaver.saveOfficeReport(fileName, excel);
         }
 
+
+       
+
+        [TestMethod()]
+        public void renderWordGettingStartedTest()
+        {
+           
+            SampleData sampleData = new SampleData();
+            var cols = sampleData.ModelCol();
+            var data = sampleData.ModelData();
+            string title = "測試資料";
+            ReportCreator<Word> report = new ReportCreator<Word>();
+            report.setInfo(data, cols, title, DateTime.Now.AddDays(-1), DateTime.Now, "測試人員", true);
+            string word = report.render();
+            Assert.IsNotNull(word);
+            string fileName = sampleData.FileName + ".doc";
+            ReportSaver.saveOfficeReport(fileName, word);
+        }
+
+
+
         [TestMethod()]
         public void renderWordTest()
         {

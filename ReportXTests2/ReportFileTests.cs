@@ -39,7 +39,7 @@ namespace ReportX.Tests
             report.setInfo(data, cols, title, date_from, date_to, creator, showTotal);
             string word = report.render();
             Assert.IsNotNull(word);
-            string fileName = sampleData.FileName;
+            string fileName = "我的報表";
 
             ReportFile rf = new ReportFile(report.report);
             string path = rf.saveFile(fileName);
