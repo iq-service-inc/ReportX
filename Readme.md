@@ -12,11 +12,12 @@
 PM> Install-Package ReportX -Version 3.0.0
 ```
 
+**Nuget**
 
+[ReportX 3.0.0](https://www.nuget.org/packages/ReportX/3.0.0)
 
 ## System requirement
 * `v1.2.0` 開始的版本僅支援 .NET Framework 4.5 以上
-
 
 
 ## 🔰 基本使用範例
@@ -347,49 +348,76 @@ ReportX API 參考一覽
 
 -------------------------------
 ### `Word` Class
+
 ∟ 繼承：[`AbsOffice`](#absoffice-與-absopenoffice-class)  
 Microsoft Office Word 底層操作類別
 #### 成員
+
 同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
+
 #### 建構子
+
 * `Word()`
+
 #### 方法
+
 同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
 
 -------------------------------
 ### `Excel` Class
+
 ∟ 繼承：[`AbsOffice`](#absoffice-與-absopenoffice-class)  
 Microsoft Office Excel 底層操作類別
+
 #### 成員
+
 同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
+
 #### 建構子
+
 * `Excel()`
+
 #### 方法
+
 同 [IReportX](#absoffice-與-absopenoffice-class) class 介紹
 
 -------------------------------
 
 ### `Odt` Class
+
 ∟ 繼承：[`AbsOpenOffice`](#absoffice-與-absopenoffice-class)  
 OpenOffice Odt 底層操作類別
+
 #### 成員
+
 * `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
 其餘同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
+
 #### 建構子
-* `Odt()`
+
+* `Odt()`  
+
 #### 方法
+
 同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 
 -------------------------------
 ### `Ods` Class
+
 ∟ 繼承：[`AbsOpenOffice`](#absoffice-與-absopenoffice-class)  
 OpenOffice Ods 底層操作類別
+
 #### 成員
+
 * `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
 其餘同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
+
 #### 建構子
+
 * `Ods()`
+
 #### 方法
+
 同 [AbsOpenOffice](#absoffice-與-absopenoffice-class) class 介紹
 
 -------------------------------

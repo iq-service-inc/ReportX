@@ -26,7 +26,7 @@ namespace ReportX.Rep.Office.Tests
             report.setCustomStyle(customOfficeCSS);
 
             // 測試寫入欄位
-            ModelTR col = report.appendRow(report.cols);
+            ModelTR col = report.appendRow(new string[] { "資料1", "資料2" });
             foreach (ModelTD td in col.tds)
                 td.className = "column";
 
