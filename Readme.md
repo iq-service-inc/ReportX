@@ -112,12 +112,12 @@ string path = rf.saveFile(fileName);
 ### 產生 OpenOffice 報表
 
 OpenOffice 報表是由以下結構所構成：
-
+  
 * OpenOffice 檔 (zip 壓縮)
     * `META-INF`：設定檔存放資料夾
         * `manifest.xml`：OpenOffice 文件設定檔
     * `content.xml`：報表內容
-
+  
 因此，如果要瀏覽 OpenOffice 檔案，需要先將報表使用以上結構組成後 zip 壓縮，但 ReportX 提供了更簡易的方法：
 
 ```csharp
@@ -330,39 +330,123 @@ ReportX API 參考
 * `string render(int? width = null)`：將多個 Excel 綁定成一個，並生成新的內容字串
     * `width`：寬度
 
+### `Word` Class
+∟ 繼承：[`AbsOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+Microsoft Office Word 底層操作類別
+#### 成員
+同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+#### 建構子
+* `Word()`
+#### 方法
+同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
 
 ### `Excel` Class
+∟ 繼承：[`AbsOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+Microsoft Office Excel 底層操作類別
+#### 成員
+同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+#### 建構子
+* `Excel()`
+#### 方法
+同 [IReportX](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+
+### `Odt` Class
+∟ 繼承：[`AbsOpenOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+OpenOffice Odt 底層操作類別
+#### 成員
+* `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
+其餘同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+#### 建構子
+* `Word()`
+#### 方法
+同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+
+### `Ods` Class
+∟ 繼承：[`AbsOpenOffice`](#AbsOpenOffice-與-AbsOpenOffice-Class)  
+OpenOffice Ods 底層操作類別
+#### 成員
+* `string meta`：Ods file 專用 Meta 宣告，用於 META-INF 檔案建立時填入
+其餘同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+#### 建構子
+* `Word()`
+#### 方法
+同 [AbsOpenOffice](#AbsOpenOffice-與-AbsOpenOffice-Class) class 介紹
+
+
+### `AbsOffice` 與 `AbsOpenOffice` Class
+∟ 繼承：`IReport`   
+定義 Office 相關功能的抽象類別 
 
 #### 成員
 
-* 
+* `abstract string[] oldcols`：原欄位位資訊
+* `abstract string[] newcols`：過濾後欄位資訊
+* `abstract string[] cols`：資料欄位資訊
+* `abstract List<ModelTR> trs`：報表每一列的詳細資訊
 
 #### 建構子
 
-* 
+抽象類別無法實例化
 
 #### 方法
 
-* 
+* `virtual string render(int? width = null)`：畫出報表，並回傳結果字串
+    * `width`：寬度
+* `abstract void changecut(string[] cut)`：過濾欲顯示欄位
+    * `cut`：欲顯示的欄位陣列
+* `abstract void setCustomStyle(string css)`：設定客製化 CSS 樣式
+* `abstract ModelTR appendFullRow(string data, string trStyle = null, string className = null)`：新增一個滿版列(橫跨所有欄)
+    * `data`：該列要顯示的內容
+    * `trStyle`：該列的自訂樣式
+    * `className`：該列的 className
+* `ModelTR appendRow(params object[] data)`：新增一列，並在該列中填充數個欄位
+    * `data`：每一個欄位的設定，必須是一個陣列。其中，`object` 的規格如下：
+        * `object data`：要顯示的資料
+        * `int colspan`：合併幾個欄，預設 1 無合併
+        * `int rowspan`：合併幾個列，預設 1 無合併
+        * `string fontSize`：字體大小
+        * `string align`：對齊設定 (center, left, right)
+        * `bool bold`：是否粗體
+        * `string bgcolor`：背景顏色
+        * `string style`：自訂樣式
+        * `string className`：className
+* `void appendTable<T>(T[] data, string trStyle = null, string className = null)`：新增一個 Table 資料
+    * `data`：表格資料 (資料模型陣列)
+    * `trStyle`：每列樣式
+    * `className`：每列 className
+* `void appendTable(DataTable data, string trStyle = null, string className = null)`：新增一個 Table 資料
+    * `data`：表格資料 (DataTable)
+    * `trStyle`：每列樣式
+    * `className`：每列 className
+* `void setCol<T>(T[] data)`：設定資料欄位資訊 (呼叫 `setReportColNum`)
+* `void setCol(DataTable data)`：設定資料欄位資訊 (呼叫 `setReportColNum`)
+* `abstract void setReportColNum()`：設定欄位數量
+* `abstract void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)`：設定報表背景資訊
+    * `author`：作者名稱
+    * `company`：公司名稱
+    * `sheetName`：報表名稱
+    * `dateTime`：建立時間
+    * `dateRange`：報表資料時間範圍
 
 
+### `IReportX` interface
 
+基底報表規格介面
 
-### `` Class
-
-#### 成員
-
-* 
-
-#### 建構子
-
-* 
-
-#### 方法
-
-* 
-
-
+* `string[] oldcols`：定義原欄位位資訊
+* `string[] newcols`：定義過濾後欄位資訊
+* `string[] cols`：定義資料欄位資訊
+* `string render(int? width = null)`：定義畫出報表，並回傳結果字串
+* `void changecut(string[] cut)`：定義過濾欲顯示欄位
+* `void setCustomStyle(string css)`：定義設定客製化 CSS 樣式
+* `ModelTR appendFullRow(string data, string trStyle = null, string className = null)`：定義新增一個滿版列(橫跨所有欄)
+* `ModelTR appendRow(params object[] data)`：定義新增一列，並在該列中填充數個欄位
+* `void appendTable<T>(T[] data, string trStyle = null, string className = null)`：定義新增一個 Table 資料
+* `void appendTable(DataTable data, string trStyle = null, string className = null)`：定義新增一個 Table 資料
+* `void setData(string author = null, string company = null, string sheetName = null, string dateTime = null, string dateRange = null)`：定義設定報表背景資訊
+* `int getColCount()`：定義取得欄位數量
+* `void setCol<T>(T[] data)`：定義設定欄位資訊
+* `void setCol(DataTable data)`：定義設定欄位資訊
 
 
 ## License
